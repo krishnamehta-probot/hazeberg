@@ -188,7 +188,12 @@ export function CaseCard({ item, image, wide }: { item: Item; image: string; wid
                 aria-expanded={open}
                 aria-controls={panelId}
                 data-spec
-                className={`spec grid size-11 shrink-0 cursor-pointer place-items-center rounded-pill bg-white/12 text-white backdrop-blur-md hover:bg-white/22 ${
+                /* The same blue disc every CTA arrow sits on, for the same
+                   reason: a glass disc at 12% white measured 1.37:1 against its
+                   own + over a bright photograph — on a pale frame it simply
+                   vanished. An opaque fill does not depend on the picture
+                   underneath it. White on this is 4.6:1. */
+                className={`spec grid size-11 shrink-0 cursor-pointer place-items-center rounded-pill disc-blue text-white ${
                   open ? "rotate-45" : ""
                 }`}
               >

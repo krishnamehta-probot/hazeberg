@@ -348,7 +348,7 @@ export function SiteHeader() {
                 {NAV_CTA.label}
                 <span
                   aria-hidden
-                  className="relative grid size-8 shrink-0 place-items-center overflow-hidden rounded-pill bg-[radial-gradient(circle_at_30%_22%,#3aa4ff_0%,#008eff_38%,#1972b9_72%,#0d4674_100%)]"
+                  className="relative grid size-8 shrink-0 place-items-center overflow-hidden rounded-pill disc-blue"
                 >
                   <ArrowUpRight
                     className="absolute size-3.5 text-white transition-transform duration-300 ease-brand group-hover/cta:translate-x-[180%] group-hover/cta:-translate-y-[180%]"

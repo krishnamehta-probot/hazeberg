@@ -36,8 +36,6 @@ export function CtaPill({
 }) {
   const light = tone === "light";
   const arrow = "absolute size-4 text-white transition-transform duration-300 ease-brand";
-  const DISC =
-    "bg-[radial-gradient(circle_at_30%_22%,#3aa4ff_0%,#008eff_38%,#1972b9_72%,#0d4674_100%)]";
   return (
     <Link
       href={href}
@@ -51,10 +49,11 @@ export function CtaPill({
           get from one to the other without spending most of itself in the
           grey-green they blend through — it came out looking like a bug. Amber
           lives on the rim, which turns, so both colours are still on the button;
-          they are just never mixed. White on this measures 4.6:1. */}
+          they are just never mixed. White on this measures 5.1:1 where the
+          arrow sits, 3.58:1 at the disc's lightest point. */}
       <span
         aria-hidden
-        className={`relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-pill ${DISC}`}
+        className="disc-blue relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-pill"
       >
         <ArrowUpRight
           className={`${arrow} group-hover/p:translate-x-[180%] group-hover/p:-translate-y-[180%]`}
