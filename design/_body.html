@@ -1,0 +1,230 @@
+<div class="switcher">
+  <div class="switcher-in">
+    <span class="switch-label">Direction</span>
+    <div class="switch-group" role="group" aria-label="Design direction">
+      <button class="switch-btn" data-set-dir="harbor" aria-pressed="true">A &middot; Harbor</button>
+      <button class="switch-btn" data-set-dir="signal" aria-pressed="false">B &middot; Signal</button>
+      <button class="switch-btn" data-set-dir="atlas"  aria-pressed="false">C &middot; Atlas</button>
+    </div>
+    <span class="switch-label">Mode</span>
+    <div class="switch-group" role="group" aria-label="Colour mode">
+      <button class="switch-btn" data-set-mode="light" aria-pressed="true">Light</button>
+      <button class="switch-btn" data-set-mode="dark"  aria-pressed="false">Dark</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ INTRO ============ -->
+<section class="sec" style="padding-bottom:var(--s-12);border-top:0">
+  <div class="container">
+    <p class="eyebrow">Hazeberg website revamp &middot; Phase 1</p>
+    <h1 style="max-width:20ch">Three directions. One component set. Pick the one that sounds like Hazeberg.</h1>
+    <p class="lead" style="margin-top:var(--s-6)">
+      Every component below is rendered from the <em>same</em> markup &mdash; only the design tokens change
+      when you switch direction. That is the point: whatever you choose here becomes the single
+      source of truth every page section inherits afterwards.
+    </p>
+    <div class="note" style="margin-top:var(--s-8)">
+      <p><strong>Your logo works with all three.</strong> The SVG recovered from your current site is
+      monochrome &mdash; one fill colour across 12 paths &mdash; so it recolours to match any palette.
+      Colour clash was the main risk in keeping the existing logo; it does not apply here.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APPLIED PREVIEW ============ -->
+<section class="sec">
+  <div class="sec-head">
+    <p class="sec-label">Applied</p>
+    <h2>How it feels as a page</h2>
+  </div>
+  <div class="container">
+    <nav class="nav" aria-label="Example site navigation">
+      <span class="logo" data-logo aria-label="Hazeberg"></span>
+      <ul class="nav-links">
+        <li><a href="#0">Services</a></li>
+        <li><a href="#0">About</a></li>
+        <li><a href="#0">Clients</a></li>
+        <li><a href="#0">Careers</a></li>
+        <li><a href="#0">Contact</a></li>
+      </ul>
+      <a class="btn btn-primary btn-sm" href="#0">Book a consultation</a>
+    </nav>
+
+    <div class="hero">
+      <p class="eyebrow">Workday consulting</p>
+      <h1>Workday, delivered by people who have done it before.</h1>
+      <p class="lead">
+        HCM, Finance and Student implementations for enterprises in 40+ countries &mdash;
+        from configuration and design through go-live and the years after it.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary btn-lg" href="#0">Talk to a consultant</a>
+        <a class="btn btn-secondary btn-lg" href="#0">See our work</a>
+      </div>
+      <div class="trust">
+        <span>ISO certified</span><span>Govt. of India recognised</span>
+        <span>Coimbatore &middot; Penang</span>
+      </div>
+    </div>
+
+    <div class="grid g4" style="margin-bottom:var(--s-16)">
+      <div class="stat"><div class="stat-n">20+</div><div class="stat-l">Projects delivered</div></div>
+      <div class="stat"><div class="stat-n">200+</div><div class="stat-l">Integrations built</div></div>
+      <div class="stat"><div class="stat-n">40+</div><div class="stat-l">Countries served</div></div>
+      <div class="stat"><div class="stat-n">12</div><div class="stat-l">Years combined experience</div></div>
+    </div>
+
+    <div class="grid g3" style="margin-bottom:var(--s-16)">
+      <a class="card" href="#0">
+        <div class="card-i" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>Human Capital Management</h3>
+        <p>Core HR, Compensation, Payroll, Time Tracking, Absence and Recruiting &mdash; configured around how your people actually work.</p>
+        <span class="card-link">Explore HCM &rarr;</span>
+      </a>
+      <a class="card" href="#0">
+        <div class="card-i" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3>Finance Management</h3>
+        <p>Spend management, accounts, invoicing, vendor management, reporting and the APIs that hold it together.</p>
+        <span class="card-link">Explore Finance &rarr;</span>
+      </a>
+      <a class="card" href="#0">
+        <div class="card-i" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        </div>
+        <h3>Student Management</h3>
+        <p>Academic planning, registration and financial insight for institutions running Workday Student.</p>
+        <span class="card-link">Explore Student &rarr;</span>
+      </a>
+    </div>
+
+    <div style="padding:var(--s-12) 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:var(--s-16)">
+      <p class="sec-label" style="text-align:center">Trusted by teams at</p>
+      <div class="logos">
+        <div>Hitachi</div><div>ADP</div><div>Fortune 500</div><div>Healthcare</div><div>Higher Ed</div>
+      </div>
+    </div>
+
+    <div class="quote" style="margin-bottom:var(--s-16)">
+      <blockquote>&ldquo;Placeholder quote &mdash; client testimonial goes here once you supply the copy.&rdquo;</blockquote>
+      <footer>Name, Title &mdash; Company</footer>
+    </div>
+
+    <div class="foot">
+      <div class="grid g4">
+        <div>
+          <span class="logo" data-logo aria-label="Hazeberg" style="margin-bottom:var(--s-4)"></span>
+          <p class="muted" style="font-size:var(--t-sm)">Strategic Workday consulting and business solutions.</p>
+        </div>
+        <div><h4>Services</h4><ul><li><a href="#0">HCM</a></li><li><a href="#0">Finance</a></li><li><a href="#0">Student</a></li><li><a href="#0">Support</a></li></ul></div>
+        <div><h4>Company</h4><ul><li><a href="#0">About</a></li><li><a href="#0">Clients</a></li><li><a href="#0">Careers</a></li><li><a href="#0">Contact</a></li></ul></div>
+        <div><h4>Offices</h4><ul><li class="muted" style="font-size:var(--t-sm)">Coimbatore, India</li><li class="muted" style="font-size:var(--t-sm)">Penang, Malaysia</li></ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COLOUR TOKENS ============ -->
+<section class="sec">
+  <div class="sec-head">
+    <p class="sec-label">Colour</p>
+    <h2>Tokens</h2>
+    <p class="lead" style="margin-top:var(--s-4)">Live values for the direction and mode currently selected.</p>
+  </div>
+  <div class="container">
+    <div class="grid g4" id="swatches" style="margin-bottom:var(--s-12)"></div>
+    <h3 style="margin-bottom:var(--s-5)">Contrast, measured live</h3>
+    <p class="muted" style="margin-bottom:var(--s-6);font-size:var(--t-sm)">
+      Computed from the rendered CSS with the WCAG&nbsp;2.1 relative-luminance formula &mdash; read from the
+      page as it is drawn, not copied from a spec. Switch direction or mode and these recalculate.
+    </p>
+    <div class="grid g2"><div id="ratios"></div><div id="ratios2"></div></div>
+  </div>
+</section>
+
+<!-- ============ TYPOGRAPHY ============ -->
+<section class="sec">
+  <div class="sec-head">
+    <p class="sec-label">Typography</p>
+    <h2>Type scale</h2>
+    <p class="lead" style="margin-top:var(--s-4)" id="typenote"></p>
+  </div>
+  <div class="container">
+    <div class="typerow"><div class="typemeta">Display / 5xl</div><div class="display" style="font-family:var(--font-display);font-size:var(--t-5xl);line-height:1.05;letter-spacing:-.03em;font-weight:700">Workday, done right</div></div>
+    <div class="typerow"><div class="typemeta">H1 / 4xl</div><h1>Consulting that outlives go-live</h1></div>
+    <div class="typerow"><div class="typemeta">H2 / 3xl</div><h2>Built around your people</h2></div>
+    <div class="typerow"><div class="typemeta">H3 / 2xl</div><h3>Human Capital Management</h3></div>
+    <div class="typerow"><div class="typemeta">Lead / lg</div><p class="lead">Twelve years of combined experience across HCM, Finance and Student implementations.</p></div>
+    <div class="typerow"><div class="typemeta">Body / base</div><p>Hazeberg is an atomic consulting venture providing Workday ERP services globally. We work with Fortune 500 companies, healthcare organisations and universities across more than forty countries, from configuration and design consultation through to post-launch support.</p></div>
+    <div class="typerow"><div class="typemeta">Small / sm</div><p style="font-size:var(--t-sm)" class="muted">Supporting detail, captions and form labels.</p></div>
+    <div class="typerow"><div class="typemeta">Eyebrow / mono</div><p class="eyebrow" style="margin:0">Workday consulting</p></div>
+  </div>
+</section>
+
+<!-- ============ COMPONENTS ============ -->
+<section class="sec">
+  <div class="sec-head">
+    <p class="sec-label">Components</p>
+    <h2>The kit</h2>
+    <p class="lead" style="margin-top:var(--s-4)">Every state shown, not just the resting one.</p>
+  </div>
+  <div class="container">
+    <h3 style="margin-bottom:var(--s-5)">Buttons</h3>
+    <div class="stack" style="margin-bottom:var(--s-5)">
+      <button class="btn btn-primary">Primary</button>
+      <button class="btn btn-secondary">Secondary</button>
+      <button class="btn btn-ghost">Ghost</button>
+      <button class="btn btn-accent">Accent</button>
+      <button class="btn btn-primary" disabled>Disabled</button>
+    </div>
+    <div class="stack" style="margin-bottom:var(--s-12)">
+      <button class="btn btn-primary btn-sm">Small</button>
+      <button class="btn btn-primary">Default</button>
+      <button class="btn btn-primary btn-lg">Large</button>
+      <span class="badge">Badge</span>
+      <span class="badge badge-accent">Accent badge</span>
+    </div>
+
+    <div class="grid g2" style="margin-bottom:var(--s-12)">
+      <div>
+        <h3 style="margin-bottom:var(--s-5)">Form</h3>
+        <form onsubmit="return false">
+          <div class="field"><label for="f1">Full name</label><input id="f1" placeholder="Sakthi Vignesh"></div>
+          <div class="field"><label for="f2">Work email</label><input id="f2" type="email" placeholder="you@company.com"></div>
+          <div class="field"><label for="f3">Area of interest</label>
+            <select id="f3"><option>Human Capital Management</option><option>Finance Management</option><option>Student Management</option><option>Implementation support</option></select></div>
+          <div class="field invalid"><label for="f4">Phone</label><input id="f4" value="12" aria-invalid="true" aria-describedby="f4e">
+            <span class="err" id="f4e">Enter a valid phone number including country code.</span></div>
+          <div class="field"><label for="f5">How can we help?</label><textarea id="f5" rows="3" placeholder="Tell us about your Workday programme"></textarea></div>
+          <button class="btn btn-primary" type="submit">Send enquiry</button>
+        </form>
+      </div>
+      <div>
+        <h3 style="margin-bottom:var(--s-5)">Tabs</h3>
+        <div class="tabs" role="tablist">
+          <button class="tab" role="tab" aria-selected="true"  aria-controls="p1" id="t1">Implement</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="p2" id="t2">Optimise</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="p3" id="t3">Support</button>
+        </div>
+        <div role="tabpanel" id="p1" aria-labelledby="t1"><p class="muted">Configuration, design consultation and business readiness through to go-live.</p></div>
+        <div role="tabpanel" id="p2" aria-labelledby="t2" hidden><p class="muted">New feature adoption, integration work and reporting once you are live.</p></div>
+        <div role="tabpanel" id="p3" aria-labelledby="t3" hidden><p class="muted">Ongoing post-launch support from consultants who know your tenant.</p></div>
+
+        <h3 style="margin:var(--s-10) 0 var(--s-5)">Accordion</h3>
+        <div class="acc">
+          <details open><summary>Do you work with existing Workday tenants?</summary><p>Placeholder answer &mdash; real FAQ copy to be supplied.</p></details>
+          <details><summary>Which regions do you cover?</summary><p>Placeholder answer &mdash; real FAQ copy to be supplied.</p></details>
+          <details><summary>How are engagements structured?</summary><p>Placeholder answer &mdash; real FAQ copy to be supplied.</p></details>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:var(--s-5)">Logo on every surface</h3>
+    <p class="muted" style="margin-bottom:var(--s-6);font-size:var(--t-sm)">The brand-fit check: the wordmark rendered on canvas, surface, primary and accent for the current direction.</p>
+    <div class="grid g4" id="logotest"></div>
+  </div>
+</section>

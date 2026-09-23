@@ -1,0 +1,111 @@
+<title>Hazeberg Design Directions</title>
+<style>
+/*FONTS_PLACEHOLDER*/
+
+/* ============ SHARED FOUNDATION (identical across all directions) ============ */
+:root{
+  --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:20px;--s-6:24px;--s-8:32px;
+  --s-10:40px;--s-12:48px;--s-16:64px;--s-20:80px;--s-24:96px;--s-32:128px;
+  --t-xs:12px;--t-sm:14px;
+  --t-base:clamp(15px,.95rem + .15vw,17px);
+  --t-lg:clamp(17px,1rem + .4vw,20px);
+  --t-xl:clamp(20px,1.1rem + .7vw,24px);
+  --t-2xl:clamp(24px,1.2rem + 1.2vw,32px);
+  --t-3xl:clamp(28px,1.3rem + 2vw,40px);
+  --t-4xl:clamp(34px,1.4rem + 3.2vw,56px);
+  --t-5xl:clamp(40px,1.5rem + 4.6vw,72px);
+  --ease:cubic-bezier(.2,.7,.3,1);--fast:150ms;--base:220ms;--slow:380ms;
+  --maxw:1200px;
+  /* default = harbor light, overridden below */
+  --font-display:"Outfit";--font-body:"Inter";--font-mono:ui-monospace,monospace;
+}
+
+/* ============ DIRECTION A - HARBOR ============ */
+[data-dir="harbor"]{
+  --font-display:"Outfit",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,sans-serif;
+  --font-mono:"Geist Mono",ui-monospace,monospace;
+  --radius:8px;--radius-sm:5px;--radius-lg:14px;
+  --canvas:#FFFFFF;--surface:#F4F7FA;--ink:#0B2239;--ink-muted:#5B7183;
+  --primary:#1A6FB5;--primary-hover:#155A93;--primary-ink:#FFFFFF;
+  --accent:#F2A81D;--accent-ink:#2A1C00;--border:#CBD8E4;--danger:#C62828;
+  --shadow:0 1px 2px rgba(11,34,57,.06),0 8px 24px -12px rgba(11,34,57,.18);
+  --shadow-lg:0 2px 4px rgba(11,34,57,.06),0 24px 48px -20px rgba(11,34,57,.28);
+}
+[data-dir="harbor"][data-mode="dark"]{
+  --canvas:#06182A;--surface:#0D2338;--ink:#E8F0F7;--ink-muted:#8CA3B8;
+  --primary:#4A97D8;--primary-hover:#6BAEE5;--primary-ink:#04121F;
+  --accent:#F2A81D;--accent-ink:#2A1C00;--border:#1B3A54;--danger:#FF8F8A;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+  --shadow-lg:0 2px 4px rgba(0,0,0,.4),0 24px 48px -20px rgba(0,0,0,.7);
+}
+
+/* ============ DIRECTION B - SIGNAL ============ */
+[data-dir="signal"]{
+  --font-display:"Geist",system-ui,sans-serif;
+  --font-body:"Geist",system-ui,sans-serif;
+  --font-mono:"Geist Mono",ui-monospace,monospace;
+  --radius:10px;--radius-sm:6px;--radius-lg:16px;
+  --canvas:#FFFFFF;--surface:#F6F7F9;--ink:#0A0A0B;--ink-muted:#687184;
+  --primary:#1F5FE0;--primary-hover:#1A4FBD;--primary-ink:#FFFFFF;
+  --accent:#00B3A4;--accent-ink:#00201D;--border:#D3D8E0;--danger:#D32323;
+  --shadow:0 1px 2px rgba(10,10,11,.05);
+  --shadow-lg:0 1px 2px rgba(10,10,11,.05),0 20px 40px -24px rgba(10,10,11,.25);
+}
+[data-dir="signal"][data-mode="dark"]{
+  --canvas:#0A0A0B;--surface:#141417;--ink:#FAFAFA;--ink-muted:#9CA3AF;
+  --primary:#5B8DEF;--primary-hover:#7BA5F4;--primary-ink:#06101F;
+  --accent:#00B3A4;--accent-ink:#00201D;--border:#26262B;--danger:#F87171;
+  --shadow:0 1px 2px rgba(0,0,0,.6);
+  --shadow-lg:0 1px 2px rgba(0,0,0,.6),0 20px 40px -24px rgba(0,0,0,.8);
+}
+
+/* ============ DIRECTION C - ATLAS ============ */
+[data-dir="atlas"]{
+  --font-display:"Fraunces",Georgia,serif;
+  --font-body:"Inter",system-ui,sans-serif;
+  --font-mono:"Geist Mono",ui-monospace,monospace;
+  --radius:6px;--radius-sm:4px;--radius-lg:10px;
+  --canvas:#FBF9F5;--surface:#F2EDE4;--ink:#1C1A15;--ink-muted:#6E675A;
+  --primary:#17548A;--primary-hover:#113F69;--primary-ink:#FFFFFF;
+  --accent:#4A5D23;--accent-ink:#FFFFFF;--border:#D6CCBA;--danger:#B3261E;
+  --shadow:0 1px 2px rgba(28,26,21,.07);
+  --shadow-lg:0 1px 2px rgba(28,26,21,.07),0 18px 36px -22px rgba(28,26,21,.3);
+}
+[data-dir="atlas"][data-mode="dark"]{
+  --canvas:#14130F;--surface:#1E1C17;--ink:#F5F1E8;--ink-muted:#A39A88;
+  --primary:#5E9BD1;--primary-hover:#7CB2E0;--primary-ink:#0A1520;
+  --accent:#A8BE6B;--accent-ink:#1A1F0B;--border:#2E2B23;--danger:#E89080;
+  --shadow:0 1px 2px rgba(0,0,0,.5);
+  --shadow-lg:0 1px 2px rgba(0,0,0,.5),0 18px 36px -22px rgba(0,0,0,.75);
+}
+/* Atlas leans on its serif's optical sizing */
+[data-dir="atlas"] h1,[data-dir="atlas"] h2,[data-dir="atlas"] .display{
+  font-variation-settings:"SOFT" 0,"WONK" 1,"opsz" 84;font-weight:600;
+}
+
+/* ============ BASE ============ */
+*,*::before,*::after{box-sizing:border-box;}
+body{
+  margin:0;background:var(--canvas);color:var(--ink);
+  font-family:var(--font-body);font-size:var(--t-base);line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  transition:background var(--base) var(--ease),color var(--base) var(--ease);
+}
+h1,h2,h3,h4{font-family:var(--font-display);line-height:1.12;margin:0;letter-spacing:-.02em;font-weight:700;text-wrap:balance;}
+h1{font-size:var(--t-4xl);}h2{font-size:var(--t-3xl);}h3{font-size:var(--t-2xl);}h4{font-size:var(--t-xl);}
+p{margin:0;max-width:68ch;}
+a{color:var(--primary);}
+img,svg{max-width:100%;}
+:focus-visible{outline:3px solid var(--primary);outline-offset:2px;border-radius:var(--radius-sm);}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 var(--s-6);}
+.eyebrow{
+  font-family:var(--font-mono);font-size:var(--t-xs);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--primary);font-weight:600;margin:0 0 var(--s-4);
+}
+.lead{font-size:var(--t-lg);color:var(--ink-muted);}
+.muted{color:var(--ink-muted);}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}
+}
+</style>

@@ -1,0 +1,60 @@
+<script>
+(function(){
+  "use strict";
+  var LOGO = "/*MB3_LOGO*/";
+  Array.prototype.forEach.call(document.querySelectorAll('[data-logo]'), function(n){
+    n.innerHTML = LOGO;
+  });
+
+  /* Slot furniture is generated so the markup carries only the number and the caption. */
+  var slots = Array.prototype.slice.call(document.querySelectorAll('.slot'));
+  slots.forEach(function(s){
+    var m = document.createElement('div');
+    m.className = 'meta';
+    m.innerHTML = '<span class="no"></span><span class="cap"></span>';
+    m.querySelector('.no').textContent = s.getAttribute('data-no');
+    m.querySelector('.cap').textContent = s.getAttribute('data-cap');
+    s.appendChild(m);
+    s.setAttribute('role', 'button');
+    s.setAttribute('tabindex', '0');
+    s.setAttribute('aria-label', 'Image slot ' + s.getAttribute('data-no')
+      + ': ' + s.getAttribute('data-cap') + '. Click or drop a file to fill.');
+  });
+
+  /* Drop or pick a local file and paint it into the slot. FileReader only, so nothing
+     leaves the page and the artifact stays request-free. */
+  var picker = document.createElement('input');
+  picker.type = 'file';
+  picker.accept = 'image/*';
+  picker.style.display = 'none';
+  document.body.appendChild(picker);
+  var target = null;
+
+  function fill(el, file){
+    if (!el || !file || !/^image\//.test(file.type)) return;
+    var r = new FileReader();
+    r.onload = function(){
+      el.style.backgroundImage = 'url("' + r.result + '")';
+      el.classList.add('filled');
+    };
+    r.readAsDataURL(file);
+  }
+
+  picker.addEventListener('change', function(){ fill(target, picker.files[0]); picker.value = ''; });
+
+  slots.forEach(function(s){
+    s.addEventListener('click', function(){ target = s; picker.click(); });
+    s.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); target = s; picker.click(); }
+    });
+    s.addEventListener('dragover', function(e){ e.preventDefault(); s.classList.add('over'); });
+    s.addEventListener('dragleave', function(){ s.classList.remove('over'); });
+    s.addEventListener('drop', function(e){
+      e.preventDefault(); s.classList.remove('over');
+      fill(s, e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]);
+    });
+  });
+  document.addEventListener('dragover', function(e){ e.preventDefault(); });
+  document.addEventListener('drop', function(e){ e.preventDefault(); });
+})();
+</script>

@@ -1,0 +1,383 @@
+================================================================================
+HAZEBERG — FULL CONTENT OF THE EXISTING LIVE SITE
+================================================================================
+Source          : https://www.hazebergconsulting.com/
+Captured        : 2026-09-16
+Site structure  : ONE PAGE (index.html). The nav items are in-page anchors
+                  (#aboutus, #services, #clients, #careers, #contactus) — there
+                  are no separate About / Services / Careers / Contact pages.
+Other files     : project-details.html exists but is UNTOUCHED template
+                  boilerplate ("Apexa - Business Consulting HTML Template",
+                  lorem-ipsum, fake New York address). It contains NO Hazeberg
+                  content and is excluded below.
+                  No sitemap.xml and no robots.txt on the domain.
+
+Everything below is verbatim from the live page, including its typos and
+unfinished sentences. Notes from me are in [square brackets].
+================================================================================
+
+
+--------------------------------------------------------------------------------
+0. PAGE META
+--------------------------------------------------------------------------------
+title       Hazeberg - Strategic Workday Consulting & Business Solutions
+description Strategic Workday Consulting & Business Solutions
+
+
+--------------------------------------------------------------------------------
+1. HEADER / NAVIGATION
+--------------------------------------------------------------------------------
+Logo: assets/img/logo/Hazebergfinal.svg  (also Hazeberg_logo.png)
+
+Nav items (all in-page anchors):
+  Home          -> #
+  About Us      -> #aboutus
+  Services      -> #services
+  Clients       -> #clients
+  Careers       -> #careers
+  contacts      -> #contactus          [lower-case "contacts" on the live site]
+
+Header contact strip:
+  connect@hazebergconsulting.com       -> mailto:
+  9750533701                           -> tel:
+  www.hazeberg/linkedin.com            -> https://www.linkedin.com/company/hazeberg
+                                          [the displayed text is malformed]
+
+Off-canvas / slide-out panel:
+  Office Address
+    Annamalai Industrial Park, 227/1A, Sharp Nagar, Nehru Nagar West,
+    Kalapatti, Coimbatore, Tamil Nadu 641048
+  Phone Number
+    9750533701
+  Email
+    connect@hazebergconsulting.com
+  LinkedIn Profile
+    www.hazeberg/linkedin.com
+
+
+--------------------------------------------------------------------------------
+2. HERO
+--------------------------------------------------------------------------------
+An atomic consulting venture helping organizations to discover new realms of
+success with high caliber WORKDAY services!
+
+Hazeberg is the newest consulting venture in Workday ecosystem with smart
+consultants having 12+ years of experience totally. Hazeberg is based out of
+India to provide Workday services globally!
+
+
+--------------------------------------------------------------------------------
+3. INTEGRATION VENDOR STRIP
+--------------------------------------------------------------------------------
+Heading:
+  "Below are the various vendors we have successfully integrated Workday with"
+
+Logos shown (no alt text on any of them — names taken from the filenames):
+  Accurat            ADP                Anthem             CDP
+  Cigna              Delta Dental       Empower            Fidelity
+  Greenhouse         HireRight          MetLife            NGA Human Resources
+  Okta               Payslip            SD Worx            Tenstreet
+  Vanguard           VSP Vision         DocuSign
+
+  [19 vendors. Directory: assets/img/Hazeberg_partner/]
+
+
+--------------------------------------------------------------------------------
+4. ABOUT
+--------------------------------------------------------------------------------
+Eyebrow:  About Our Consultancy
+Heading:  Transforming Businesses Through Strategic Solutions
+
+Body:
+  Hazeberg isn't merely a service provider; it's a strategic partner, guiding
+  businesses through the labyrinth of Workday technology, illuminating pathways
+  to efficiency, productivity, and growth. Like a master craftsman, it doesn't
+  just build IT solutions; it sculpts them, infusing every line of code with
+  purpose and every network configuration with resilience.
+
+Stat badge:
+  12 — Years Experience in Consulting
+
+Bullets:
+  - Strategic Workforce Planning
+  - Talent Acquisition & Management
+  - Employee Engagement & Development
+
+Images: h3_about_img01.jpg, h3_about_img02.jpg
+
+
+--------------------------------------------------------------------------------
+5. SERVICES  ("WHAT WE OFFER")
+--------------------------------------------------------------------------------
+Eyebrow:  WHAT WE OFFER
+Heading:  Explore Our Consultancy Services
+
+  5.1  Student Management
+       Create a great student experience from day one. Streamline academic
+       planning, registration, and access to financial insights so you can keep
+       students engaged.
+       Admissions, Financial Aid, Advising, Student Experience.
+
+  5.2  Finance Management
+       Spend Management, Accounts and Financing, Invoicing, Vendor Management,
+       Workday Reporting, Workday Core Connectors, Workday APIs,
+       [the sentence ends on a trailing comma]
+
+  5.3  Workday Human Capital Management
+       Workday Core HR, Workday Compensation, Workday Advance Compensation,
+       Workday Payroll, Workday Time Tracking, Workday Absence Management,
+       Workday Recruiting, Workday Reporting, Workday Integrations, BIRTs,
+       Workday APIs
+
+
+--------------------------------------------------------------------------------
+6. WHY HAZEBERG CONSULTING?
+--------------------------------------------------------------------------------
+Heading:  Why Hazeberg Consulting ?
+
+  6.1  Business Readiness & Implementation Support
+       We also provide expertise in cut-over activities and independent testing
+       to ensure a smooth transition and reliable system performance.
+
+  6.2  Consult & Design
+       We excel in configuration workbook management and offer a consultative
+       approach to help customers meet their strategic objectives. talent.
+       [the stray trailing word "talent." is on the live site]
+
+  6.3  Already Live?
+       Our expertise extends to delivering solutions for post go- live
+       challenges, implementing new release features, and rolling out new
+       functionalities to enhance your Workday experience. .
+       [stray trailing period on the live site]
+
+  6.4  Delivering High-Quality Solutions
+       We deliver high-quality solutions that exceed expectations. We understand
+       your needs and goals to develop the right solution for you. We are
+       committed to excellence in all our services.
+
+
+--------------------------------------------------------------------------------
+7. WHY WE ARE THE BEST
+--------------------------------------------------------------------------------
+Eyebrow:  Why We Are The Best
+Heading:  We Offer Business Insight World Class Consulting
+
+Body:
+  In a world where technology is the heartbeat of progress, this IT services
+  company stands as a beacon of innovation, offering not just services, but a
+  promise of transformation. It's where vision meets execution, where dreams of
+  digital supremacy become reality.
+  [generic template copy — it never names Hazeberg]
+
+List:
+  - Workday Human Capital Management
+  - Finance Management
+
+Images: h3_choose_img01.jpg, h3_choose_img02.jpg
+
+
+--------------------------------------------------------------------------------
+8. PROJECTS  ("OUR PROJECTS")
+--------------------------------------------------------------------------------
+Eyebrow:  OUR PROJECTS
+Heading:  We Provide Solutions To Big & Small Organizations For Work
+
+  8.1  Category: Inventory Tracking
+       Title:    Inventory Management
+       Body:     A mysterious printer once jumbled up a collection of type,
+                 creating a unique type specimen book in the process.
+                 [PLACEHOLDER — reworded lorem ipsum, still live on the site]
+
+  8.2  Category: Consulting
+       Title:    Strategic Human Resources
+       Body:     Empowering businesses by optimizing workforce efficiency and
+                 enhancing employee engagement.
+
+  Each card links to: project-details.html  [the un-customised template page]
+
+
+--------------------------------------------------------------------------------
+9. STAT COUNTERS
+--------------------------------------------------------------------------------
+  20+    Successfully Completed Projects
+  +      Years of Experiences To Run This Company
+         [BROKEN — the number is missing, only the "+" renders]
+  200+   Integrations built
+  40+    Countries Served
+
+
+--------------------------------------------------------------------------------
+10. CTA BAND
+--------------------------------------------------------------------------------
+Heading:  Offering The Best Experience Of Finance Services
+Phone:    9750533701
+CTA:      Contact us now
+
+
+--------------------------------------------------------------------------------
+11. CASE STUDIES
+--------------------------------------------------------------------------------
+Heading:  CASE STUDIES
+
+  11.1  Fortune 500 Company — Workday HR Transformation
+        Challenge: The client faced inefficiencies in HR and financial processes
+                   due to legacy systems.
+        Solution:  Implemented Workday ERP, automating payroll, benefits, and
+                   financial reporting.
+        Results:   HR processing time reduced by 40%, payroll errors decreased
+                   by 30%, and real-time financial insights improved
+                   decision-making. Saved half a Million Dollar annually for the
+                   customer.
+
+  11.2  Healthcare Customer — Workday HCM & Payroll Implementation
+        Challenge: Managing HR operations across multiple countries with
+                   different compliance requirements.
+        Solution:  Rolled out Workday HCM and Payroll to streamline workforce
+                   management and ensure compliance.
+        Results:   Improved employee experience, 50% faster onboarding and
+                   enhanced compliance tracking.
+
+  11.3  Healthcare Organization — Workday Finance
+        Challenge: Disjointed financial systems led to inefficiencies in
+                   budgeting and supply chain operations.
+        Solution:  Integrated Workday Finance and SCM, providing real-time
+                   tracking of expenses and inventory.
+        Results:   25% cost savings in procurement, faster budget approvals, and
+                   better financial forecasting.
+
+
+--------------------------------------------------------------------------------
+12. CLIENTS
+--------------------------------------------------------------------------------
+Heading:  Our Valued Clients
+
+Logos shown (no alt text — names taken from the filenames):
+  Alcon              Chevron            Iron Mountain      DocuSign
+  Novartis           UPS                Northstar          Medallia
+  D2                 Sandoz             Menasha            Enovix
+  Hitachi
+
+  [13 logos. Directory: assets/img/Hazebergs Clients/]
+
+
+--------------------------------------------------------------------------------
+13. CAREERS
+--------------------------------------------------------------------------------
+Heading:  Join Our Team At Hazeberg
+
+Body:
+  Are you passionate about innovation and looking for an opportunity to grow
+  your career? At Hazeberg, we're building a team of creative, driven, and
+  talented individuals who want to make an impact.
+
+  13.1  Collaborative Environment
+        Work with a team that values creativity, teamwork, and innovation.
+
+  13.2  Career Growth
+        We provide opportunities for learning and professional development.
+
+  13.3  Supportive Culture
+        Experience a workplace where your ideas are valued and your
+        contributions matter.
+
+  13.4  Dynamic Work Environment
+        Engage in a fast-paced, innovative setting that fosters growth and
+        excellence.
+
+Closing line:
+  Send your resume to connect@hazebergconsulting.com and be part of our
+  exciting journey!
+  [no application form — email only]
+
+
+--------------------------------------------------------------------------------
+14. LEADERSHIP
+--------------------------------------------------------------------------------
+  Sakthi Vignesh
+  CEO & Founder
+  Contact Number +91 9750533701
+  Photo: assets/img/images/Founder/SakthiVigneh.jpg
+
+  [the only person named on the entire site]
+
+
+--------------------------------------------------------------------------------
+15. CERTIFICATIONS
+--------------------------------------------------------------------------------
+  Recognized by Government of India     (assets/img/Certificates/certificate 1.png)
+  ISO Certified                         (assets/img/Certificates/iso.jpg)
+
+
+--------------------------------------------------------------------------------
+16. FOOTER
+--------------------------------------------------------------------------------
+Tagline:
+  Never Miss out on a Moment
+  Hazeberg us
+  [the copy is unfinished / garbled]
+
+Follow Us on:  LinkedIn -> https://www.linkedin.com/company/hazeberg
+
+Information
+  - About us
+  - Services
+  - Clients
+  - Careers
+  - Contact us
+
+Location
+  - 9750533701
+  - connect@hazebergconsulting.com
+  - 12A-2, JALAN VERVEA 7, BANDAR CASSIA, PULAU PINANG, MALAYSIA - 14110
+  - Annamalai Industrial Park, 227/1A, Sharp Nagar, Nehru Nagar West,
+    Kalapatti, Coimbatore, Tamil Nadu 641048
+
+Copyright (c) Hazeberg | All Right Reserved
+
+
+================================================================================
+17. FACTS WORTH CARRYING INTO THE REBUILD
+================================================================================
+Company      Hazeberg (Hazeberg Consulting)
+Positioning  Workday-only consulting venture, 12+ years combined experience,
+             India-based, serving globally
+Founder      Sakthi Vignesh, CEO & Founder
+Email        connect@hazebergconsulting.com
+Phone        +91 9750533701
+LinkedIn     https://www.linkedin.com/company/hazeberg
+Office IN    Annamalai Industrial Park, 227/1A, Sharp Nagar, Nehru Nagar West,
+             Kalapatti, Coimbatore, Tamil Nadu 641048
+Office MY    12A-2, JALAN VERVEA 7, BANDAR CASSIA, PULAU PINANG,
+             MALAYSIA - 14110
+Credentials  Recognized by Government of India, ISO Certified
+Numbers      20+ projects, 200+ integrations, 40+ countries, 12 yrs
+Clients      13 logos; integration vendors 19 logos (lists in sections 3 and 12)
+
+
+================================================================================
+18. GAPS — THE NEW SITEMAP NEEDS COPY THAT DOES NOT EXIST YET
+================================================================================
+The new sitemap has roughly 20 pages. The live site supplies usable copy for
+maybe three of them. Nothing at all exists for:
+
+  - Workday Payroll / Financials / Integrations / Reporting & Analytics /
+    AMS / Extend       (only keyword lists exist, no page copy)
+  - Every "What we do" solution: Implementation, Optimization, AMS,
+    Cost Optimization, Integration Modernization, Payroll Transformation,
+    Release Management, Health Check
+  - About: Our story, Life at Hazeberg, Certifications, Rewards, Leadership
+    (only the founder card exists), Our Team
+  - Berg (the entire proposition)
+  - Careers: no roles, no process, no application form — an email address only
+  - Contact: no form on the live site
+
+Also live and unusable as-is:
+  - 8.1 project card is lorem ipsum
+  - 9 "Years of Experiences" counter has no number
+  - 7 body copy is template filler that never names Hazeberg
+  - 16 footer tagline is garbled
+  - Header link text "www.hazeberg/linkedin.com" is malformed
+  - Zero alt text on all 57 images
+
+Note: "Student Management" (5.1) appears on the live site but is absent from the
+new sitemap. Confirm whether it is being dropped.

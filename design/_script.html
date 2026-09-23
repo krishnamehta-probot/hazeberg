@@ -1,0 +1,171 @@
+<script>
+(function(){
+  "use strict";
+  var root = document.documentElement;
+  var LOGO = "/*LOGO_SVG*/";
+
+  /* ---------- fonts named per direction, for the type spec ---------- */
+  var FONTS = {
+    harbor: "Outfit for headings, Inter for body \u2014 the current site's pairing, refined.",
+    signal: "Geist for everything, Geist Mono for stats, eyebrows and labels.",
+    atlas:  "Fraunces for display, Inter for body \u2014 the serif is what makes this one warm."
+  };
+
+  /* ---------- WCAG contrast ---------- */
+  function toRGB(str){
+    var m = str.trim().match(/^rgba?\(([^)]+)\)$/i);
+    if(m){ var p = m[1].split(/[,\s\/]+/).filter(Boolean).map(Number); return [p[0],p[1],p[2]]; }
+    var h = str.trim().replace('#','');
+    if(h.length===3) h = h.split('').map(function(c){return c+c;}).join('');
+    return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];
+  }
+  function lum(str){
+    var c = toRGB(str).map(function(v){ v=v/255; return v<=0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055,2.4); });
+    return 0.2126*c[0] + 0.7152*c[1] + 0.0722*c[2];
+  }
+  function ratio(a,b){ var x=lum(a), y=lum(b); if(x<y){ var t=x; x=y; y=t; } return (x+0.05)/(y+0.05); }
+  function tok(name){ return getComputedStyle(root).getPropertyValue(name).trim(); }
+  function hex(str){
+    var p = toRGB(str);
+    return '#' + p.map(function(v){ return ('0'+v.toString(16)).slice(-2); }).join('').toUpperCase();
+  }
+
+  /* ---------- swatches ---------- */
+  var SWATCHES = [
+    ['--canvas','Canvas','Page background'],
+    ['--surface','Surface','Cards, wells, footer'],
+    ['--ink','Ink','Headings and body'],
+    ['--ink-muted','Ink muted','Secondary text'],
+    ['--primary','Primary','Links, buttons, focus'],
+    ['--accent','Accent','Highlights, emphasis'],
+    ['--border','Border','Hairlines, dividers'],
+    ['--danger','Danger','Form errors only']
+  ];
+  function paintSwatches(){
+    var el = document.getElementById('swatches');
+    el.innerHTML = SWATCHES.map(function(s){
+      var v = tok(s[0]);
+      return '<div class="sw">'
+        + '<div class="sw-chip" style="background:' + v + '"></div>'
+        + '<div class="sw-meta"><span class="sw-name">' + s[1] + '</span>'
+        + '<span class="sw-hex">' + hex(v) + '</span>'
+        + '<span class="sw-hex" style="text-transform:none">' + s[2] + '</span></div></div>';
+    }).join('');
+  }
+
+  /* ---------- live contrast table ---------- */
+  var PAIRS = [
+    ['Ink on canvas','--ink','--canvas',4.5],
+    ['Ink on surface','--ink','--surface',4.5],
+    ['Muted on canvas','--ink-muted','--canvas',4.5],
+    ['Muted on surface','--ink-muted','--surface',4.5],
+    ['Primary on canvas','--primary','--canvas',4.5],
+    ['Primary on surface','--primary','--surface',4.5],
+    ['Label on primary btn','--primary-ink','--primary',4.5],
+    ['Label on accent btn','--accent-ink','--accent',4.5],
+    ['Danger on canvas','--danger','--canvas',4.5],
+    ['Focus ring on canvas','--primary','--canvas',3]
+  ];
+  function paintRatios(){
+    var half = Math.ceil(PAIRS.length/2);
+    var render = function(list){
+      return list.map(function(p){
+        var r = ratio(tok(p[1]), tok(p[2]));
+        var ok = r >= p[3];
+        return '<div class="ratio"><span>' + p[0] + '</span>'
+          + '<span class="' + (ok?'pass':'fail') + '">' + r.toFixed(2) + ':1 '
+          + (ok ? 'PASS' : 'FAIL') + ' <span class="muted">(min ' + p[3] + ')</span></span></div>';
+      }).join('');
+    };
+    document.getElementById('ratios').innerHTML  = render(PAIRS.slice(0,half));
+    document.getElementById('ratios2').innerHTML = render(PAIRS.slice(half));
+  }
+
+  /* ---------- logo rendered on each surface ---------- */
+  var SURFACES = [
+    ['--canvas','--ink','Canvas'],
+    ['--surface','--primary','Surface'],
+    ['--primary','--primary-ink','Primary'],
+    ['--accent','--accent-ink','Accent']
+  ];
+  function paintLogoTest(){
+    var el = document.getElementById('logotest');
+    el.innerHTML = SURFACES.map(function(s){
+      return '<div class="sw">'
+        + '<div style="background:' + tok(s[0]) + ';color:' + tok(s[1])
+        + ';padding:var(--s-8) var(--s-6);display:grid;place-items:center">'
+        + '<span style="display:block;width:150px;height:39px">' + LOGO + '</span></div>'
+        + '<div class="sw-meta"><span class="sw-name">' + s[2] + '</span>'
+        + '<span class="sw-hex">' + hex(tok(s[0])) + '</span></div></div>';
+    }).join('');
+  }
+
+  /* ---------- inline the logo wherever it is marked ---------- */
+  function paintLogos(){
+    Array.prototype.forEach.call(document.querySelectorAll('[data-logo]'), function(n){
+      if(!n.dataset.done){ n.innerHTML = LOGO; n.dataset.done = '1'; }
+    });
+  }
+
+  /* ---------- repaint everything that reads live token values ---------- */
+  function repaint(){
+    paintSwatches(); paintRatios(); paintLogoTest();
+    document.getElementById('typenote').textContent = FONTS[root.dataset.dir];
+  }
+
+  /* ---------- switcher ---------- */
+  function bindSwitch(attr, prop){
+    Array.prototype.forEach.call(document.querySelectorAll('[' + attr + ']'), function(btn){
+      btn.addEventListener('click', function(){
+        root.dataset[prop] = btn.getAttribute(attr);
+        Array.prototype.forEach.call(document.querySelectorAll('[' + attr + ']'), function(b){
+          b.setAttribute('aria-pressed', String(b === btn));
+        });
+        /* let the CSS variables settle before measuring them */
+        requestAnimationFrame(repaint);
+      });
+    });
+  }
+
+  /* ---------- tabs: click + full arrow-key support ---------- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  function selectTab(tab){
+    tabs.forEach(function(t){
+      var on = t === tab;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    tab.focus();
+  }
+  tabs.forEach(function(tab, i){
+    tab.tabIndex = tab.getAttribute('aria-selected') === 'true' ? 0 : -1;
+    tab.addEventListener('click', function(){ selectTab(tab); });
+    tab.addEventListener('keydown', function(e){
+      var n = null;
+      if(e.key === 'ArrowRight') n = tabs[(i+1) % tabs.length];
+      else if(e.key === 'ArrowLeft') n = tabs[(i-1+tabs.length) % tabs.length];
+      else if(e.key === 'Home') n = tabs[0];
+      else if(e.key === 'End') n = tabs[tabs.length-1];
+      if(n){ e.preventDefault(); selectTab(n); }
+    });
+  });
+
+  /* ---------- boot ---------- */
+  root.dataset.dir = 'harbor';
+  // Open in whatever theme the viewer is already in: an explicit host choice stamps
+  // data-theme on the root; otherwise fall back to the OS preference. The toggle above
+  // overrides either one, since comparing both modes is the point of this page.
+  var hostTheme = root.getAttribute('data-theme');
+  root.dataset.mode = hostTheme === 'dark' || hostTheme === 'light'
+    ? hostTheme
+    : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  Array.prototype.forEach.call(document.querySelectorAll('[data-set-mode]'), function(b){
+    b.setAttribute('aria-pressed', String(b.getAttribute('data-set-mode') === root.dataset.mode));
+  });
+  bindSwitch('data-set-dir','dir');
+  bindSwitch('data-set-mode','mode');
+  paintLogos();
+  repaint();
+})();
+</script>
