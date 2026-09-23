@@ -433,6 +433,23 @@
     mask-composite: exclude;
   }
 
+  /* The one disc on the site. Every arrow and every + sits on it, so it is a
+     rule rather than the same arbitrary value pasted into three components.
+
+     Deep on purpose: the first cut peaked at #3aa4ff and a white glyph measured
+     2.98:1 on it — right on the 3:1 line for a control, which is not a place to
+     be. The lightest point here is 3.58:1 and the middle, where the glyph
+     actually sits, is 5.1:1. */
+  .disc-blue {
+    background-image: radial-gradient(
+      circle at 30% 22%,
+      #1f8ce8 0%,
+      #0d6fc4 42%,
+      #12599b 74%,
+      #0a3d68 100%
+    );
+  }
+
   .grad-blue {
     background-image: var(--grad-blue);
   }
