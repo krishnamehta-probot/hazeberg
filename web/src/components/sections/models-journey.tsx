@@ -17,7 +17,12 @@ import { MODELS } from "@/lib/home-content";
  *
  * **Same timer as the services list, and the same manners**, because it is the
  * same device and the page should only teach it once:
- *   - it pauses while the pointer or focus is inside the block
+ *   - it does NOT pause under the pointer. Reading a tab and hovering it are
+ *     the same gesture here, so a pointer pause stopped the clock for anyone
+ *     actually looking at the thing, and the bar sat frozen mid-sweep. Keyboard
+ *     focus still holds it: there the pause is the point, since the panel must
+ *     not change under someone who is tabbing through it — keyboard focus
+ *     only, since clicking a tab focuses it as well.
  *   - a click RE-SEATS it rather than ending it: pick the third and the third's
  *     seven seconds begin, then it carries on
  *   - `prefers-reduced-motion` never starts it and draws no bar
@@ -43,7 +48,7 @@ export function ModelsJourney() {
   const [progress, setProgress] = useState(0);
   const item = MODELS.items[active];
 
-  /* Refs, not state: nothing has to re-render because a pointer arrived, and the
+  /* Refs, not state: nothing has to re-render because focus arrived, and the
      timer reads both inside its own frame. */
   const held = useRef(false);
   const restart = useRef(false);
@@ -83,9 +88,16 @@ export function ModelsJourney() {
   return (
     <div
       className="mt-12"
-      onPointerEnter={() => (held.current = true)}
-      onPointerLeave={() => (held.current = false)}
-      onFocusCapture={() => (held.current = true)}
+      /* `:focus-visible`, not plain focus. Clicking a tab focuses its button
+         too, so holding on every focus froze the clock the instant you picked a
+         model — and because a click also re-seats the bar at zero, it did not
+         read as paused, it read as gone. Matching focus-visible keeps the hold
+         for the keyboard, where the panel genuinely must not change underneath
+         someone, and lets a click start the new tab's seven seconds running. */
+      onFocusCapture={(e) => {
+        const t = e.target as HTMLElement;
+        held.current = typeof t.matches === "function" && t.matches(":focus-visible");
+      }}
       onBlurCapture={() => (held.current = false)}
     >
       {/* -- the three tabs, equal thirds -------------------------------------- */}

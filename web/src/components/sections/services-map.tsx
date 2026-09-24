@@ -39,8 +39,10 @@ import { SERVICES } from "@/lib/home-content";
  * needs darkness — on white it is a smudge. Flat fills, hairlines and one solid
  * core are what read as expensive here.
  *
- * Below lg the wheel is not drawn. Seven labelled wedges need width a phone does
- * not have; the same seven are listed in full instead.
+ * The phone draws the wheel and drops the label ring. Seven labelled wedges need
+ * width a phone does not have, so the naming moves under the circle — the active
+ * capability, named and described, changing as the sweep goes round. The full
+ * seven stay in the DOM for assistive technology at every size.
  */
 
 /* The ring, in the 0-100 box the wheel is drawn in. */
@@ -91,12 +93,21 @@ export function ServicesMap() {
   const track = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const [pinned, setPinned] = useState(false);
+  const [narrow, setNarrow] = useState(false);
   const [p, setP] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
 
   useEffect(() => {
+    /* The wheel runs on a phone too. What does NOT run there is the ring of
+       seven HTML labels: a 390px frame gives each wedge about 80px of arc and
+       every name is two words, which is exactly what used to push them out of
+       the circle. Narrow keeps the drawing and moves the naming underneath it,
+       where there is a whole line to say it in. */
     const mq = window.matchMedia("(min-width: 1024px)");
-    const sync = () => setPinned(mq.matches);
+    const sync = () => {
+      setPinned(true);
+      setNarrow(!mq.matches);
+    };
     sync();
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
@@ -128,7 +139,7 @@ export function ServicesMap() {
       <p className="font-mono text-xs tracking-caps text-ink-subtle uppercase">
         {SERVICES.eyebrow}
       </p>
-      <h2 className="mt-5 max-w-[18ch] text-3xl leading-[1.08] font-light tracking-[-0.03em] text-pretty text-ink">
+      <h2 className="mt-4 max-w-[18ch] text-2xl leading-[1.08] font-light tracking-[-0.03em] text-pretty text-ink sm:text-3xl lg:mt-5">
         {SERVICES.title}
       </h2>
 
@@ -140,11 +151,11 @@ export function ServicesMap() {
           column and drags the heading with it. Measured at 12px of drift before
           this was tall enough — inside a pin, where nothing is supposed to move
           at all. */}
-      <div aria-live="polite" className="mt-10 hidden min-h-[12rem] lg:block">
+      <div aria-live="polite" className="mt-6 min-h-[8.5rem] lg:mt-10 lg:min-h-[12rem]">
         <p className="font-mono text-[0.6875rem] tracking-caps text-primary uppercase">
           {item.n} &middot; {item.label}
         </p>
-        <p className="mt-3 max-w-[40ch] text-base text-ink-muted">{item.body}</p>
+        <p className="mt-2.5 max-w-[40ch] text-sm text-ink-muted sm:text-base lg:mt-3">{item.body}</p>
         <Link
           href={item.href}
           className="group/e mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-ink"
@@ -161,7 +172,7 @@ export function ServicesMap() {
   );
 
   const list = (
-    <ul className="space-y-6 lg:sr-only">
+    <ul className="sr-only">
       {SERVICES.items.map((s) => (
         <li key={s.label}>
           <p className="font-mono text-[0.6875rem] tracking-caps text-ink-subtle uppercase">{s.n}</p>
@@ -182,7 +193,7 @@ export function ServicesMap() {
   return (
     <div ref={track} data-map-track className={pinned ? "h-[300vh]" : ""}>
       <div className={pinned ? "sticky top-0 flex h-svh items-center overflow-hidden" : ""}>
-        <div className="shell grid w-full gap-12 py-[var(--section-y)] lg:grid-cols-[minmax(0,0.6fr)_minmax(0,1fr)] lg:items-center lg:gap-10 lg:py-0">
+        <div className="shell grid w-full gap-6 py-10 lg:grid-cols-[minmax(0,0.6fr)_minmax(0,1fr)] lg:items-center lg:gap-10 lg:py-0">
           {copy}
 
           {/* -- the wheel, desktop only ------------------------------------ */}
@@ -194,7 +205,7 @@ export function ServicesMap() {
               the left and right. Constraining the width keeps box and drawing the
               same shape, which is the only way percentage positions can line up
               with a viewBox at all. */}
-          <div className="relative hidden aspect-square w-full max-w-[74svh] justify-self-end lg:block">
+          <div className="relative order-first aspect-square w-full max-w-[min(74svh,26rem)] justify-self-center lg:order-none lg:max-w-[74svh] lg:justify-self-end">
             <svg data-map aria-hidden viewBox="0 0 100 100" className="absolute inset-0 size-full">
               {/* The orbit, and four markers riding it. */}
               <g style={{ opacity: orbit }}>
@@ -259,7 +270,7 @@ export function ServicesMap() {
 
             {/* The labels. HTML, not SVG text: these wrap, they are buttons, and
                 SVG text is bad at both. */}
-            {SERVICES.items.map((s, i) => {
+            {(narrow ? [] : SERVICES.items).map((s, i) => {
               const centre = -90 + i * step;
               const q = at(R_LABEL, centre);
               const shown = ease(clamp01(sweep * total - i));

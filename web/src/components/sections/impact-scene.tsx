@@ -28,13 +28,24 @@ import { IMPACT } from "@/lib/home-content";
  * figures behind a hover would hide the only specific thing the section owns
  * from everyone who never hovers.
  *
- * **Desktop only.** Below lg there is no track, no pin and no drawing: the same
- * four items stack as a plain list with every field visible, because hover is
- * not an input a phone has.
+ * **The phone runs it too**, turned through ninety degrees: the four strands
+ * fall from the top instead of reaching in from the left, land in a column down
+ * the left edge, their labels sit beside them and wrap, and the copy takes the
+ * foot of the frame instead of the right half of it. The pointer
+ * detail is a hover, which a phone does not have — so on narrow the same label
+ * is a TAP target and the card it opens stays open until another is picked.
  */
 
 /** The point everything arrives at, in the scene's 0-100 space. */
 const MEET = { x: 54, y: 50 };
+/* The phone runs the same scene, not a different one — but not the same
+   picture. On a 390px screen an endpoint at x=30 puts a nowrap label centred on
+   117px, and the label is about 200px wide, so half of it is off the left edge
+   before it has finished drawing. The narrow composition turns the whole thing
+   through ninety degrees: the strands FALL from the top, land in a column down
+   the left, their labels sit beside them and wrap, and the copy takes the foot
+   of the frame rather than the right half of it. */
+const MEET_NARROW = { x: 52, y: 24 };
 
 /** Where each strand ends before it converges, and the height it enters at.
     Spread wider at the left edge than at the endpoints, so the lines sweep in
@@ -44,6 +55,27 @@ const STRANDS = [
   { end: { x: 38, y: 39 }, enter: 33 },
   { end: { x: 34, y: 61 }, enter: 67 },
   { end: { x: 27, y: 80 }, enter: 94 },
+];
+
+/** The same four strands in the narrow frame — but falling from the TOP, not
+    reaching in from the side.
+
+    A phone frame is tall and thin, which is the wrong shape for four lines
+    entering from one edge and fanning across: they had a quarter of the width to
+    separate in. From above they get the whole height instead, and the shape
+    reads as four things coming down and gathering, which is the same sentence
+    the wide version draws sideways.
+
+    `enter` is an X here, not a Y. They come in across the right half and land in
+    a column on the left, one label-height apart — so the entry order and the
+    endpoint order are the same and no strand ever crosses another. That rule is
+    the whole point of the picture: these four gains do not run through one
+    another on the way to the result. */
+const STRANDS_NARROW = [
+  { end: { x: 13, y: 10 }, enter: 34 },
+  { end: { x: 13, y: 26 }, enter: 55 },
+  { end: { x: 13, y: 42 }, enter: 76 },
+  { end: { x: 13, y: 58 }, enter: 97 },
 ];
 
 /* The scene's timeline, as shares of the pin.
@@ -61,11 +93,12 @@ const ease = (t: number) => (t < 0 ? 0 : t > 1 ? 1 : t * t * (3 - 2 * t));
 const span = (v: number, a: number, b: number) => ease((v - a) / (b - a));
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 
-/** A strand's endpoint at a given progress. */
-function endAt(i: number, p: number) {
+/** A strand's endpoint at a given progress, in whichever geometry is running. */
+function endAt(i: number, p: number, narrow: boolean) {
   const t = span(p, MERGE_FROM, MERGE_TO);
-  const e = STRANDS[i].end;
-  return { x: e.x + (MEET.x - e.x) * t, y: e.y + (MEET.y - e.y) * t };
+  const e = (narrow ? STRANDS_NARROW : STRANDS)[i].end;
+  const m = narrow ? MEET_NARROW : MEET;
+  return { x: e.x + (m.x - e.x) * t, y: e.y + (m.y - e.y) * t };
 }
 
 /**
@@ -74,9 +107,22 @@ function endAt(i: number, p: number) {
  * other. Crossing looks good and says something untrue: these four gains do not
  * run through one another on the way to the result.
  */
-function pathAt(i: number, p: number) {
+function pathAt(i: number, p: number, narrow: boolean) {
+  const e = endAt(i, p, narrow);
+
+  if (narrow) {
+    // Falls from above the top edge, leaves vertical, arrives vertical: the
+    // first control point sits directly below the entry and the second directly
+    // above the endpoint, so the sideways travel all happens in the middle.
+    const { enter } = STRANDS_NARROW[i];
+    // Clamped against the endpoint's own height. Once the strands converge the
+    // endpoint climbs, and a fixed -18 would put the control point above the
+    // frame and hook the curve back on itself.
+    const c2 = Math.max(e.y - 18, e.y * 0.45);
+    return `M ${enter} -12 C ${enter} ${e.y * 0.5}, ${e.x} ${c2}, ${e.x} ${e.y}`;
+  }
+
   const { enter } = STRANDS[i];
-  const e = endAt(i, p);
   return `M -12 ${enter} C ${18} ${enter}, ${e.x - 26} ${e.y}, ${e.x} ${e.y}`;
 }
 
@@ -88,9 +134,17 @@ export function ImpactScene() {
   const [p, setP] = useState(0);
   const [open, setOpen] = useState<number | null>(null);
 
+  /* The phone gets the scene, in the narrow composition. The pin was gated at
+     1024px because a pinned frame fights a phone's address bar — true of `vh`,
+     not of `svh`, which is the height that does NOT change when the bar hides.
+     What a phone needed was a different picture, not a different section. */
+  const [narrow, setNarrow] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px)");
-    const sync = () => setPinned(mq.matches);
+    const sync = () => {
+      setPinned(true);
+      setNarrow(!mq.matches);
+    };
     sync();
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
@@ -159,7 +213,13 @@ export function ImpactScene() {
             scene is busiest and the label was sitting inside its own artwork;
             at the shell gutter it lined up with nothing, and pushed to the right
             gutter it lined up with nothing either. It belongs above the words. */}
-        <p className="pointer-events-none absolute top-[calc(var(--header-h)+2rem)] right-0 left-[58%] pr-[var(--gutter)] font-mono text-xs tracking-caps text-on-panel/55 uppercase">
+        <p
+          className={`pointer-events-none absolute top-[calc(var(--header-h)+1.25rem)] font-mono text-xs tracking-caps text-on-panel/55 uppercase lg:top-[calc(var(--header-h)+2rem)] ${
+            narrow
+              ? "inset-x-0 px-[var(--gutter)]"
+              : "right-0 left-[58%] pr-[var(--gutter)]"
+          }`}
+        >
           {IMPACT.eyebrow}
         </p>
 
@@ -181,7 +241,7 @@ export function ImpactScene() {
           </defs>
 
           {STRANDS.map((_, i) => {
-            const d = pathAt(i, prog);
+            const d = pathAt(i, prog, narrow);
             // Staggered, so they arrive one after another rather than as a slab.
             const drawn = reduce ? 1 : ease(clamp01((prog - i * 0.035) / DRAW_END));
             const lit = open === i;
@@ -218,7 +278,7 @@ export function ImpactScene() {
         {/* Endpoint dots and the meeting point, as their own layer: a circle in a
             stretched viewBox becomes an ellipse, and these have to stay round. */}
         {STRANDS.map((_, i) => {
-          const e = endAt(i, prog);
+          const e = endAt(i, prog, narrow);
           const drawn = reduce ? 1 : ease(clamp01((prog - i * 0.035) / DRAW_END));
           return (
             <span
@@ -245,16 +305,26 @@ export function ImpactScene() {
         {/* The labels. Buttons, not decorated text: this is the only way into the
             detail, and a pointer is not the only way people drive a page. */}
         {IMPACT.cards.map((c, i) => {
-          const e = endAt(i, prog);
+          const e = endAt(i, prog, narrow);
           const drawn = reduce ? 1 : ease(clamp01((prog - i * 0.035) / DRAW_END));
           return (
             <button
               key={c.title}
               type="button"
-              onPointerEnter={() => setOpen(i)}
-              onPointerLeave={() => setOpen((v) => (v === i ? null : v))}
+              /* A phone has no hover, so on narrow the same detail opens on a
+                 TAP and stays open until another is picked. Attaching the
+                 pointer handlers as well would be worse than not having them:
+                 a touch fires pointerleave the instant the finger lifts, so the
+                 card would open and close in the same gesture. */
+              {...(narrow
+                ? { onClick: () => setOpen((v) => (v === i ? null : i)) }
+                : {
+                    onPointerEnter: () => setOpen(i),
+                    onPointerLeave: () => setOpen((v) => (v === i ? null : v)),
+                  })}
               onFocus={() => setOpen(i)}
-              onBlur={() => setOpen((v) => (v === i ? null : v))}
+              onBlur={() => (narrow ? undefined : setOpen((v) => (v === i ? null : v)))}
+              aria-expanded={narrow ? open === i : undefined}
               tabIndex={hoverable ? 0 : -1}
               aria-hidden={!hoverable}
               style={{
@@ -263,7 +333,23 @@ export function ImpactScene() {
                 opacity: drawn * (1 - merged),
                 pointerEvents: hoverable ? "auto" : "none",
               }}
-              className="absolute max-w-[15rem] -translate-x-1/2 -translate-y-[2.1rem] cursor-pointer rounded-sm px-2 py-1 text-center font-mono text-[0.6875rem] tracking-caps whitespace-nowrap uppercase transition-colors dur-fast ease-brand"
+              /* Wide: centred above its dot on one line. Narrow: BESIDE the dot,
+                 left-aligned and allowed to wrap. Centring a 200px nowrap label
+                 on an endpoint that sits at 13% of a 390px screen puts most of
+                 it off the left edge before it has finished drawing. */
+              /* The narrow label carries a scrim; the wide one does not need one.
+                 Turned through ninety degrees the strands run DOWN through the
+                 band the labels read across, so a label is always sitting on a
+                 line — it measured 2.90:1 over the lit hairline. There is no
+                 arrangement of four vertical strands and four horizontal labels
+                 in a 390px frame that avoids this, so the label brings its own
+                 ground. At 82% of the section's own black it reads as the lines
+                 dimming behind the words rather than as a box. */
+              className={`absolute cursor-pointer rounded-sm font-mono text-[0.6875rem] tracking-caps uppercase transition-colors dur-fast ease-brand ${
+                narrow
+                  ? "max-w-[calc(100%-5rem)] -translate-y-1/2 bg-void/82 py-1.5 pr-2.5 pl-3.5 text-left backdrop-blur-[2px]"
+                  : "max-w-[15rem] -translate-x-1/2 -translate-y-[2.1rem] px-2 py-1 text-center whitespace-nowrap"
+              }`}
             >
               <span className={open === i ? "text-on-panel" : "text-on-panel/70"}>
                 {c.stat} {c.statLabel}
@@ -274,7 +360,16 @@ export function ImpactScene() {
 
         {/* Right half: the hovered card first, the outcome after. They never
             share the screen — hover is switched off before the payoff arrives. */}
-        <div className="pointer-events-none absolute inset-y-0 right-0 left-[58%] flex items-center pr-[var(--gutter)]">
+        {/* Wide: the right half, vertically centred. Narrow: the bottom of the
+            frame, full width, under the fan rather than beside it — which is
+            why the narrow geometry keeps every strand in the upper half. */}
+        <div
+          className={`pointer-events-none absolute flex ${
+            narrow
+              ? "inset-x-0 bottom-0 items-end px-[var(--gutter)] pb-9"
+              : "inset-y-0 right-0 left-[58%] items-center pr-[var(--gutter)]"
+          }`}
+        >
           <div className="relative w-full max-w-[30rem]">
             <AnimatePresence mode="wait">
               {card ? (
@@ -288,10 +383,10 @@ export function ImpactScene() {
                   <p className="font-mono text-[0.6875rem] tracking-caps text-accent uppercase">
                     {card.source}
                   </p>
-                  <p className="mt-4 text-2xl leading-tight font-light text-balance text-on-panel">
+                  <p className="mt-3 text-xl leading-tight font-light text-balance text-on-panel lg:mt-4 lg:text-2xl">
                     {card.title}
                   </p>
-                  <p className="mt-3 text-base text-on-panel/70">{card.body}</p>
+                  <p className="mt-3 text-sm text-on-panel/70 sm:text-base">{card.body}</p>
                 </motion.div>
               ) : null}
             </AnimatePresence>
@@ -300,12 +395,12 @@ export function ImpactScene() {
               style={{ opacity: payoff, transform: `translateY(${(1 - payoff) * 16}px)` }}
               className={`${card ? "absolute inset-0" : ""} ${payoff > 0.02 ? "" : "invisible"}`}
             >
-              <h2 className="text-3xl leading-[1.08] font-light tracking-[-0.03em] text-balance text-on-panel">
+              <h2 className="text-2xl leading-[1.08] font-light tracking-[-0.03em] text-balance text-on-panel sm:text-3xl">
                 {IMPACT.titleLead}{" "}
                 <span className="text-accent">{IMPACT.titleAccent}</span>
               </h2>
-              <p className="mt-5 max-w-[46ch] text-base text-on-panel/70">{IMPACT.body}</p>
-              <div className="pointer-events-auto mt-8">
+              <p className="mt-4 max-w-[46ch] text-sm text-on-panel/70 sm:text-base lg:mt-5">{IMPACT.body}</p>
+              <div className="pointer-events-auto mt-6 lg:mt-8">
                 <CtaPill href={IMPACT.cta.href} tone="light">
                   {IMPACT.cta.label}
                 </CtaPill>

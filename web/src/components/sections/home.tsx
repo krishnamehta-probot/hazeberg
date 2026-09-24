@@ -76,9 +76,6 @@ const COMP = {
  */
 const GROUND = {
   surface: "bg-surface",
-  /** `surface` with the two brand washes bled into opposite corners. Reached
-      for where a plain grey band would otherwise carry no colour at all. */
-  surfaceTint: "surface-tint",
   canvas: "bg-canvas",
   ink: "grad-ink grain text-on-panel",
 } as const;
@@ -440,7 +437,7 @@ function StatCard({ stat, delay }: { stat: (typeof RESULTS.stats)[number]; delay
 export function Results() {
   const stats = RESULTS.stats;
   return (
-    <Section ground="surfaceTint" id="results">
+    <Section ground="surface" id="results">
       {/* Centred through `SectionHead`, like every other head on the page —
           this was the one section still setting its own left-aligned block.
           The break is hard rather than left to the wrap: the figures are one
@@ -503,17 +500,36 @@ export function Results() {
 /* ========================= 07 — CASE STUDIES =========================== */
 
 export function CaseStudies() {
-  const [lead, ...rest] = CASE_STUDIES.items;
   return (
     <Section ground="surface" id="case-studies">
       <SectionHead eyebrow={CASE_STUDIES.eyebrow} title={CASE_STUDIES.title} body={CASE_STUDIES.body} />
 
-      {/* `items-start` matters now that the cards open: a card that grows must
-          not drag the height of the one beside it. */}
-      <RevealGroup as="ul" className="mt-12 grid items-start gap-5 lg:grid-cols-2">
-        <CaseCard item={lead} image={COMP.cases[0]} wide />
-        {rest.map((c, i) => (
-          <CaseCard key={c.n} item={c} image={COMP.cases[(i + 1) % COMP.cases.length]} wide={false} />
+      {/* Equal cards in one row — no lead card at twice the width of the others.
+
+          `items-stretch`, so all three are the same rectangle. Nothing has to be
+          protected from a card growing, because none of them grows: opening one
+          swaps its face inside the height it already had. See `case-card.tsx`.
+
+          The column count is derived, not fixed at three, so a fourth use case
+          lands here without anyone touching this file.
+
+          A phone gets ONE scroll, sideways.
+
+          Stacked, three cards ran 1892px — two and a quarter screens for a
+          section the page has already spent two pinned scenes before. Side by
+          side with snap points it is one card tall and you swipe, which is the
+          same gesture the rest of a phone uses for a row of anything.
+
+          The negative margin and matching padding are what let the strip bleed
+          to the screen edge while its first card still lines up with every
+          other section's gutter. `overflow-x` is on the strip, never on the
+          document — measured at 0. */}
+      <RevealGroup
+        as="ul"
+        className="mt-10 -mx-[var(--gutter)] flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto px-[var(--gutter)] pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3"
+      >
+        {CASE_STUDIES.items.map((c, i) => (
+          <CaseCard key={c.n} item={c} image={COMP.cases[i % COMP.cases.length]} />
         ))}
       </RevealGroup>
     </Section>

@@ -305,30 +305,6 @@
       radial-gradient(110% 85% at -10% 112%, rgb(25 114 185 / 0.14), transparent 52%);
   }
 
-  /* `--surface` is a neutral grey, and a whole band of it under four white
-     cards carried no brand colour at all. Two weak washes — amber top right,
-     blue bottom left, the same pair the results photograph climbs between —
-     tint the band. The cards sit on their own opaque white, so nothing that is
-     measured is measured against this.
-
-     Radii are in px, NOT the usual percentages: the results section runs a
-     220vh scroll track, and a wash sized at 70% of ~2400px is spread so thin it
-     reads as nothing at all. Fixed radii keep it the same size whatever the
-     section's height turns out to be.
-
-     The only type on this ground is the head block, top left. Both washes fade
-     out well before it — the amber peak is the far top right corner, the blue
-     one is ~520px off the foot of a section that is at minimum two viewports
-     tall — so the head measures against flat `--surface`: 4.67:1 for the blue
-     half of the heading at 30px, and 4.75:1 for the eyebrow. */
-  .surface-tint {
-    background-color: var(--surface);
-    background-image:
-      radial-gradient(760px 520px at 100% 0%, rgb(254 192 15 / 0.2), transparent 70%),
-      radial-gradient(720px 520px at 0% 100%, rgb(25 114 185 / 0.17), transparent 70%);
-  }
-
-
   /* ---------------------------------------------------------------------- *
    * Specular — one hover and one press, for every button on the site.
    *
@@ -360,6 +336,9 @@
    * and press are one value changing rather than two effects agreeing.
    * ---------------------------------------------------------------------- */
   .spec {
+    /* NOTE: this beats Tailwind own absolute/fixed on the same element — same
+       cascade layer, declared later. A .spec button that also needs positioning
+       must be wrapped, with the position on the wrapper. */
     position: relative;
     isolation: isolate;
     --spec-hover: 0;
@@ -435,11 +414,8 @@
 
   /* The one disc on the site. Every arrow and every + sits on it, so it is a
      rule rather than the same arbitrary value pasted into three components.
-
-     Deep on purpose: the first cut peaked at #3aa4ff and a white glyph measured
-     2.98:1 on it — right on the 3:1 line for a control, which is not a place to
-     be. The lightest point here is 3.58:1 and the middle, where the glyph
-     actually sits, is 5.1:1. */
+     The lightest point measures 3.58:1 against a white glyph and the middle,
+     where the glyph actually sits, is 5.1:1. */
   .disc-blue {
     background-image: radial-gradient(
       circle at 30% 22%,

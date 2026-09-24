@@ -163,15 +163,16 @@ export function AboutScene() {
   const [index, setIndex] = useState(0);
   const [arc, setArc] = useState(0);
 
-  // The pin is a desktop layout, so the scene only mounts where it can work.
-  // Server-rendered as unpinned, which is also what a phone keeps.
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const sync = () => setPinned(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
+  /* The phone gets the scene too.
+     It used to be gated at 1024px on the argument that a pinned frame fights a
+     phone's address bar — which was true of , and is not true of :
+     the small viewport height is the one that does NOT change when the bar
+     hides, so the frame is the same height throughout the pin. What a phone
+     actually needs is a smaller composition, not a different section, and that
+     is what the sizes below are.
+     Still false until mounted, because useScroll has nothing to measure on the
+     server and the unpinned tree is the honest first paint. */
+  useEffect(() => setPinned(true), []);
 
   const { scrollYProgress } = useScroll({ target: track, offset: ["start start", "end end"] });
 
@@ -194,8 +195,8 @@ export function AboutScene() {
 
   return (
     <div ref={track} className={pinned ? "h-[280vh]" : ""}>
-      <div className={pinned ? "sticky top-0 flex min-h-svh items-center" : ""}>
-        <div className="shell grid w-full gap-12 py-[var(--section-y)] lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:items-center lg:gap-20">
+      <div className={pinned ? "sticky top-0 flex h-svh items-center overflow-hidden" : ""}>
+        <div className="shell grid w-full gap-7 py-10 sm:gap-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:items-center lg:gap-20 lg:py-[var(--section-y)]">
           <div>
             <Reveal>
               <p className="font-mono text-xs tracking-caps text-ink-subtle uppercase">
@@ -206,19 +207,19 @@ export function AboutScene() {
               {/* Bigger only from lg. The pinned scene gives this column a whole
                   screen to fill and section-heading size left most of it empty;
                   on a phone there is no pin and no spare room, so it stays. */}
-              <h2 className="mt-6 max-w-[16ch] text-3xl font-light tracking-[-0.03em] text-balance text-ink lg:max-w-[19ch] lg:text-4xl">
+              <h2 className="mt-4 max-w-[16ch] text-2xl font-light tracking-[-0.03em] text-balance text-ink sm:text-3xl lg:mt-6 lg:max-w-[19ch] lg:text-4xl">
                 <Counter value={ABOUT.stat} suffix={ABOUT.statSuffix} /> {ABOUT.statTail}
               </h2>
             </Reveal>
             <ScrollText
               text={ABOUT.body}
               progress={pinned ? readProgress : undefined}
-              className="mt-6 max-w-[48ch] text-lg leading-[1.55] font-light text-pretty lg:mt-8 lg:max-w-[42ch] lg:text-xl"
+              className="mt-4 max-w-[48ch] text-base leading-[1.5] font-light text-pretty sm:text-lg lg:mt-8 lg:max-w-[42ch] lg:text-xl"
             />
             <Reveal delay={0.2}>
               {/* The way out of the section. Yellow, because this ground is
                   light — the white fill is for the dark sections. */}
-              <div className="mt-9 lg:mt-10">
+              <div className="mt-6 lg:mt-10">
                 <CtaPill href={ABOUT.cta.href}>{ABOUT.cta.label}</CtaPill>
               </div>
             </Reveal>
@@ -226,7 +227,7 @@ export function AboutScene() {
 
           {pinned ? (
             <div className="flex flex-col items-center">
-              <div className="relative aspect-square w-full max-w-[26rem]">
+              <div className="relative aspect-square w-full max-w-[13rem] sm:max-w-[18rem] lg:max-w-[26rem]">
                 <Blob progress={scrollYProgress} className="absolute inset-0 size-full" />
                 <ProgressRing value={reduce ? 1 : arc} />
 
@@ -240,7 +241,7 @@ export function AboutScene() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={reduce ? undefined : { opacity: 0, y: -10 }}
                       transition={SWAP}
-                      className="text-center text-2xl leading-tight font-light text-balance text-on-panel"
+                      className="text-center text-lg leading-tight font-light text-balance text-on-panel sm:text-xl lg:text-2xl"
                     >
                       {point.title}
                     </motion.p>
@@ -251,7 +252,7 @@ export function AboutScene() {
               {/* The line under it. Kept out of the circle: a two-line
                   description inside a disc has to fight the curve at both ends
                   and ends up set smaller than the rest of the page. */}
-              <div className="mt-8 grid min-h-[3.5rem] w-full max-w-[34rem] place-items-center">
+              <div className="mt-5 grid min-h-[3.25rem] w-full max-w-[34rem] place-items-center lg:mt-8">
                 <AnimatePresence mode="wait">
                   <motion.p
                     key={point.body}
@@ -259,7 +260,7 @@ export function AboutScene() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={reduce ? undefined : { opacity: 0, y: -8 }}
                     transition={SWAP}
-                    className="text-center text-base text-balance text-ink-muted"
+                    className="text-center text-sm text-balance text-ink-muted lg:text-base"
                   >
                     {point.body}
                   </motion.p>

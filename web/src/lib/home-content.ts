@@ -317,54 +317,78 @@ export const RESULTS = {
 /* 07 — case studies ------------------------------------------------------ */
 /** Client note on the source doc: confirm each result against approved documentation. */
 export const CASE_STUDIES = {
-  eyebrow: "Our work",
-  title: "Workday solutions built around real business challenges.",
-  body: "Every organization has its own processes, priorities, and operational constraints. Our approach begins with understanding those realities and delivering solutions that address them.",
+  eyebrow: "Use cases",
+  title: "Workday Transformation Use Cases",
+  body: "How Hazeberg enables smarter HR, Finance, and workforce transformation through Workday.",
+  /**
+   * **There is no case-study page.** These three are the whole record, so the
+   * card carries everything and offers no way out of itself — a "read more" that
+   * goes nowhere is worse than not having one.
+   *
+   * Four fields, and which of them is visible is the design decision: `impact`
+   * is what the reader came for and is on the card from the start; `challenge`
+   * and `approach` are the story behind it and sit behind the toggle.
+   * `capabilities` is the client's own pipe-separated string, split here.
+   */
   items: [
     {
       n: "01",
-      tag: "HCM / Workday HR Transformation",
-      title: "Making HR operations more efficient.",
-      client: "Fortune 500 Company",
+      title: "Modernising HR Operations with Workday HCM",
       challenge:
-        "Legacy HR and financial processes were creating inefficiencies and limiting operational visibility.",
-      did: "Implemented Workday ERP end to end, supporting automation, payroll, benefits, and financial reporting.",
-      outcomes: [
-        "40% reduction in HR processing time",
-        "30% reduction in payroll errors",
-        "Approximately $500K in annual savings",
+        "A global enterprise was facing inefficiencies in HR operations due to fragmented processes and reliance on legacy systems. Limited automation and disconnected workforce data impacted employee experience and decision-making.",
+      approach:
+        "Hazeberg implemented Workday HCM capabilities to streamline core HR processes, automate workflows, improve employee data management, and create a unified source of workforce information.",
+      impact: [
+        "Reduced manual HR administration through process automation",
+        "Improved accuracy and accessibility of workforce data",
+        "Enabled real-time workforce insights for better decision-making",
+      ],
+      capabilities: [
+        "Workday HCM",
+        "HR Process Automation",
+        "Workforce Reporting",
+        "Employee Experience",
       ],
     },
     {
       n: "02",
-      tag: "HCM & Payroll / Implementation",
-      title: "Supporting HR operations across multiple countries.",
-      client: "Healthcare Customer",
+      title: "Streamlining Global Workforce Management with Workday HCM & Payroll",
       challenge:
-        "HR operations spanned multiple countries, each with different compliance and workforce requirements.",
-      did: "Rolled out Workday HCM and Payroll to support workforce management and compliance tracking.",
-      outcomes: [
-        "50% faster onboarding",
-        "Improved compliance tracking",
-        "More consistent HR processes",
+        "Managing HR operations across multiple countries created complexity due to varying compliance requirements, regional processes, and inconsistent workforce management practices.",
+      approach:
+        "Hazeberg deployed Workday HCM and Payroll solutions to standardise workforce processes, improve payroll operations, and support compliance management across regions.",
+      impact: [
+        "Improved employee experience through streamlined HR services",
+        "Faster onboarding and workforce administration",
+        "Enhanced compliance tracking across locations",
+      ],
+      capabilities: [
+        "Workday HCM",
+        "Payroll",
+        "Compliance Management",
+        "Global Workforce Operations",
       ],
     },
     {
       n: "03",
-      tag: "Finance / Workday Finance Transformation",
-      title: "Bringing structure to financial operations.",
-      client: "Healthcare Organization",
+      title: "Driving Financial Visibility with Workday Finance",
       challenge:
-        "Disjointed financial systems made budgeting, procurement, and operational visibility more difficult.",
-      did: "Integrated Workday Finance and SCM to improve financial processes and tracking.",
-      outcomes: [
-        "25% procurement cost savings",
-        "Faster budget approvals",
-        "Better financial forecasting",
+        "Disconnected financial systems limited visibility into budgeting, reporting, and operational performance. Teams relied on manual processes, impacting financial planning and decision-making.",
+      approach:
+        "Hazeberg integrated Workday Finance capabilities to unify financial processes, improve reporting accuracy, and provide real-time visibility into financial operations.",
+      impact: [
+        "Improved financial reporting and operational visibility",
+        "Faster budget approvals and planning cycles",
+        "Enhanced forecasting through real-time insights",
+      ],
+      capabilities: [
+        "Workday Finance",
+        "Financial Reporting",
+        "Analytics",
+        "Process Integration",
       ],
     },
   ],
-  cta: { label: "View case study", href: "/what-we-do#case-studies" },
 } as const;
 
 /* 08 — engagement models ------------------------------------------------- */
