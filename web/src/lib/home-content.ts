@@ -96,7 +96,7 @@ export const ABOUT = {
    * and be counted up. It was buried mid-sentence before, which is the one place
    * a number nobody can miss should never be.
    */
-  stat: 11,
+  stat: 12,
   statSuffix: "+",
   statTail: "years of Workday expertise.",
   /**
@@ -105,7 +105,7 @@ export const ABOUT = {
    * and the audience is US enterprise. Flagged, not silently changed: it is
    * their copy.
    */
-  body: "Hazeberg helps enterprise teams implement, optimise, and support Workday, bringing deep expertise in complex operations and a clear understanding of business priorities.",
+  body: "Hazeberg brings 12+ years of Workday expertise, backed by 200+ consolidated years of consultant experience, delivering enterprise implementations, complex integrations, and continuous support. Our certified consultants work alongside your teams to solve challenges, enable smarter decisions, and build solutions that create lasting value beyond go-live. With delivery centres in India and Malaysia, we support organisations across global time zones.",
   /** The way out of the section. It points at the About page, which the sitemap
       already carries and the nav already links as "About Hazeberg". */
   cta: { label: "Explore Hazeberg", href: "/about" },
@@ -119,6 +119,17 @@ export const ABOUT = {
       icon: "/3rd.svg",
       title: "Workday Expertise",
       body: "Certified consultants with deep, hands-on Workday experience.",
+    },
+    {
+      /**
+       * Added 2026-09-25 with the revised copy, and it is the fourth row against
+       * three supplied marks. `icon` is deliberately omitted rather than reusing
+       * one of the other three or redrawing a supplied file: `AboutPoints` falls
+       * back to the locked icon set (Lucide) when there is no mark, which is the
+       * one route that touches none of the client's artwork.
+       */
+      title: "Enterprise-Ready Integrations",
+      body: "200+ integrations with platforms like ADP, Okta, and DocuSign.",
     },
     {
       icon: "/2nd.svg",
@@ -161,34 +172,46 @@ export const IMPACT = {
   body: "We help enterprise teams get more from Workday through experienced delivery, smarter improvements, and support that keeps operations moving.",
   cta: { label: "Let's Optimize Your Workday Environment", href: "/contact" },
   mediaTag: "Delivery",
+  /**
+   * Replaced 2026-09-25 with the client's revised figures.
+   *
+   * **`source` is gone from every card.** The previous four were all traceable to
+   * one Fortune 500 engagement and each carried that attribution. These four
+   * arrive with no source given, and carrying the old one forward would attribute
+   * figures to a client who never stated them. The scene now uses `statLabel`
+   * where `source` used to sit.
+   *
+   * `stat` and `statLabel` are the client's, verbatim. `title` and `body` are the
+   * line the scene shows when a strand is opened: two of them are the existing
+   * approved copy, kept because the new figure still fits; the other two are
+   * marked below and need the client's words.
+   */
   cards: [
     {
-      stat: "40%",
-      statLabel: "less HR processing time",
-      source: "Fortune 500 client",
+      stat: "80%+",
+      statLabel: "Process Efficiency Gains",
       title: "Operational Efficiency",
       body: "Less manual work. Smoother processes. Better use of your team's time.",
     },
     {
-      stat: "30%",
-      statLabel: "fewer payroll errors",
-      source: "Fortune 500 client",
-      title: "Reliable Delivery",
-      body: "Experienced consultants. Clear ownership. Fewer disruptions.",
+      stat: "<30 sec",
+      statLabel: "Faster Data Actions",
+      /** PLACEHOLDER — the figure is the client's, this line is not. */
+      title: "Answers in Seconds",
+      body: "Routine data actions resolved on the spot rather than raised as a request.",
     },
     {
-      stat: "100%",
-      statLabel: "client retention",
-      source: "Every client onboarded",
+      stat: "Weekly",
+      statLabel: "Continuous Insights",
       title: "Continuous Improvement",
       body: "Keep improving your Workday environment long after go-live.",
     },
     {
-      stat: "$500K",
-      statLabel: "saved a year",
-      source: "Fortune 500 client",
-      title: "Measurable Outcomes",
-      body: "From faster HR processing to fewer payroll errors, we focus on improvements that matter.",
+      stat: "100%",
+      statLabel: "Learning Alignment",
+      /** PLACEHOLDER — the figure is the client's, this line is not. */
+      title: "Aligned Enablement",
+      body: "Teams trained on the tenant they actually run, not a generic course.",
     },
   ],
 } as const;
@@ -271,45 +294,50 @@ export const SERVICES = {
 
 /* 06 — consulting results ----------------------------------------------- */
 export const RESULTS = {
-  eyebrow: "Consulting results",
+  eyebrow: "Our Global Workday Capability",
   /* Two lines, not one wrapped sentence: the figures take the first and carry
      the brand blue, the claim they support takes the second in ink. The head
      puts a hard break between them, so neither string carries a joining space. */
-  titleLead: "20+ projects. 200+ integrations.",
-  titleRest: "Trusted delivery for global enterprises.",
-  body: "Through experienced delivery, thoughtful solutions, and long-term partnerships.",
-  /* `tone` drives each card's rule and hover wash: three blue, then amber on
-     the last. It is the same blue-to-yellow climb the photograph beside them
-     draws, so the final card reads as the top of that line rather than as a
-     fourth of four. */
-  stats: [
+  titleLead: "20+ Projects. 200+ Integrations. 100% Customer Retention.",
+  titleRest: "Trusted delivery across the Workday lifecycle.",
+  body: "From Go-Live and Zero-Disruption Testing to Workday Health Checks and Always-On Support, we help enterprises achieve long-term success.",
+  /**
+   * Replaced 2026-09-25. These were four counters — 20+, 200+, 40+, 100% — and
+   * the client moved those figures up into the heading, where they now open the
+   * section. What is left in the cards is four capabilities, so the card no
+   * longer counts anything: the counter is replaced by the item's index, and the
+   * rest of the card (the rule, the wash, the hover) is unchanged.
+   *
+   * Every string is the client's, verbatim, including item 01 repeating its own
+   * title in its body — flagged rather than silently trimmed.
+   *
+   * `tone` still drives the rule and the hover wash: three blue, amber on the
+   * last, which is the same climb the photograph beside them draws.
+   */
+  items: [
     {
-      value: 20,
-      suffix: "+",
+      n: "01",
       tone: "primary",
-      label: "Projects delivered",
-      body: "Full lifecycle implementations and AMS engagements across HR, Finance, and Student modules.",
+      title: "Pure-Play Workday Expertise",
+      body: "Pure-play Workday expertise across implementation, Phase X, AMS, optimisation, and integrations.",
     },
     {
-      value: 200,
-      suffix: "+",
+      n: "02",
       tone: "primary",
-      label: "Integrations built",
-      body: "Connections across platforms including ADP, Cigna, Fidelity, Greenhouse, and more.",
+      title: "Onshore + Global Delivery",
+      body: "Delivery presence across Malaysia and India among 40+, supporting global enterprises across Americas, EMEA, and APAC.",
     },
     {
-      value: 40,
-      suffix: "+",
+      n: "03",
       tone: "primary",
-      label: "Countries served",
-      body: "Supporting global enterprise teams across operations and diverse business requirements.",
+      title: "Functional & Technical Depth",
+      body: "Expertise across HCM, Finance, Talent, Payroll, Recruiting, Learning, Reporting, and Integrations.",
     },
     {
-      value: 100,
-      suffix: "%",
+      n: "04",
       tone: "accent",
-      label: "Client retention",
-      body: "Every client we've onboarded is still with us.",
+      title: "AI & Integration Enablement",
+      body: "200+ integrations connecting Workday with enterprise platforms and AI-driven solutions.",
     },
   ],
 } as const;

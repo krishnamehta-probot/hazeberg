@@ -2,8 +2,9 @@ import Link from "next/link";
 import { Mail, Phone } from "lucide-react";
 
 import { HazebergWordmark } from "@/components/brand/hazeberg-wordmark";
+import { LinkedInMark } from "@/components/brand/linkedin-mark";
 import { SERVICES } from "@/lib/home-content";
-import { CONTACT } from "@/lib/navigation";
+import { CONTACT, OFFICES } from "@/lib/navigation";
 
 /**
  * Footer.
@@ -19,22 +20,6 @@ import { CONTACT } from "@/lib/navigation";
  * Measured on this ground: links 7.1:1, the legal strip 5.0:1, the amber line
  * 11.97:1.
  */
-
-/** Lucide dropped its brand marks, and a generic "link" glyph next to a LinkedIn
-    URL tells you nothing. Drawn here rather than pulled in as a whole icon set. */
-function LinkedInMark({ className = "" }: { className?: string }) {
-  return (
-    <svg aria-hidden viewBox="0 0 24 24" fill="currentColor" className={className}>
-      <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.71h.05a4.17 4.17 0 0 1 3.75-2.06c4 0 4.74 2.63 4.74 6.06V21h-4v-5.5c0-1.31-.02-3-1.83-3-1.84 0-2.12 1.43-2.12 2.9V21h-4V9Z" />
-    </svg>
-  );
-}
-
-/** [live] §17 */
-const OFFICES = [
-  { city: "Coimbatore, IN", detail: "Annamalai Industrial Park, Kalapatti" },
-  { city: "Penang, MY", detail: "Bandar Cassia, Pulau Pinang" },
-];
 
 function Column({
   heading,
@@ -139,8 +124,10 @@ export function SiteFooter() {
         <ul className="mt-12 grid grid-cols-2 gap-x-6 gap-y-7 border-t border-white/10 pt-8 lg:grid-cols-4">
           {OFFICES.map((office) => (
             <li key={office.city}>
-              <p className="text-sm font-medium text-on-panel">{office.city}</p>
-              <p className="mt-1 text-sm text-on-panel/70">{office.detail}</p>
+              <p className="text-sm font-medium text-on-panel">
+                {office.city}, {office.code}
+              </p>
+              <p className="mt-1 text-sm text-on-panel/70">{office.short}</p>
             </li>
           ))}
           {/* The two lines here are the only ones in the footer you can ACT on

@@ -65,6 +65,20 @@
   --accent: #fec00f; /* FILL ONLY on this ground — 1.65:1 as type */
   --accent-ink: #14181a; /* 10.8:1 on accent */
 
+  /* -- validation ---------------------------------------------------- */
+  /* The one colour on the site that is not blue, amber or a neutral, and it is
+     here because the contact form needs it: an invalid field has to say so, and
+     neither brand colour can. Amber is the call to action and measures 1.65:1 as
+     type on white; blue is every other interactive state on the page, so a blue
+     error is indistinguishable from a focus ring.
+
+     #B3261E measures 6.06:1 on white and 5.72:1 on `--surface`, so it carries
+     12px helper text. It is UI only — never photography, never a panel, never a
+     second accent. Rule 8's "off-palette colour is out" governs imagery; a
+     field that fails silently is an accessibility defect. */
+  --danger: #b3261e;
+  --danger-soft: rgb(179 38 30 / 0.4);
+
   /* -- lines and glass ----------------------------------------------- */
   --border: rgb(20 24 26 / 0.1);
   --border-strong: rgb(20 24 26 / 0.18);
@@ -130,6 +144,8 @@
   --color-glass: var(--glass);
   --color-glass-strong: var(--glass-strong);
   --color-ring: var(--ring);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
 
   --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, monospace;

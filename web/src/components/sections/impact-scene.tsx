@@ -193,7 +193,7 @@ export function ImpactScene() {
               <p className="mt-2 text-lg font-medium text-on-panel">{c.title}</p>
               <p className="mt-1.5 text-sm text-on-panel/70">{c.body}</p>
               <p className="mt-2.5 font-mono text-[0.6875rem] tracking-caps text-on-panel/55 uppercase">
-                {c.statLabel} &middot; {c.source}
+                {c.statLabel}
               </p>
             </RevealItem>
           ))}
@@ -381,7 +381,7 @@ export function ImpactScene() {
                   transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <p className="font-mono text-[0.6875rem] tracking-caps text-accent uppercase">
-                    {card.source}
+                    {card.statLabel}
                   </p>
                   <p className="mt-3 text-xl leading-tight font-light text-balance text-on-panel lg:mt-4 lg:text-2xl">
                     {card.title}
@@ -415,7 +415,7 @@ export function ImpactScene() {
         <ul className="sr-only">
           {IMPACT.cards.map((c) => (
             <li key={c.title}>
-              {c.stat} {c.statLabel}, {c.source}. {c.title}. {c.body}
+              {c.stat} {c.statLabel}. {c.title}. {c.body}
             </li>
           ))}
         </ul>

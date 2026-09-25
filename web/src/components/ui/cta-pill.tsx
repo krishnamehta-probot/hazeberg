@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Loader2, Mail } from "lucide-react";
 
 /**
  * The call to action — one style, used everywhere.
@@ -21,7 +21,63 @@ import { ArrowUpRight } from "lucide-react";
  * Nothing grows on hover: no scale anywhere, so the button never shifts what is
  * around it. The hover, the focus and the press are NOT defined here — they are
  * `.spec`, shared with every other button on the site.
+ *
+ * Three exports, one shape — because the element has to change and the button
+ * must not:
+ *
+ *   CtaPill    navigates. A next/link, which is every in-site call to action
+ *   CtaButton  submits. An anchor cannot submit a form and a div with a click
+ *              handler is not keyboard-operable, so the contact form needs a real
+ *              `<button type="submit">`
+ *   CtaMail    opens a mail client. A plain `<a href="mailto:">`, because
+ *              next/link would try to route a mailto through the router — and it
+ *              carries an envelope rather than an arrow, since the arrow means
+ *              "goes to a page" everywhere else on the site
  */
+
+/** One button, two grounds. `dark` is the black pill for white sections;
+    `light` is the white pill for the dark panels. The rim, the disc and the
+    arrow swap are identical in both — only the fill and the label invert. */
+type Tone = "dark" | "light";
+
+const SHELL =
+  "spec group/p inline-flex h-14 items-center gap-4 rounded-pill pr-2.5 pl-8 font-mono text-xs tracking-caps uppercase";
+
+function shell(tone: Tone, extra = "") {
+  return `${SHELL} ${tone === "light" ? "bg-canvas text-ink" : "bg-ink text-on-panel"} ${extra}`;
+}
+
+/* The disc is BLUE, not blue-into-amber. A 36px circle is too small to get from
+   one to the other without spending most of itself in the grey-green they blend
+   through — it came out looking like a bug. Amber lives on the rim, which turns,
+   so both colours are still on the button; they are just never mixed. White on
+   this measures 5.1:1 where the arrow sits, 3.58:1 at the disc's lightest
+   point. */
+function Disc({ busy = false }: { busy?: boolean }) {
+  const arrow = "absolute size-4 text-white transition-transform duration-300 ease-brand";
+  return (
+    <span
+      aria-hidden
+      className="disc-blue relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-pill"
+    >
+      {busy ? (
+        <Loader2 className="size-4 animate-spin text-white" strokeWidth={2} />
+      ) : (
+        <>
+          <ArrowUpRight
+            className={`${arrow} group-hover/p:translate-x-[180%] group-hover/p:-translate-y-[180%]`}
+            strokeWidth={2}
+          />
+          <ArrowUpRight
+            className={`${arrow} -translate-x-[180%] translate-y-[180%] group-hover/p:translate-x-0 group-hover/p:translate-y-0`}
+            strokeWidth={2}
+          />
+        </>
+      )}
+    </span>
+  );
+}
+
 export function CtaPill({
   href,
   children,
@@ -29,41 +85,72 @@ export function CtaPill({
 }: {
   href: string;
   children: React.ReactNode;
-  /** One button, two grounds. `dark` is the black pill for white sections;
-      `light` is the white pill for the dark panels. The rim, the disc and the
-      arrow swap are identical in both — only the fill and the label invert. */
-  tone?: "dark" | "light";
+  tone?: Tone;
 }) {
-  const light = tone === "light";
-  const arrow = "absolute size-4 text-white transition-transform duration-300 ease-brand";
   return (
-    <Link
-      href={href}
+    <Link href={href} data-spec className={shell(tone)}>
+      {children}
+      <Disc />
+    </Link>
+  );
+}
+
+export function CtaButton({
+  children,
+  tone = "dark",
+  type = "submit",
+  busy = false,
+  disabled = false,
+  onClick,
+}: {
+  children: React.ReactNode;
+  tone?: Tone;
+  type?: "submit" | "button";
+  /** Swaps the disc's arrow for a spinner. The label is the caller's to change —
+      a button that says "Send" while it is sending is lying about its state. */
+  busy?: boolean;
+  disabled?: boolean;
+  onClick?: () => void;
+}) {
+  return (
+    <button
+      type={type}
       data-spec
-      className={`spec group/p inline-flex h-14 items-center gap-4 rounded-pill pr-2.5 pl-8 font-mono text-xs tracking-caps uppercase ${
-        light ? "bg-canvas text-ink" : "bg-ink text-on-panel"
-      }`}
+      onClick={onClick}
+      disabled={disabled || busy}
+      /* `disabled:` rather than a second skin: the pill keeps its shape and
+         loses its light, which is what every other disabled control on a site
+         like this does. `cursor-pointer` because a bare <button> does not get
+         one and every other pill on the page is a link that does. */
+      className={shell(tone, "cursor-pointer disabled:cursor-not-allowed disabled:opacity-55")}
     >
       {children}
-      {/* The disc is BLUE, not blue-into-amber. A 36px circle is too small to
-          get from one to the other without spending most of itself in the
-          grey-green they blend through — it came out looking like a bug. Amber
-          lives on the rim, which turns, so both colours are still on the button;
-          they are just never mixed. White on this measures 5.1:1 where the
-          arrow sits, 3.58:1 at the disc's lightest point. */}
+      <Disc busy={busy} />
+    </button>
+  );
+}
+
+export function CtaMail({
+  href,
+  children,
+  tone = "dark",
+}: {
+  /** A full `mailto:` URL, subject and body included. */
+  href: string;
+  children: React.ReactNode;
+  tone?: Tone;
+}) {
+  return (
+    <a href={href} data-spec className={shell(tone)}>
+      {children}
+      {/* No arrow swap: nothing arrives from the bottom left, because this is not
+          a journey to somewhere. One envelope, still. */}
       <span
         aria-hidden
         className="disc-blue relative grid size-9 shrink-0 place-items-center overflow-hidden rounded-pill"
       >
-        <ArrowUpRight
-          className={`${arrow} group-hover/p:translate-x-[180%] group-hover/p:-translate-y-[180%]`}
-          strokeWidth={2}
-        />
-        <ArrowUpRight
-          className={`${arrow} -translate-x-[180%] translate-y-[180%] group-hover/p:translate-x-0 group-hover/p:translate-y-0`}
-          strokeWidth={2}
-        />
+        <Mail className="size-4 text-white" strokeWidth={2} />
       </span>
-    </Link>
+    </a>
   );
 }

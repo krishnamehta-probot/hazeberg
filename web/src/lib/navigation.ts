@@ -325,3 +325,46 @@ export const CONTACT = {
   phoneHref: "tel:+919750533701",
   linkedin: "https://www.linkedin.com/company/hazeberg",
 } as const;
+
+/**
+ * The two offices, in full. `[live]` §17 — the addresses are exactly as the live
+ * site prints them, only cased down from its all-caps Malaysian line.
+ *
+ * Here rather than in the footer, which is where they used to live: the footer
+ * wants one line each and the Contact page wants the whole address, a timezone
+ * and what the office is for. Two copies of an address is how one of them ends
+ * up out of date.
+ *
+ * `role` and `hours` are `[derived]` — the split of work between the two offices
+ * is not stated anywhere on the live site, and the hours are the ordinary
+ * business day in each timezone. Both are safe to correct; neither is a claim
+ * about capability.
+ */
+export const OFFICES = [
+  {
+    city: "Coimbatore",
+    code: "IN",
+    country: "India",
+    /** The footer's one-liner. */
+    short: "Annamalai Industrial Park, Kalapatti",
+    lines: [
+      "Annamalai Industrial Park, 227/1A",
+      "Sharp Nagar, Nehru Nagar West",
+      "Kalapatti, Coimbatore",
+      "Tamil Nadu 641048",
+    ],
+    role: "Headquarters and delivery",
+    tz: "IST · UTC+5:30",
+    hours: "Mon–Fri, 9:00–18:30",
+  },
+  {
+    city: "Penang",
+    code: "MY",
+    country: "Malaysia",
+    short: "Bandar Cassia, Pulau Pinang",
+    lines: ["12A-2, Jalan Vervea 7", "Bandar Cassia", "Pulau Pinang 14110"],
+    role: "APAC delivery",
+    tz: "MYT · UTC+8",
+    hours: "Mon–Fri, 9:00–18:00",
+  },
+] as const;

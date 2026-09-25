@@ -34,22 +34,26 @@ import { ABOUT } from "@/lib/home-content";
  * sphere holds one angle, and all three points are listed at once.
  */
 
-/** Even thirds, matching the three segments of the ring exactly. The point
-    changes as each segment completes, so the gauge is not describing the
-    content — it IS the content's position. */
-const CHECKPOINTS = [0, 1 / 3, 2 / 3];
+/** Even steps, matching the segments of the ring exactly. The point changes as
+    each segment completes, so the gauge is not describing the content — it IS
+    the content's position.
+
+    Derived from the point count rather than written out: the revised copy took
+    this section from three points to four, and a hard-coded `[0, 1/3, 2/3]`
+    would have silently dropped the fourth off the end of the pin. */
+const CHECKPOINTS = ABOUT.points.map((_, i) => i / ABOUT.points.length);
 
 const SWAP = { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const };
 
 /**
- * The progress ring: three thin white arcs, one per point, just inside the sphere.
+ * The progress ring: one thin white arc per point, just inside the sphere.
  *
  * It was one track with one sweep over it, which read as two circles rather than
  * as a gauge and said nothing about how many points there were. Three segments
  * with a gap between them ARE the three checkpoints, so the shape tells you how
  * far in you are and how much is left.
  *
- * Each segment fills over its own third of the scroll. The ring closes exactly as
+ * Each segment fills over its own share of the scroll. The ring closes exactly as
  * the pin runs out, so "the circle is complete" and "the page moves on" are the
  * same moment rather than two.
  *
@@ -61,7 +65,8 @@ const SWAP = { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const };
  * everywhere the ring can cross.
  */
 const RING_R = 46;
-const SEGMENTS = 3;
+/** One arc per point, always. */
+const SEGMENTS = ABOUT.points.length;
 /** Degrees of daylight between segments. Enough to read as separate arcs, not so
     much that the ring stops reading as a circle. */
 const GAP_DEG = 7;
@@ -214,7 +219,13 @@ export function AboutScene() {
             <ScrollText
               text={ABOUT.body}
               progress={pinned ? readProgress : undefined}
-              className="mt-4 max-w-[48ch] text-base leading-[1.5] font-light text-pretty sm:text-lg lg:mt-8 lg:max-w-[42ch] lg:text-xl"
+              /* One step down the scale at every breakpoint. The revised copy is
+                 four times the length of what this held before, and at 20px the
+                 paragraph ran to eleven lines and took the column on its own —
+                 large display type is for the heading above it, not for a body
+                 that long. The measure opens with it so the lines still break at
+                 a readable length rather than getting narrower as they shrink. */
+              className="mt-4 max-w-[54ch] text-sm leading-[1.6] font-light text-pretty sm:text-base lg:mt-8 lg:max-w-[50ch] lg:text-lg"
             />
             <Reveal delay={0.2}>
               {/* The way out of the section. Yellow, because this ground is
@@ -267,7 +278,7 @@ export function AboutScene() {
                 </AnimatePresence>
               </div>
 
-              {/* All three, always, for anyone who never scrolls the pin and for
+              {/* Every one of them, always, for anyone who never scrolls the pin and for
                   assistive technology, which should not have to animate a page
                   to reach two thirds of a section. */}
               <ul className="sr-only">

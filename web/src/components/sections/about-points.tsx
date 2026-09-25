@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
+import { Waypoints } from "lucide-react";
 
 import { RevealGroup, RevealItem } from "@/components/motion/reveal";
 
@@ -18,6 +19,13 @@ import { RevealGroup, RevealItem } from "@/components/motion/reveal";
  * short line each and every one earns its place, so hiding two of them behind an
  * accordion would cost information and buy nothing.
  *
+ * A row with no supplied mark falls back to Lucide, the project's locked icon
+ * set. Three marks were supplied and the revised copy runs to four rows; the
+ * alternatives were reusing one of the three — a duplicate icon in a four-row
+ * list — or drawing a fourth in the supplied files' style, which is exactly the
+ * "supplied assets are not rewritten" rule. The fallback is stroked rather than
+ * filled, so it takes `currentColor` and follows the same state as the others.
+ *
  * The icons are painted through a CSS mask rather than rendered as images. The
  * supplied files have their colours baked in and they disagree with each other:
  * `2nd.svg` is stroked in white because it was drawn for the filled circle,
@@ -27,7 +35,7 @@ import { RevealGroup, RevealItem } from "@/components/motion/reveal";
  * state and none of the artwork has to be touched.
  */
 
-type Point = { readonly icon: string; readonly title: string; readonly body: string };
+type Point = { readonly icon?: string; readonly title: string; readonly body: string };
 
 export function AboutPoints({ points }: { points: readonly Point[] }) {
   const ref = useRef<HTMLUListElement>(null);
@@ -73,20 +81,24 @@ export function AboutPoints({ points }: { points: readonly Point[] }) {
                   on ? "opacity-100" : "opacity-0"
                 }`}
               />
-              <span
-                aria-hidden
-                className="relative size-6 bg-current"
-                style={{
-                  maskImage: `url(${p.icon})`,
-                  WebkitMaskImage: `url(${p.icon})`,
-                  maskSize: "contain",
-                  WebkitMaskSize: "contain",
-                  maskRepeat: "no-repeat",
-                  WebkitMaskRepeat: "no-repeat",
-                  maskPosition: "center",
-                  WebkitMaskPosition: "center",
-                }}
-              />
+              {p.icon ? (
+                <span
+                  aria-hidden
+                  className="relative size-6 bg-current"
+                  style={{
+                    maskImage: `url(${p.icon})`,
+                    WebkitMaskImage: `url(${p.icon})`,
+                    maskSize: "contain",
+                    WebkitMaskSize: "contain",
+                    maskRepeat: "no-repeat",
+                    WebkitMaskRepeat: "no-repeat",
+                    maskPosition: "center",
+                    WebkitMaskPosition: "center",
+                  }}
+                />
+              ) : (
+                <Waypoints aria-hidden className="relative size-5" strokeWidth={1.6} />
+              )}
             </span>
             <span className="min-w-0">
               <span className="block text-base font-medium text-ink">{p.title}</span>

@@ -131,6 +131,14 @@ type there.
 AA contrast, keyboard operability and visible focus are acceptance criteria. A section
 failing them is unfinished, not "to be revisited".
 
+**One colour was added to the system for this**, and it is the only non-brand, non-neutral
+value in it: `--danger: #B3261E`, 6.06:1 on white, for invalid form fields. Neither brand
+colour can do the job — amber is 1.65:1 as type here and is the call to action, and blue
+is every other interactive state on the page, so a blue error is indistinguishable from a
+focus ring. It is UI only: never photography, never a panel, never a second accent. Error
+state is never carried by colour alone — the message is text, `role="alert"`, and tied to
+the control by `aria-describedby`.
+
 ### 8. Photography: bright, western, editorial, one dark note
 Settled on the moodboard and binding for every section.
 
@@ -205,20 +213,25 @@ Populated as components are built. Before writing any new component, check here 
 | Component | Used by | Status |
 |---|---|---|
 | Button (primary/secondary/ghost/accent, 3 sizes) | nav, hero, cards, forms | prototyped in showcase |
-| Section header (label + heading + lead) | every section | prototyped in showcase |
+| `Section` / `Eyebrow` / `SectionHead` (`components/ui/section.tsx`) | every section, every page | **built** — moved out of `sections/home.tsx` when Contact and Careers needed them. `SectionHead` gained `align`: the home page stays centred, inner pages lead left |
 | Card / service card | services, insights | prototyped in showcase |
 | Stat block | hero, about | prototyped in showcase |
-| Form field (input, select, textarea, error) | contact, careers | prototyped in showcase |
+| `TextField` / `TextareaField` / `SelectField` (`components/ui/field.tsx`) | contact form | **built** — one box, three controls, error state wired with `aria-invalid` + `aria-describedby`, native `<select>` kept on purpose |
 | Accordion | FAQ, services | prototyped in showcase |
 | Tabs | services | prototyped in showcase |
 | Badge / pill | various | prototyped in showcase |
 | Site nav (`components/site-header/`) | global | **built** — collapsing pill, mega panel, mobile drawer, 36-check QA suite |
 | `NotchCard` (`components/ui/`) | every major block | **built** — the signature shape |
 | `Reveal` / `RevealGroup` / `RevealItem` (`components/motion/`) | every section | **built** — the one scroll reveal, ported from CropIntel's measured values |
-| `Section` (`components/sections/hero.tsx`) | every section | **built** — the vertical rhythm wrapper |
+| `CtaPill` / `CtaButton` / `CtaMail` (`components/ui/cta-pill.tsx`) | every CTA on the site | **built** — one pill, three elements. A link navigates, a `<button type="submit">` submits the contact form, an `<a href="mailto:">` opens a mail client and carries an envelope instead of the arrow |
 | `Counter`, `Eyebrow`, `MediaPlaceholder` (`components/ui/`) | many | **built** |
 | `ChipButton` (`components/ui/`) | every CTA | **built** — 4 tones, all AA-verified |
 | Logo wordmark (`components/brand/`) | nav, footer | **built** — inline SVG, `currentColor` |
+| `LinkedInMark` (`components/brand/linkedin-mark.tsx`) | footer, contact | **built** — was private to the footer until Contact needed it |
+| `PageHero` (`components/page/page-hero.tsx`) | contact, careers, and every inner page after them | **built** — the short dark opener: the hero's arc at a third the height, left-aligned, `interactive={false}`, `data-nav-dark` |
+| `CrossLink` (`components/page/cross-link.tsx`) | contact, careers | **built** — the whole-row link that pairs the two pages |
+| `ContactForm` (`components/contact/contact-form.tsx`) | contact | **built** — three states, and the third is a prefilled mail link so a failed send loses nothing |
+| `OFFICES` (`lib/navigation.ts`) | footer, contact | **built** — the footer wants one line per office and Contact wants the whole address; two copies is how one goes stale |
 | Page placeholder (`components/page-placeholder.tsx`) | every un-built route | **built** |
 | Footer | global | prototyped in showcase |
 

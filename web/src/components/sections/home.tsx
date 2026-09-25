@@ -9,7 +9,7 @@ import { ServicesSection } from "@/components/sections/services-section";
 import { ResultsSplit } from "@/components/sections/results-split";
 import { CaseCard } from "@/components/sections/case-card";
 import { Carousel } from "@/components/ui/carousel";
-import { Counter } from "@/components/ui/counter";
+import { Eyebrow, Section, SectionHead } from "@/components/ui/section";
 import {
   CASE_STUDIES,
   CLOSING,
@@ -23,6 +23,10 @@ import {
 /* ---------------------------------------------------------------------------
    Shared furniture
    ---------------------------------------------------------------------------
+   `Section`, `Eyebrow` and `SectionHead` now live in `components/ui/section.tsx`
+   — Contact and Careers need the same three, and a second copy of a section
+   heading is how pages built weeks apart drift apart (rule 3).
+
    Built against `REFERENCE-SPEC.md`. The reference alternates its ground
    surface -> canvas -> ink with no rules between sections: the ground change
    IS the separator. Section padding lives on the inner container.
@@ -67,99 +71,6 @@ const COMP = {
   ],
   why: "/comp/section-06.webp",
 } as const;
-
-/**
- * `surface` is the page. Every section sits on it unless there is a reason to
- * break — `canvas` and `ink` are the exceptions, reached for deliberately.
- * Cards go the other way: white on the surface, which is what gives them an
- * edge without darkening a whole band to produce one.
- */
-const GROUND = {
-  surface: "bg-surface",
-  canvas: "bg-canvas",
-  ink: "grad-ink grain text-on-panel",
-} as const;
-
-function Section({
-  children,
-  ground = "surface",
-  id,
-  className = "",
-}: {
-  children: React.ReactNode;
-  ground?: keyof typeof GROUND;
-  id?: string;
-  className?: string;
-}) {
-  return (
-    <section id={id} className={`relative ${GROUND[ground]}`}>
-      <div className={`shell py-[var(--section-y)] ${className}`}>{children}</div>
-    </section>
-  );
-}
-
-/**
- * Space Mono, caps, tracked. Three of the four reference sites set their
- * micro-labels in a monospace and nothing else — it is the one place the second
- * face appears, which is what keeps it from reading as a gimmick.
- */
-function Eyebrow({
-  children,
-  tone = "subtle",
-}: {
-  children: React.ReactNode;
-  tone?: "subtle" | "panel" | "onDark";
-}) {
-  const skin =
-    tone === "panel" ? "text-accent" : tone === "onDark" ? "text-on-panel/60" : "text-ink-subtle";
-  return <p className={`font-mono text-xs tracking-caps uppercase ${skin}`}>{children}</p>;
-}
-
-function SectionHead({
-  eyebrow,
-  title,
-  body,
-  cta,
-  tone = "light",
-  titleMax = "max-w-[24ch]",
-}: {
-  eyebrow: string;
-  /** A node, not a string: one head sets part of its line in brand blue and
-      breaks the sentence itself. */
-  title: React.ReactNode;
-  body?: string;
-  cta?: { label: string; href: string };
-  tone?: "light" | "panel";
-  /** `24ch` is the measure every head wants EXCEPT one that carries its own
-      hard break — there the cap has to clear the longer of the two lines. */
-  titleMax?: string;
-}) {
-  const panel = tone === "panel";
-  return (
-    <Reveal className="flex flex-col items-center text-center">
-      <Eyebrow tone={panel ? "panel" : "subtle"}>{eyebrow}</Eyebrow>
-      <h2
-        className={`mt-5 ${titleMax} text-3xl leading-[1.08] font-light tracking-[-0.03em] text-balance ${
-          panel ? "text-on-panel" : "text-ink"
-        }`}
-      >
-        {title}
-      </h2>
-      {body ? (
-        <p className={`mt-5 max-w-[60ch] text-base ${panel ? "text-on-panel/70" : "text-ink-muted"}`}>
-          {body}
-        </p>
-      ) : null}
-      {cta ? (
-        <div className="mt-9">
-          <CtaPill href={cta.href}>
-            {cta.label}
-          </CtaPill>
-        </div>
-      ) : null}
-    </Reveal>
-  );
-}
 
 /* ============================== 01 — HERO ============================== */
 
@@ -380,12 +291,12 @@ export function Services() {
 /* ============================ 06 — RESULTS ============================= */
 
 /**
- * Four figures as a 2 x 2 block that a photograph splits open on scroll — the
- * layout the client asked for. The mechanics live in `ResultsSplit`; this only
- * supplies the two halves and the media.
+ * Four capabilities as a 2 x 2 block that a photograph splits open on scroll —
+ * the layout the client asked for. The mechanics live in `ResultsSplit`; this
+ * only supplies the two halves and the media.
  *
- * Counters run on scroll, so the numbers arrive as the split finishes rather
- * than sitting there already counted.
+ * It was four counters until the revised copy moved those figures up into the
+ * heading. The block is unchanged; only what each card carries is.
  */
 /**
  * Each card reveals on its own rather than through a RevealGroup. The group
@@ -401,8 +312,8 @@ export function Services() {
  * only the wash and the lift wait for a hover, so a touch device that never
  * reports one still gets a coloured section.
  */
-function StatCard({ stat, delay }: { stat: (typeof RESULTS.stats)[number]; delay: number }) {
-  const amber = stat.tone === "accent";
+function CapabilityCard({ item, delay }: { item: (typeof RESULTS.items)[number]; delay: number }) {
+  const amber = item.tone === "accent";
   return (
     <Reveal
       as="li"
@@ -425,17 +336,21 @@ function StatCard({ stat, delay }: { stat: (typeof RESULTS.stats)[number]; delay
         aria-hidden
         className={`relative h-1 w-10 rounded-pill ${amber ? "grad-cta" : "grad-primary"}`}
       />
-      <span className="relative mt-6 text-3xl leading-none font-light tracking-[-0.03em] text-primary tabular-nums">
-        <Counter value={stat.value} suffix={stat.suffix} />
+      {/* The index, where the counter used to be. It is set small and in the
+          mono face rather than at display size: the figures this section used to
+          count now open the heading above, and a 40px "01" would pull the eye
+          straight back off them. */}
+      <span className="relative mt-6 font-mono text-xs tracking-caps text-ink-subtle">{item.n}</span>
+      <span className="relative mt-3 text-lg leading-snug font-medium text-balance text-ink">
+        {item.title}
       </span>
-      <span className="relative mt-3 text-sm font-medium text-ink">{stat.label}</span>
-      <span className="relative mt-2 text-sm text-ink-muted">{stat.body}</span>
+      <span className="relative mt-2.5 text-sm text-ink-muted">{item.body}</span>
     </Reveal>
   );
 }
 
 export function Results() {
-  const stats = RESULTS.stats;
+  const items = RESULTS.items;
   return (
     <Section ground="surface" id="results">
       {/* Centred through `SectionHead`, like every other head on the page —
@@ -453,7 +368,7 @@ export function Results() {
             {RESULTS.titleRest}
           </>
         }
-        titleMax="max-w-[46rem]"
+        titleMax="max-w-[70rem]"
         body={RESULTS.body}
       />
 
@@ -465,14 +380,14 @@ export function Results() {
              split has a settled block to open. */
           left={
             <>
-              <StatCard stat={stats[0]} delay={0} />
-              <StatCard stat={stats[1]} delay={0.06} />
+              <CapabilityCard item={items[0]} delay={0} />
+              <CapabilityCard item={items[1]} delay={0.06} />
             </>
           }
           right={
             <>
-              <StatCard stat={stats[2]} delay={0.06} />
-              <StatCard stat={stats[3]} delay={0.12} />
+              <CapabilityCard item={items[2]} delay={0.06} />
+              <CapabilityCard item={items[3]} delay={0.12} />
             </>
           }
           media={

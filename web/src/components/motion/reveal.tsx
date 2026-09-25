@@ -78,7 +78,9 @@ export function RevealGroup({
   children: ReactNode;
   className?: string;
   stagger?: number;
-  as?: "div" | "ul" | "section";
+  /** `ol` is here for the sequences — Careers' hiring steps are an ordered
+      list and a `ul` full of numbered steps is a list lying about itself. */
+  as?: "div" | "ul" | "ol" | "section";
   /** Passed straight through, so a caller can measure the group's own travel
       through the viewport without wrapping it in another element. */
   ref?: Ref<HTMLElement>;
