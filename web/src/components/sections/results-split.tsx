@@ -44,7 +44,18 @@ export function ResultsSplit({
   const opacity = useTransform(smooth, [0.05, 0.3, 0.75], [0, 0.25, 1]);
 
   return (
-    <div ref={track} className="lg:h-[220vh]">
+    /* The negative BOTTOM margin is the same empty half at the other end.
+       When the track is spent the pane parks with its bottom on the track's
+       bottom — and the pane's lower half is empty, so 226px of nothing sat
+       between the cards and whatever came next. Added to the section's own
+       100px and the following section's 100px, the seam under this block
+       measured 426px where every other seam on the page is 200px.
+
+       It costs the pin nothing: the track keeps its full 220vh of scroll and
+       the sticky range is unchanged — a negative margin only shortens the
+       space the track takes in FLOW. The 226px it reclaims is the dead half,
+       so the section still ends exactly 100px below the cards. */
+    <div ref={track} className="lg:-mb-[calc((100svh-28rem)/2)] lg:h-[220vh]">
       {/* The pane is a full `100svh` centring a 28rem block, so the moment it
           pins, the four cards are dead centre of the screen and the split opens
           from there. Left alone that also buys ~200px of dead air under the
