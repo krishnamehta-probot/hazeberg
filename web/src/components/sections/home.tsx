@@ -312,6 +312,28 @@ export function Services() {
  * only the wash and the lift wait for a hover, so a touch device that never
  * reports one still gets a coloured section.
  */
+/**
+ * One fragment of a card's body, set in brand blue.
+ *
+ * The term is matched rather than marked up in the copy, so the content stays a
+ * plain string — which is what lets it come from Sanity later without carrying
+ * HTML through the CMS. Blue at 5.06:1 on white, and it is the same colour the
+ * figures in this section's heading are in, so the highlight reads as part of
+ * that set rather than as a link.
+ */
+function Highlight({ body, term }: { body: string; term?: string }) {
+  if (!term) return <>{body}</>;
+  const at = body.indexOf(term);
+  if (at === -1) return <>{body}</>;
+  return (
+    <>
+      {body.slice(0, at)}
+      <strong className="font-medium text-primary">{term}</strong>
+      {body.slice(at + term.length)}
+    </>
+  );
+}
+
 function CapabilityCard({ item, delay }: { item: (typeof RESULTS.items)[number]; delay: number }) {
   const amber = item.tone === "accent";
   return (
@@ -344,7 +366,9 @@ function CapabilityCard({ item, delay }: { item: (typeof RESULTS.items)[number];
       <span className="relative mt-3 text-lg leading-snug font-medium text-balance text-ink">
         {item.title}
       </span>
-      <span className="relative mt-2.5 text-sm text-ink-muted">{item.body}</span>
+      <span className="relative mt-2.5 text-sm text-ink-muted">
+        <Highlight body={item.body} term={"highlight" in item ? item.highlight : undefined} />
+      </span>
     </Reveal>
   );
 }

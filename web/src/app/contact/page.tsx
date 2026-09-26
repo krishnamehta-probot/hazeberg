@@ -12,7 +12,7 @@ import { CONTACT, OFFICES } from "@/lib/navigation";
 export const metadata = {
   title: "Contact",
   description:
-    "Tell us what your Workday tenant is doing — implementation, optimisation, integrations or ongoing support. Offices in Coimbatore and Penang.",
+    "Tell us what your Workday tenant is doing — implementation, optimization, integrations or ongoing support. Offices in Coimbatore and Penang.",
 };
 
 /**

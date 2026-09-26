@@ -257,7 +257,7 @@ export const PRIMARY_NAV: NavNode[] = [
     href: "/about",
     lede: {
       title: "The people behind the tenant",
-      body: "Recognised by the Government of India and ISO certified, with offices in Coimbatore and Penang.",
+      body: "Recognized by the Government of India and ISO certified, with offices in Coimbatore and Penang.",
     },
     viewAll: { label: "About Hazeberg", href: "/about" },
     columns: [
@@ -295,7 +295,7 @@ export const PRIMARY_NAV: NavNode[] = [
             label: "Certifications",
             href: "/about#certifications",
             icon: "certifications",
-            description: "ISO certified; recognised by the Government of India.",
+            description: "ISO certified; recognized by the Government of India.",
           },
           {
             label: "Rewards",

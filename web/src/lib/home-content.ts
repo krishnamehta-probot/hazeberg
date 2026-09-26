@@ -8,7 +8,8 @@
  * Section order follows the SaleUnion reference measured in `REFERENCE-SPEC.md`.
  *
  * Tone: smart, human, confident, enterprise-ready.
- * Audience: US-based Fortune 100 and Fortune 500 organisations.
+ * Audience: US-based Fortune 100 and Fortune 500 organizations.
+ * Spelling: AMERICAN throughout, including in client-supplied copy — set 2026-09-25.
  */
 
 /* 01 — opening ---------------------------------------------------------- */
@@ -100,12 +101,11 @@ export const ABOUT = {
   statSuffix: "+",
   statTail: "years of Workday expertise.",
   /**
-   * Client-supplied, verbatim. Note the British "optimise" here against the
-   * American "Optimize" in `IMPACT.cta` — two spellings of one word on one page,
-   * and the audience is US enterprise. Flagged, not silently changed: it is
-   * their copy.
+   * Client-supplied. Revised 2026-09-25, and normalised to American spelling
+   * with the rest of the site on the same instruction — "centres" and
+   * "organisations" were the last two British forms in it.
    */
-  body: "Hazeberg brings 12+ years of Workday expertise, backed by 200+ consolidated years of consultant experience, delivering enterprise implementations, complex integrations, and continuous support. Our certified consultants work alongside your teams to solve challenges, enable smarter decisions, and build solutions that create lasting value beyond go-live. With delivery centres in India and Malaysia, we support organisations across global time zones.",
+  body: "Hazeberg brings 12+ years of Workday expertise, backed by 200+ consolidated years of consultant experience, delivering enterprise implementations, complex integrations, and continuous support. Our certified consultants work alongside your teams to solve challenges, enable smarter decisions, and build solutions that create lasting value beyond go-live. With delivery centers in India and Malaysia, we support organizations across global time zones.",
   /** The way out of the section. It points at the About page, which the sitemap
       already carries and the nav already links as "About Hazeberg". */
   cta: { label: "Explore Hazeberg", href: "/about" },
@@ -319,13 +319,19 @@ export const RESULTS = {
       n: "01",
       tone: "primary",
       title: "Pure-Play Workday Expertise",
-      body: "Pure-play Workday expertise across implementation, Phase X, AMS, optimisation, and integrations.",
+      body: "Pure-play Workday expertise across implementation, Phase X, AMS, optimization, and integrations.",
     },
     {
       n: "02",
       tone: "primary",
       title: "Onshore + Global Delivery",
-      body: "Delivery presence across Malaysia and India among 40+, supporting global enterprises across Americas, EMEA, and APAC.",
+      body: "Delivery presence across Malaysia and India among 40+ countries, supporting global enterprises across Americas, EMEA, and APAC.",
+      /** Lifted out of the sentence in brand blue. It is the one hard number left
+          in the cards — the other three figures moved up into the heading — so it
+          is the one fragment that should not read as ordinary body copy.
+          A plain substring rather than markup in the string: the copy stays a
+          serialisable string for Sanity, and the card does the splitting. */
+      highlight: "40+ countries",
     },
     {
       n: "03",
@@ -361,7 +367,7 @@ export const CASE_STUDIES = {
   items: [
     {
       n: "01",
-      title: "Modernising HR Operations with Workday HCM",
+      title: "Modernizing HR Operations with Workday HCM",
       challenge:
         "A global enterprise was facing inefficiencies in HR operations due to fragmented processes and reliance on legacy systems. Limited automation and disconnected workforce data impacted employee experience and decision-making.",
       approach:
@@ -384,7 +390,7 @@ export const CASE_STUDIES = {
       challenge:
         "Managing HR operations across multiple countries created complexity due to varying compliance requirements, regional processes, and inconsistent workforce management practices.",
       approach:
-        "Hazeberg deployed Workday HCM and Payroll solutions to standardise workforce processes, improve payroll operations, and support compliance management across regions.",
+        "Hazeberg deployed Workday HCM and Payroll solutions to standardize workforce processes, improve payroll operations, and support compliance management across regions.",
       impact: [
         "Improved employee experience through streamlined HR services",
         "Faster onboarding and workforce administration",
@@ -491,7 +497,7 @@ export const TESTIMONIALS = {
     {
       placeholder: true,
       body: "The integrations work landed on time and has not needed a rescue since. Our team finally stopped exporting spreadsheets.",
-      name: "IT Programme Manager",
+      name: "IT Program Manager",
       role: "Healthcare Group",
     },
     {
@@ -502,7 +508,7 @@ export const TESTIMONIALS = {
     },
     {
       placeholder: true,
-      body: "Senior people stayed on the work after the kickoff. That single fact changed how the whole programme ran.",
+      body: "Senior people stayed on the work after the kickoff. That single fact changed how the whole program ran.",
       name: "Transformation Director",
       role: "Fortune 100 Client",
     },

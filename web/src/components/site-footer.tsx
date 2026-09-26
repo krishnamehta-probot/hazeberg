@@ -165,7 +165,7 @@ export function SiteFooter() {
         {/* -- legal --------------------------------------------------------- */}
         <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 md:flex-row md:items-center md:justify-between">
           <p className="text-xs text-on-panel/60">
-            Recognised by the Government of India &middot; ISO certified
+            Recognized by the Government of India &middot; ISO certified
           </p>
           <p className="text-xs text-on-panel/60">
             &copy; {new Date().getFullYear()} Hazeberg Consulting. All rights reserved.

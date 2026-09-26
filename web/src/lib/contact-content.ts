@@ -26,7 +26,7 @@ export const CONTACT_PAGE = {
       nowhere on the light sections. */
   titleLead: "Tell us what your",
   titleAccent: " tenant is doing.",
-  lead: "Whether it is a first implementation, an integration that keeps failing, or a live tenant nobody has optimised since go-live — start with the specifics and we will come back with a view, not a brochure.",
+  lead: "Whether it is a first implementation, an integration that keeps failing, or a live tenant nobody has optimized since go-live — start with the specifics and we will come back with a view, not a brochure.",
   /** [PLACEHOLDER] on the first row only — the other two are facts already on
       the home page and in the sitemap. */
   meta: [
@@ -45,7 +45,7 @@ export const CONTACT_PAGE = {
         no way out makes people lie to it. */
     interests: [
       "New Workday implementation",
-      "Optimisation or a health check",
+      "Optimization or a health check",
       "AMS and ongoing support",
       "Integrations",
       "Payroll",

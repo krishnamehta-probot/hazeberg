@@ -151,7 +151,7 @@ export const CAREERS_PAGE = {
   cross: {
     eyebrow: "Not here for a role?",
     title: "Talk to us about your Workday environment",
-    body: "Implementation, optimisation, integrations, AMS — the other door is Contact.",
+    body: "Implementation, optimization, integrations, AMS — the other door is Contact.",
     href: "/contact",
   },
 } as const;

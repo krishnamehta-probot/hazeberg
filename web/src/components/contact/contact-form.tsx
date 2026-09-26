@@ -55,7 +55,7 @@ function validate(values: Values) {
   if (!values.email.trim()) errors.email = "We need somewhere to reply.";
   else if (!EMAIL.test(values.email.trim()))
     errors.email = "That does not look like an email address.";
-  if (!values.company.trim()) errors.company = "Which organisation is this for?";
+  if (!values.company.trim()) errors.company = "Which organization is this for?";
   if (!values.interest) errors.interest = "Pick the closest one — it decides who reads this.";
   if (values.message.trim().length < 10) errors.message = "A line or two about the tenant, at least.";
   return errors;
