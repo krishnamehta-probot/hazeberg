@@ -269,11 +269,13 @@ export function SiteHeader() {
               aria-label="Hazeberg — home"
               className="-mx-2 flex min-h-11 shrink-0 items-center rounded-sm px-2 transition-opacity dur-fast ease-brand hover:opacity-70"
             >
-              {/* Up a step at both breakpoints on the client's note — 14/16px was
+              {/* Up twice on the client's note. It started at 14/16px, which was
                   correct against the nav links and too quiet as the one piece of
-                  identity in the bar. 18/22px still clears the 44px pill with
-                  room, so nothing around it moves. */}
-              <HazebergWordmark className="h-[1.125rem] w-auto md:h-[1.375rem]" />
+                  identity in the bar; 18/22px was closer; this is 21/26px.
+                  Still well inside the bar — the nav is 56px on a phone and 68px
+                  from md, and the link's own 44px minimum is what sets the row's
+                  height, so nothing around the wordmark moves at either size. */}
+              <HazebergWordmark className="h-[1.3125rem] w-auto md:h-[1.625rem]" />
             </Link>
 
             {/* Centred, absolutely positioned so the logo and CTA cannot shift it. */}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
 
 import { BERG } from "@/lib/berg-content";
@@ -50,6 +50,36 @@ import { BERG } from "@/lib/berg-content";
  * of it. Alternating at 390px would be two columns of about eighteen characters.
  */
 
+/**
+ * Is the roadmap in its two-column form?
+ *
+ * This exists because the sideways entrance was a real overflow bug. The copy
+ * and the card slide 40px in from their own sides towards the line — which is
+ * the whole point at `lg`, and meaningless below it, where the line is at the
+ * left edge and everything sits in one column to the right of it. Worse than
+ * meaningless: a card already at the shell's right margin, pushed 40px further
+ * right, is 40px of horizontal page scroll. Measured at 390px, the document was
+ * 410px wide.
+ *
+ * `useSyncExternalStore` rather than `useEffect` + `setState`: this is reading
+ * an external source, which is exactly what the hook is for, and it avoids the
+ * synchronous set-state-in-effect that the lint rule (correctly) objects to.
+ * The server snapshot is `false`, so the first paint is the one-column form and
+ * a phone never renders the wide version even for a frame.
+ */
+const MQ = "(min-width: 1024px)";
+const subscribeWide = (cb: () => void) => {
+  const m = window.matchMedia(MQ);
+  m.addEventListener("change", cb);
+  return () => m.removeEventListener("change", cb);
+};
+const useWide = () =>
+  useSyncExternalStore(
+    subscribeWide,
+    () => window.matchMedia(MQ).matches,
+    () => false,
+  );
+
 function Stage({
   step,
   index,
@@ -61,6 +91,7 @@ function Stage({
 }) {
   const row = useRef<HTMLLIElement>(null);
   const reduce = useReducedMotion();
+  const wide = useWide();
 
   /* The row's whole passage across the viewport: 0 when its top is at the
      bottom edge, 1 when its bottom has left the top edge. Everything below is a
@@ -74,10 +105,19 @@ function Stage({
   const scale = useTransform(p, [0.74, 0.97], [1, 0.94]);
   const blur = useTransform(p, [0.04, 0.32, 0.76, 0.97], [8, 0, 0, 7]);
   const filter = useTransform(blur, (v) => `blur(${v}px)`);
-  /* The two halves close on the line from opposite sides. Small — 40px is a
-     gesture, 120px is a slide show. */
-  const copyX = useTransform(p, [0.04, 0.36], [-40, 0]);
-  const cardX = useTransform(p, [0.04, 0.36], [40, 0]);
+  /* The two halves close on the line from opposite sides — and only at `lg`,
+     where there are two sides to come from. See `useWide`.
+  
+     THE TRAVEL IS BOUNDED BY THE GUTTER. A card in the right-hand column already
+     sits on the shell's right margin, so any outward travel is page overflow
+     unless it is smaller than the gutter. It was 40px, and at 1024 — where the
+     shell fills the window and the gutter is exactly 2rem — the document came
+     out 1032px wide against a 1024px viewport. 20px leaves 12px of slack at the
+     tightest width the two-column form is ever used at, and it is still a
+     gesture; the movement people read here is the blur and the rise, not the
+     distance. */
+  const copyX = useTransform(p, [0.04, 0.36], [-20, 0]);
+  const cardX = useTransform(p, [0.04, 0.36], [20, 0]);
   const node = useTransform(p, [0.18, 0.4], [0.4, 1]);
 
   const motionStyle = reduce ? undefined : { opacity, y, scale, filter };
@@ -117,7 +157,7 @@ function Stage({
 
       {/* -- the stage ------------------------------------------------- */}
       <motion.div
-        style={reduce ? undefined : { ...motionStyle, x: copyX }}
+        style={reduce ? undefined : { ...motionStyle, x: wide ? copyX : 0 }}
         className={copyPlace}
       >
         <p className="font-mono text-xs tracking-caps text-ink-subtle">{step.n}</p>
@@ -135,7 +175,7 @@ function Stage({
 
       {/* -- the outcome card ------------------------------------------ */}
       <motion.div
-        style={reduce ? undefined : { ...motionStyle, x: cardX }}
+        style={reduce ? undefined : { ...motionStyle, x: wide ? cardX : 0 }}
         className={`mt-6 lg:mt-0 ${cardPlace}`}
       >
         <div className="group/c relative overflow-hidden rounded-2xl bg-canvas p-7 ring-1 ring-border transition dur-base ease-brand hover:shadow-xl hover:shadow-primary/10 hover:ring-primary/25 sm:p-8">

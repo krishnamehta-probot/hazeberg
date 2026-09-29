@@ -31,7 +31,7 @@ export const CONTACT_PAGE = {
       the home page and in the sitemap. */
   meta: [
     { label: "Reply", value: "One business day" },
-    { label: "Offices", value: "Coimbatore · Penang" },
+    { label: "Offices", value: "Coimbatore, India · Penang, Malaysia" },
     { label: "Delivering to", value: "40+ countries" },
   ],
 

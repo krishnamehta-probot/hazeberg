@@ -63,7 +63,7 @@ export const ABOUT_PAGE = {
   meta: [
     { label: "Workday experience", value: "12+ years" },
     { label: "Consolidated experience", value: "200+ years" },
-    { label: "Delivery centers", value: "Coimbatore · Penang" },
+    { label: "Delivery centers", value: "Coimbatore, India · Penang, Malaysia" },
   ],
 
   /* -- 01 — our story --------------------------------------------------- */
