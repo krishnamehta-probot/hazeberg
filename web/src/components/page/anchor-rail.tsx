@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 /**
- * The contents rail on the legal pages — and it now knows where you are.
+ * The contents rail: a list of the page's own sections that knows where you are.
+ *
+ * Built for the legal pages first and now shared with `/what-we-do`, which is
+ * the other page on this site whose whole job is to be deep-linked into: the nav
+ * links eight separate anchors on it, so a reader arrives mid-page and needs to
+ * see where that is.
  *
  * It was a static list, which on an eleven-section document is a list you read
  * once and then cannot use: you scroll into section 7 and the rail still looks
@@ -27,10 +32,13 @@ import { motion, useReducedMotion } from "motion/react";
  * fades say they are eleven unrelated states — and it is the difference between
  * motion that explains the page and motion that decorates it.
  */
-export function LegalToc({
+export function AnchorRail({
   sections,
+  label = "On this page",
 }: {
   sections: readonly { id: string; heading: string }[];
+  /** The rail's own heading, and its accessible name. */
+  label?: string;
 }) {
   const [active, setActive] = useState(sections[0]?.id ?? "");
   const reduce = useReducedMotion();
@@ -70,11 +78,11 @@ export function LegalToc({
 
   return (
     <nav
-      aria-label="On this page"
+      aria-label={label}
       className="lg:sticky lg:top-[calc(var(--header-h)+2.5rem)] lg:self-start"
     >
       <p className="font-mono text-[0.6875rem] tracking-caps text-ink-subtle uppercase">
-        On this page
+        {label}
       </p>
 
       {/* The rule the whole list hangs off, so the rows read as stops on one
@@ -88,7 +96,7 @@ export function LegalToc({
                 /* One element, moved — not eleven, faded. */
                 <motion.span
                   aria-hidden
-                  layoutId="legal-toc-marker"
+                  layoutId={`anchor-rail-${label}`}
                   className="grad-primary absolute top-1 bottom-1 -left-px w-[2px] rounded-pill"
                   transition={
                     reduce
@@ -108,8 +116,9 @@ export function LegalToc({
                   on ? "text-primary" : "text-ink-muted hover:text-ink"
                 }`}
               >
-                {/* The headings carry their own numbering — "1. Who we are" —
-                    so the rail does not add a second one beside it. */}
+                {/* Whatever numbering a page uses lives in the heading itself —
+                    the legal documents number their clauses "1. Who we are" — so
+                    the rail never adds a second one beside it. */}
                 {section.heading}
               </a>
             </li>

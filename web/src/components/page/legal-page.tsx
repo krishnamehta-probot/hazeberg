@@ -1,6 +1,6 @@
 import { Reveal } from "@/components/motion/reveal";
 import { CrossLink } from "@/components/page/cross-link";
-import { LegalToc } from "@/components/page/legal-toc";
+import { AnchorRail } from "@/components/page/anchor-rail";
 import { PageHero } from "@/components/page/page-hero";
 import { Section } from "@/components/ui/section";
 import type { LegalDoc } from "@/lib/legal-content";
@@ -46,9 +46,9 @@ export function LegalPage({ doc, other }: { doc: LegalDoc; other: { label: strin
         <div className="grid gap-12 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] lg:gap-16">
           {/* -- contents ------------------------------------------------- */}
           {/* Lives in its own client component because it tracks the scroll —
-              see `legal-toc.tsx`. Everything else on this page is static and
-              stays on the server. */}
-          <LegalToc sections={doc.sections} />
+              see `anchor-rail.tsx`, shared with `/what-we-do`. Everything else
+              on this page is static and stays on the server. */}
+          <AnchorRail sections={doc.sections} />
 
           {/* -- the document --------------------------------------------- */}
           <div className="max-w-[68ch]">

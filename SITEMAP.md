@@ -32,12 +32,26 @@ truth. Routes, page types and section anchors are settled here before any page i
 Nav dropdown with no parent destination. Each child is its own page. All six share one
 template and one CMS document type - six documents, not six hand-built pages.
 
-1. Workday HCM
-2. Workday Payroll
-3. Workday Financials
-4. Workday Integrations
-5. Workday Reporting & Analytics
-6. Workday Extend
+1. Workday HCM - `/services/workday-hcm` - **written**
+2. Workday Payroll - `/services/workday-payroll` - scaffold
+3. Workday Financials - `/services/workday-financials` - scaffold
+4. Workday Integrations - `/services/workday-integrations` - scaffold
+5. Workday Reporting & Analytics - `/services/workday-reporting-analytics` - scaffold
+6. Workday Extend - `/services/workday-extend` - scaffold
+
+Template built 2026-09-29: `app/services/[slug]/page.tsx` renders every one of the six
+from `lib/service-content.ts`, which is the CMS document type standing in for Sanity until
+Sanity exists. The seventh module, whenever it comes, is a content entry and not a build.
+
+**Only Workday HCM is written.** The other five render their live opener - the client's
+own copy, already on the home page - and then a clearly marked scaffold saying the rest is
+not written, with a link to the finished one and the list of what each page needs. Five
+copies of the HCM page with the nouns swapped is how a shared template turns into filler,
+and a 404 would break six links that ship in the header.
+
+Note the slug: the nav and `SERVICES.items` both use `workday-reporting-analytics`, not
+`workday-reporting-and-analytics` as an earlier revision of this file had it. The routes
+are generated from `SERVICES.items`, so the shipped list wins.
 
 **Workday AMS is not in this list.** The client confirmed six Services pages, and AMS is
 the only entry that the original seven had to lose to reach six. It lives on
@@ -52,29 +66,65 @@ drop, say so and it moves back.
 Consolidated onto `/what-we-do`. Every section needs a stable anchor so the nav and
 internal links can deep-link to it.
 
-| Section | Anchor |
-|---|---|
-| Workday Implementation | `#implementation` |
-| Workday Optimization | `#optimization` |
-| Workday AMS | `#ams` |
-| Cost Optimization | `#cost-optimization` |
-| Integration Modernization | `#integration-modernization` |
-| Payroll Transformation | `#payroll-transformation` |
-| Release Management | `#release-management` |
-| Workday Health Check | `#health-check` |
+Built 2026-09-29. **DRAFT — roughly seven eighths of the prose is placeholder**, all of
+it marked in `web/src/lib/what-we-do-content.ts`. Real: the eight names, the eight
+one-line descriptions (live in the nav today), the Get-live / Stay-ahead split, the
+figures, and the AMS paragraph, which is the client's own home-page copy.
+
+Anchors corrected to the long forms `navigation.ts` has always linked - same call as
+`/about`: the nav ships in the header today, so it is the contract. Grouped and ordered
+as the nav's own two columns.
+
+| Section | Anchor | Group |
+|---|---|---|
+| Workday Implementation | `#workday-implementation` | Get live |
+| Payroll Transformation | `#payroll-transformation` | Get live |
+| Integration Modernization | `#integration-modernization` | Get live |
+| Workday Health Check | `#workday-health-check` | Get live |
+| Workday Optimization | `#workday-optimization` | Stay ahead |
+| Workday AMS | `#workday-ams` | Stay ahead |
+| Release Management | `#release-management` | Stay ahead |
+| Cost Optimization | `#cost-optimization` | Stay ahead |
+
+The page is built around a sticky rail of its own eight sections that tracks the scroll -
+`components/page/anchor-rail.tsx`, shared with the legal pages. Almost nobody opens this
+page and reads it down; they click one engagement in the nav and land two thirds of the
+way into it, and the rail is what tells them where that is.
 
 ---
 
 ## About - one page, six sections
 
+Built 2026-09-29. **The page is a DRAFT and roughly half of it is placeholder** - see
+the header of `web/src/lib/about-content.ts`, where every entry is marked `[live]`,
+`[fact]`, `[DRAFT]` or `[EMPTY]` with what is missing and why it was not invented.
+
+Four of the six anchors below were written short in an earlier revision of this file
+(`#story`, `#life`, `#team`). **`navigation.ts` has always linked the long forms**, and
+those links ship in the header today, so the nav is the contract and the table is
+corrected to match it. Section order follows the nav's own reading order.
+
 | Section | Anchor |
 |---|---|
-| Our story | `#story` |
-| Life at Hazeberg | `#life` |
+| Our story | `#our-story` |
+| Leadership | `#leadership` |
+| Our team | `#our-team` |
+| Life at Hazeberg | `#life-at-hazeberg` |
 | Certifications | `#certifications` |
 | Rewards | `#rewards` |
-| Leadership | `#leadership` |
-| Our Team | `#team` |
+
+**Real on the page**: the retired "Why choose Hazeberg" block (the client's own copy,
+parked for this page when it came off the home page on 2026-09-23), the client quote that
+came with it, the founder's name, the four delivery figures, and both certifications.
+
+**Still needed**: the founding story (year, reason, first engagement); the founder's
+biography and a real portrait photograph; Life-at-Hazeberg copy of its own - the Careers
+page holds the culture writing and it must not be printed twice; every award for Rewards;
+and the certificate paperwork (issuing body, number, valid-to date) for both marks.
+
+One client figure was edited: the retired Why block says "11+ years" twice and every other
+page now says 12+, revised by the client on 2026-09-25. The number is changed and nothing
+else is.
 
 ---
 

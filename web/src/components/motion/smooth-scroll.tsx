@@ -21,6 +21,41 @@ import Lenis from "lenis";
  *   - anchor links still land, because Lenis owns the scroll and we hand them to it
  *   - touch devices keep native momentum; Lenis only takes the wheel
  */
+/**
+ * The target's RESTING position in the document, ignoring transforms.
+ *
+ * `getBoundingClientRect()` was used here and it is the wrong tool, for a reason
+ * that only shows on a page whose sections reveal on scroll. Every section on
+ * this site starts at `translateY(64px)` and animates to 0 as it enters the
+ * viewport — and a rect includes that transform. So a jump link to a section
+ * that has not revealed yet aimed 64px below where the section was about to
+ * settle, the scroll landed there, the reveal then pulled the content up, and
+ * the heading finished well above the header's clearance. Measured on
+ * `/what-we-do`, whose eight headings live inside reveals: every one of them
+ * landed at 48px instead of 112px, i.e. tucked under the floating nav.
+ *
+ * `offsetTop` is layout, not paint. It ignores transforms entirely, so summing
+ * it up the `offsetParent` chain gives where the element will BE once everything
+ * has finished moving — which is the only position a jump link should ever aim
+ * at. The chain also handles the `position: relative` wrappers every section on
+ * this site sits in, which is the other thing that made the rect version fragile.
+ *
+ * Falls back to the rect for a target with no `offsetParent` — display:none, or
+ * inside a fixed-position subtree — where there is no layout chain to walk.
+ */
+function layoutTop(el: Element) {
+  let node = el as HTMLElement | null;
+  if (!node || node.offsetParent === null) {
+    return el.getBoundingClientRect().top + window.scrollY;
+  }
+  let y = 0;
+  while (node) {
+    y += node.offsetTop;
+    node = node.offsetParent as HTMLElement | null;
+  }
+  return y;
+}
+
 export function SmoothScroll() {
   const lenisRef = useRef<Lenis | null>(null);
   const pathname = usePathname();
@@ -104,8 +139,7 @@ export function SmoothScroll() {
 
       const header = document.querySelector("header");
       const clearance = (header?.getBoundingClientRect().height ?? 72) + 24;
-      const top = target.getBoundingClientRect().top + window.scrollY - clearance;
-      lenis.scrollTo(Math.max(0, top));
+      lenis.scrollTo(Math.max(0, layoutTop(target) - clearance));
     };
     document.addEventListener("click", onClick);
 
