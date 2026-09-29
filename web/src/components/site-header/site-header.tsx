@@ -269,7 +269,11 @@ export function SiteHeader() {
               aria-label="Hazeberg — home"
               className="-mx-2 flex min-h-11 shrink-0 items-center rounded-sm px-2 transition-opacity dur-fast ease-brand hover:opacity-70"
             >
-              <HazebergWordmark className="h-[0.875rem] w-auto md:h-4" />
+              {/* Up a step at both breakpoints on the client's note — 14/16px was
+                  correct against the nav links and too quiet as the one piece of
+                  identity in the bar. 18/22px still clears the 44px pill with
+                  room, so nothing around it moves. */}
+              <HazebergWordmark className="h-[1.125rem] w-auto md:h-[1.375rem]" />
             </Link>
 
             {/* Centred, absolutely positioned so the logo and CTA cannot shift it. */}

@@ -1,0 +1,328 @@
+/* ==========================================================================
+   Home v2 — scoped skin
+   --------------------------------------------------------------------------
+   Built to the supplied full-page comp. Everything is nested under `.v2`, so
+   the rest of the site keeps `globals.css` untouched and neither version can
+   break the other.
+
+   The mechanism: `globals.css` maps Tailwind's colour utilities onto raw
+   custom properties once, in `@theme inline` —
+
+       --color-ink: var(--ink)
+
+   — so re-declaring a variable on a subtree re-points every utility inside it.
+   v2 restates the same token CONTRACT rather than shipping a second Tailwind
+   theme.
+
+   This is the LIGHT cut, and it is close to the site's own: white ground, cool
+   neutrals, blue leading and amber as the one accent. What v2 changes is
+   structure, not palette — the comp is a tighter, flatter, more corporate
+   layout than v1's, and the differences below are all in service of that:
+
+     surface   #F6F7F8, a full point lighter than the site's #F4F6F6. The comp
+               alternates white and grey bands with no rules between them, and
+               at the site's value the grey read as a panel rather than as a
+               change of ground
+     cards     white on grey AND white on white. The second case only works
+               with a real border plus a shadow, which is why `--v2-shadow-*`
+               exist and why nothing here is a flat fill
+     radii     14px on cards, 20px on media, pills on controls. Three values,
+               no others — the comp is disciplined about this and it is most of
+               why it reads as neat
+     shadows   two, both very soft and both blue-tinted rather than grey. A
+               neutral shadow on a white page reads as dirt
+
+   Colour is the locked brand and nothing else:
+
+     --primary   #1972B9   5.06:1 on white — carries type and fills buttons
+     --accent    #FEC00F   FILL ONLY on this ground. 1.65:1 as type on white,
+                           so on the light page it never carries a word. The
+                           one exception is the footer, which is near-black:
+                           there it measures 11.9:1
+   ========================================================================== */
+
+.v2 {
+  color-scheme: light;
+
+  /* -- ground -------------------------------------------------------- */
+  --canvas: #ffffff;
+  --surface: #f6f7f8;
+  --surface-2: #eef0f2;
+  --surface-3: #e3e7ea;
+
+  /* -- ink ----------------------------------------------------------- */
+  --ink: #14181a; /* 16.9:1 on white */
+  --ink-muted: #565f64; /* 7.4:1 on white */
+  --ink-subtle: #6b757a; /* 5.3:1 on white — safe to 11px */
+  --ink-invert: #ffffff;
+
+  /* -- brand --------------------------------------------------------- */
+  --primary: #1972b9;
+  --primary-deep: #125a95;
+  --primary-ink: #ffffff;
+  --accent: #fec00f;
+  --accent-ink: #14181a; /* 10.8:1 on accent */
+
+  /* -- lines --------------------------------------------------------- */
+  --border: rgb(20 24 26 / 0.09);
+  --border-strong: rgb(20 24 26 / 0.16);
+  --glass: rgb(20 24 26 / 0.04);
+  --glass-strong: rgb(20 24 26 / 0.07);
+  --ring: #1972b9;
+
+  /* -- the footer's ground, which is the one dark surface ------------ */
+  --v2-night: #101416;
+  --v2-night-ink: #f2f5f6; /* 15.7:1 on night */
+  --v2-night-muted: #9aa5aa; /* 7.1:1 on night */
+  --v2-night-line: rgb(242 245 246 / 0.12);
+
+  /* -- depth --------------------------------------------------------- */
+  /* Blue-tinted, not grey. A neutral shadow on a white page reads as dirt. */
+  --v2-shadow-card: 0 1px 2px rgb(16 32 48 / 0.04), 0 8px 24px rgb(16 32 48 / 0.05);
+  --v2-shadow-lift: 0 2px 4px rgb(16 32 48 / 0.05), 0 18px 44px rgb(16 32 48 / 0.1);
+  --v2-shadow-float: 0 1px 2px rgb(16 32 48 / 0.05), 0 12px 32px rgb(16 32 48 / 0.08);
+
+  /* -- layout -------------------------------------------------------- */
+  --v2-shell: 82.5rem; /* 1320px — the comp's 1440 frame less its margins */
+  --v2-nav-h: 3.75rem;
+  --v2-section-y: 4.5rem;
+  --v2-radius-card: 14px;
+  --v2-radius-media: 20px;
+
+  background-color: var(--canvas);
+  color: var(--ink);
+}
+
+@media (min-width: 768px) {
+  .v2 {
+    --v2-nav-h: 4.25rem;
+    --v2-section-y: 6.5rem;
+  }
+}
+
+@layer utilities {
+  .v2-shell {
+    width: 100%;
+    max-width: var(--v2-shell);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* The card. One class, because the comp uses one card — white, hairline,
+     soft shadow — at four different sizes, and three near-identical cards
+     written three times drift apart. */
+  .v2-card {
+    background-color: var(--canvas);
+    border: 1px solid var(--border);
+    border-radius: var(--v2-radius-card);
+    box-shadow: var(--v2-shadow-card);
+  }
+
+  /* Hover for anything that is also a link. Transform and shadow only —
+     nothing that changes layout, so a row of cards cannot reflow under the
+     pointer. */
+  .v2-hoverable {
+    transition-property: transform, box-shadow, border-color, background-color;
+    transition-duration: 400ms;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .v2-hoverable:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--v2-shadow-lift);
+    border-color: var(--border-strong);
+  }
+
+  /* ------------------------------------------------------------------ *
+   * The two filled surfaces.
+   *
+   * Both are the CLIENT'S OWN gradients — the stops in `--grad-cta` and
+   * `--grad-primary` — rather than flat brand colour. The comp's filled cells
+   * are visibly graded, and a flat fill is most of what made the first cut of
+   * this page read colder than the picture.
+   *
+   * Amber needs no help: near-black measures 11.95:1 on the gradient's light
+   * end and 9.58:1 on its dark end, so the whole ramp carries body copy.
+   *
+   * Blue does. White on #008EFF — the light end — is 3.36:1, which clears the
+   * bar for a 48px figure and fails it for the 12px sentence underneath, and
+   * these cells carry both. A 20% black veil over the same gradient lifts the
+   * worst point to 4.93:1 while still reading as the client's blue rather
+   * than as a different, darker one.
+   *
+   * 135deg, not the tokens' 90deg: the comp grades corner to corner, which
+   * gives a wide cell a light source instead of a left and a right.
+   * ------------------------------------------------------------------ */
+  .v2-fill-amber {
+    background-color: var(--accent);
+    background-image: linear-gradient(135deg, #ffd34d 0%, #fec00f 48%, #f1b403 100%);
+    color: var(--accent-ink);
+  }
+
+  .v2-fill-blue {
+    background-color: var(--primary);
+    background-image:
+      linear-gradient(rgb(0 0 0 / 0.2), rgb(0 0 0 / 0.2)),
+      linear-gradient(135deg, #1972b9 0%, #1685dd 55%, #008eff 100%);
+    color: var(--primary-ink);
+  }
+
+  /* The frosted panel on a service card. Dark enough that white type clears
+     7.5:1 against the WORST case — a pure white photograph showing through at
+     28% — so contrast never depends on which frame loaded. */
+  .v2-panel {
+    background-color: rgb(18 22 26 / 0.72);
+    backdrop-filter: blur(14px) saturate(1.2);
+  }
+
+
+  .v2-night {
+    background-color: var(--v2-night);
+    color: var(--v2-night-ink);
+  }
+
+  /* Both edges of a rail dissolved into the ground. A strip that stops at a
+     hard edge reads as content that got cut off; one that fades reads as a
+     band that continues. */
+  .v2-fade-x {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  }
+
+  /* ------------------------------------------------------------------ *
+   * The type scale, and the section rhythm.
+   *
+   * These exist because they were NOT holding. An audit of the built page
+   * found three different sizes doing the same job — 44px on five section
+   * heads, 34px on Consulting results, 48px on the closing band — and one
+   * band with no top padding at all while every other had 104px. Every one
+   * of those was a `clamp()` retyped into a component, and retyped values
+   * drift. There is now one definition each and the components name it.
+   *
+   * The scale:
+   *
+   *   .v2-h1       the hero, and only the hero. Weight 600 — the one place
+   *                v2 departs from the site's large-and-light display rule,
+   *                because the comp's hero is visibly its heaviest type
+   *   .v2-h2       EVERY section head, including the closing band. Weight 400
+   *   .v2-lede     the About statement, the one paragraph set above body size
+   *   .v2-figure   every large number: the years counter, the capability
+   *                cells, the service badges' siblings
+   *
+   * The rhythm: `.v2-section` is the only vertical padding any band uses, so
+   * adjacent bands always sit 2 x --v2-section-y apart and no band can be
+   * accidentally tighter than its neighbour.
+   * ------------------------------------------------------------------ */
+  .v2-h1 {
+    font-size: clamp(2.25rem, 1.15rem + 2.9vw, 3.5rem);
+    line-height: 1.06;
+    font-weight: 600;
+    letter-spacing: -0.035em;
+  }
+
+  .v2-h2 {
+    font-size: clamp(1.875rem, 1.2rem + 2vw, 2.75rem);
+    line-height: 1.14;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+  }
+
+  .v2-lede {
+    font-size: clamp(1.0625rem, 0.9rem + 0.5vw, 1.375rem);
+    line-height: 1.55;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+  }
+
+  .v2-figure {
+    font-size: clamp(2rem, 1.5rem + 1.6vw, 2.75rem);
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  .v2-section {
+    padding-block: var(--v2-section-y);
+  }
+
+  /* Numbers that count. Tabular figures stop the width jitter that makes a
+     counter look broken while it runs. */
+  .v2-num {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  /* The very soft brand wash behind the hero and the about band. Decorative
+     only, and deliberately weaker than it would be on a dark ground — the same
+     opacity that reads as a glow on black reads as a stain on white. Never
+     behind type that has to be measured: both washes peak in a corner and are
+     fully transparent well before the copy column. */
+  .v2-wash {
+    background-color: var(--canvas);
+    background-image:
+      radial-gradient(52% 46% at 96% -6%, rgb(25 114 185 / 0.1), transparent 62%),
+      radial-gradient(44% 40% at -4% 8%, rgb(254 192 15 / 0.08), transparent 60%);
+  }
+
+  /* The services and results bands. Two very wide washes — cool climbing out
+     of the bottom left, warm off the top right — peaking at 6% and gone long
+     before any column of type, so both heads still measure against flat
+     `--canvas`.
+
+     This is the mood the flat cut was missing. The page now runs
+     washed -> white -> tinted -> tinted -> white -> grey rather than white
+     all the way down to the grey half. */
+  .v2-tint {
+    background-color: var(--canvas);
+    background-image:
+      radial-gradient(70% 58% at 4% 104%, rgb(25 114 185 / 0.06), transparent 64%),
+      radial-gradient(56% 46% at 100% 0%, rgb(254 192 15 / 0.05), transparent 62%);
+  }
+
+  /* One pass of the client strip. The duration is set inline so the two
+     copies of the track cannot drift to different speeds. */
+  .v2-marquee {
+    animation: v2-marquee linear infinite;
+    will-change: transform;
+  }
+  /* Paused under the pointer, so a reader who wants to look at a mark can. */
+  .v2-marquee-host:hover .v2-marquee {
+    animation-play-state: paused;
+  }
+
+  @keyframes v2-marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  /* Hides the native bar on the draggable rails without disabling the scroll
+     itself — wheel, trackpad, touch and keyboard all still work. */
+  .v2-noscrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .v2-noscrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+}
+
+/* Every effect on this page is a transform, an opacity or a custom property,
+   so honouring the preference is one block rather than a decision per
+   component. The JS side checks `useReducedMotion` separately for the things
+   CSS cannot reach — the scroll-linked springs and the autoplaying rails. */
+@media (prefers-reduced-motion: reduce) {
+  .v2 *,
+  .v2 *::before,
+  .v2 *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

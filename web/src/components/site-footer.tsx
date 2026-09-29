@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Mail, Phone } from "lucide-react";
 
@@ -20,6 +21,12 @@ import { CONTACT, OFFICES } from "@/lib/navigation";
  * Measured on this ground: links 7.1:1, the legal strip 5.0:1, the amber line
  * 11.97:1.
  */
+
+/** The two legal documents. Footer only — see the note at the strip. */
+const LEGAL = [
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms & Conditions", href: "/terms" },
+] as const;
 
 function Column({
   heading,
@@ -67,7 +74,30 @@ export function SiteFooter() {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] lg:gap-16">
           {/* -- the mark, the claim, the one social account we actually have -- */}
           <div className="lg:border-r lg:border-white/10 lg:pr-16">
-            <HazebergWordmark className="h-4 w-auto text-on-panel md:h-5" />
+            {/* The mark sits with the wordmark, on one baseline, divided by a
+                hairline — a credential belongs next to the name it belongs to,
+                not alone at the foot of a legal strip.
+
+                It is the REAL certification image from the client's own site.
+                A certification mark is the certifying body's trademark: it is
+                never redrawn by hand and never generated, only reproduced.
+
+                Sized to the wordmark rather than to itself. The ISO tile is a
+                solid blue rectangle and the wordmark is open letterforms, so
+                matching their pixel heights makes the tile look bigger — it is
+                held one notch under, which reads as equal. */}
+            <div className="flex items-center gap-4">
+              <HazebergWordmark className="h-4 w-auto text-on-panel md:h-5" />
+              <span aria-hidden className="h-6 w-px shrink-0 bg-white/15" />
+              <Image
+                src="/certs/iso-27001.jpg"
+                alt="ISO 27001 certified"
+                width={346}
+                height={145}
+                sizes="64px"
+                className="h-[1.125rem] w-auto rounded-xs md:h-5"
+              />
+            </div>
             <p className="mt-6 max-w-[16ch] text-2xl leading-[1.15] font-light tracking-[-0.02em] text-balance text-on-panel md:text-3xl">
               Workday expertise
               <span className="block text-accent">that stays engaged</span>
@@ -163,10 +193,23 @@ export function SiteFooter() {
         </ul>
 
         {/* -- legal --------------------------------------------------------- */}
+        {/* The legal strip. The two documents sit where a visitor looks for
+            them — bottom left, beside the copyright — and nowhere else on the
+            site, because a link to the terms in a navigation menu is a link
+            nobody has ever wanted there. */}
         <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 md:flex-row md:items-center md:justify-between">
-          <p className="text-xs text-on-panel/60">
-            Recognized by the Government of India &middot; ISO certified
-          </p>
+          <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            {LEGAL.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="text-xs text-on-panel/60 transition-colors dur-fast ease-brand hover:text-on-panel"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
           <p className="text-xs text-on-panel/60">
             &copy; {new Date().getFullYear()} Hazeberg Consulting. All rights reserved.
           </p>

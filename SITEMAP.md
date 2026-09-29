@@ -122,6 +122,15 @@ Careers and Contact both collect personal data, which needs a Privacy Policy to 
 from the forms and the footer. Terms and a cookie notice are the usual companions.
 Not in the client spec; flagging as a gap rather than assuming.
 
+**Built 2026-09-28.** `/privacy` and `/terms` now exist, linked from the footer's legal
+strip. No cookie notice, because the site sets no cookies and loads no trackers — that
+fact is stated in the policy rather than papered over with a banner.
+
+**Both documents are DRAFTS and have not been through a lawyer.** They are accurate about
+what the site does — every claim was checked against the code — but accuracy is not
+sufficiency. Two items are marked [CONFIRM] in `web/src/lib/legal-content.ts`: the hosting
+provider to be named, and the governing jurisdiction.
+
 ## CMS note (Sanity)
 
 The seven service pages are one document type with seven documents, not seven hand-built

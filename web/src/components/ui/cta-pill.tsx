@@ -82,11 +82,25 @@ export function CtaPill({
   href,
   children,
   tone = "dark",
+  external = false,
 }: {
   href: string;
   children: React.ReactNode;
   tone?: Tone;
+  /** Leaves the site. A plain anchor with `target` and `rel` rather than a
+      next/link: there is nothing for the router to prefetch on another origin,
+      and the Berg app is a different application, so it opens beside the site
+      rather than replacing it. */
+  external?: boolean;
 }) {
+  if (external) {
+    return (
+      <a href={href} target="_blank" rel="noreferrer" data-spec className={shell(tone)}>
+        {children}
+        <Disc />
+      </a>
+    );
+  }
   return (
     <Link href={href} data-spec className={shell(tone)}>
       {children}

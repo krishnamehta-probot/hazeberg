@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { Check, Mail } from "lucide-react";
 
 import { CtaButton, CtaMail } from "@/components/ui/cta-pill";
@@ -57,7 +58,7 @@ function validate(values: Values) {
     errors.email = "That does not look like an email address.";
   if (!values.company.trim()) errors.company = "Which organization is this for?";
   if (!values.interest) errors.interest = "Pick the closest one — it decides who reads this.";
-  if (values.message.trim().length < 10) errors.message = "A line or two about the tenant, at least.";
+  if (values.message.trim().length < 10) errors.message = "A line or two about the requirement, at least.";
   return errors;
 }
 
@@ -186,62 +187,62 @@ export function ContactForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <TextField
           id="name"
-          label="Your name"
+          label={copy.labels.name}
           value={values.name}
           onChange={set("name")}
           error={errors.name}
           autoComplete="name"
-          placeholder="Priya Raman"
+          placeholder={copy.labels.namePlaceholder}
         />
         <TextField
           id="email"
           type="email"
-          label="Work email"
+          label={copy.labels.email}
           value={values.email}
           onChange={set("email")}
           error={errors.email}
           autoComplete="email"
-          placeholder="you@company.com"
+          placeholder={copy.labels.emailPlaceholder}
         />
         <TextField
           id="company"
-          label="Company"
+          label={copy.labels.company}
           value={values.company}
           onChange={set("company")}
           error={errors.company}
           autoComplete="organization"
-          placeholder="Company name"
+          placeholder={copy.labels.companyPlaceholder}
         />
         <TextField
           id="phone"
           type="tel"
-          label="Phone"
+          label={copy.labels.phone}
           optional
           value={values.phone}
           onChange={set("phone")}
           error={errors.phone}
           autoComplete="tel"
-          placeholder="+1 555 0100"
+          placeholder={copy.labels.phonePlaceholder}
         />
         <SelectField
           id="interest"
-          label="What is this about?"
+          label={copy.labels.interest}
           wide
           value={values.interest}
           onChange={set("interest")}
           error={errors.interest}
           options={copy.interests}
-          placeholder="Choose the closest"
+          placeholder={copy.labels.interestPlaceholder}
         />
         <TextareaField
           id="message"
-          label="What are you working on?"
+          label={copy.labels.message}
           wide
           rows={6}
           value={values.message}
           onChange={set("message")}
           error={errors.message}
-          placeholder="Which modules, where the tenant is today, and what is getting in the way."
+          placeholder={copy.labels.messagePlaceholder}
         />
       </div>
 
@@ -270,7 +271,18 @@ export function ContactForm() {
         <CtaButton busy={state === "sending"}>
           {state === "sending" ? copy.sending : copy.submit}
         </CtaButton>
-        <p className="max-w-[30ch] text-xs text-ink-subtle">{copy.note}</p>
+        {/* The privacy link belongs HERE, next to the button that sends the
+            data, rather than only in the footer. */}
+        <p className="max-w-[32ch] text-xs text-ink-subtle">
+          {copy.note}{" "}
+          <Link
+            href="/privacy"
+            className="text-primary underline underline-offset-2 hover:no-underline"
+          >
+            Privacy Policy
+          </Link>
+          .
+        </p>
       </div>
     </form>
   );

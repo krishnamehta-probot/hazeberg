@@ -1,151 +1,133 @@
 /**
  * Careers page copy.
  *
- * COPY STATUS, per rule 5.
+ * SOURCE: the client's own careers draft at hazeberg-careers-blossom.lovable.app,
+ * captured 2026-09-28. **Every heading, paragraph, pillar and list item below is
+ * theirs, verbatim.** The earlier version of this file was built from the live
+ * site's four value props plus marked placeholders; all of that is replaced.
  *
- * The live site's §13 is the one section of it that is genuinely usable, and it
- * is used verbatim: the heading, the opening paragraph, all four value props and
- * the "send your resume" close are the client's own words, marked `[live]`.
+ * Two deliberate departures, both small and both flagged:
  *
- * What the live site does NOT have, per §18: any open role, any hiring process,
- * and any application form. **No roles are invented here.** Instead the page
- * lists the practices Hazeberg actually sells — the same seven in
- * `home-content.ts` — and says plainly that hiring is continuous across them.
- * That is honest, it needs no maintenance, and it does not put a job title on
- * the internet that nobody is recruiting for.
+ *   1. **American spelling**, per the instruction of 2026-09-28 that took the
+ *      whole site to American forms. Their draft writes "organisations" and
+ *      "optimisation"; those are the only words changed, and only in spelling.
+ *   2. **No "For Consultants" block.** `SITEMAP.md` places that audience on this
+ *      page, and the previous version carried a placeholder panel for it. The
+ *      client's draft has no such section, so it is gone rather than invented —
+ *      if it is meant to be here, it needs their copy.
  *
- *   [live]        verbatim from hazebergconsulting.com §13
- *   [derived]     says only what the home page or the sitemap already says
- *   [PLACEHOLDER] mine, and the client's to confirm: the hiring sequence and the
- *                 For Consultants proposition
+ * Their draft's CTA reads "View open positions", and there are no positions
+ * listed anywhere on it. Rather than link a button to nothing, it scrolls to the
+ * application block, which is where the page actually sends people. Flagged: if
+ * a roles list is coming, that is where it goes.
  */
 
 export const CAREERS_PAGE = {
-  eyebrow: "Careers",
-  /** [live] §13 heading, reworked into two lines so the second can carry the
-      amber. The original is "Join Our Team At Hazeberg". */
-  titleLead: "Join our team",
-  titleAccent: " at Hazeberg.",
-  /** [live] §13 body, first paragraph, trimmed of "Are you passionate about
-      innovation and" — the sentence still asks the same question in half the
-      words. */
-  lead: "Looking for an opportunity to grow your career? At Hazeberg we are building a team of creative, driven and talented individuals who want to make an impact.",
-  /** [derived] from the live site and the sitemap. */
+  eyebrow: "Careers at Hazeberg",
+  /** [live] Split so the last two words can carry the amber on the dark opener. */
+  titleLead: "Build your career around",
+  titleAccent: " Workday expertise.",
+  lead: "At Hazeberg, we bring together consultants, technologists, and problem-solvers who are passionate about delivering impactful Workday solutions.",
+  leadSecond:
+    "Join a team where deep expertise, continuous learning, and hands-on experience come together to solve complex business challenges for organizations worldwide.",
+  cta: { label: "View open positions", href: "#apply" },
+  /** [live] their own three-up rail. */
   meta: [
     { label: "Based in", value: "Coimbatore · Penang" },
-    { label: "Practices", value: "Seven, hiring across all" },
+    { label: "Focus", value: "Workday, end to end" },
     { label: "Apply by", value: "Email — we read every one" },
   ],
 
-  /* -- why here ------------------------------------------------------- */
-  /** [live] §13.1–13.4, verbatim. */
+  /* -- why here -------------------------------------------------------- */
   why: {
-    eyebrow: "Why here",
-    title: "Four things people who join us say about the place.",
+    eyebrow: "Why Hazeberg?",
+    title: "Work with expertise that creates impact.",
+    body: [
+      "A significant part of our consulting team holds Workday certifications, reflecting our commitment to quality, knowledge, and delivery excellence.",
+      "Backed by collective experience across Workday implementations, integrations, and optimization initiatives, our teams bring practical insights and proven approaches to every engagement.",
+      "At Hazeberg, you will work alongside professionals who understand the platform deeply and are focused on creating reliable, scalable solutions for clients.",
+    ],
+  },
+
+  /* -- the three pillars ----------------------------------------------- */
+  pillars: {
+    eyebrow: "Three career pillars",
+    title: "What a career here is built on.",
     items: [
       {
         n: "01",
-        title: "Collaborative Environment",
-        body: "Work with a team that values creativity, teamwork, and innovation.",
+        title: "Grow your Workday expertise",
+        body: "Work alongside experienced consultants and build your understanding across Workday modules, implementation methodologies, integrations, and enterprise transformation.",
       },
       {
         n: "02",
-        title: "Career Growth",
-        body: "We provide opportunities for learning and professional development.",
+        title: "Work on meaningful engagements",
+        body: "Contribute to projects where your work directly supports organizations in improving their processes, systems, and ways of working.",
       },
       {
         n: "03",
-        title: "Supportive Culture",
-        body: "Experience a workplace where your ideas are valued and your contributions matter.",
-      },
-      {
-        n: "04",
-        title: "Dynamic Work Environment",
-        body: "Engage in a fast-paced, innovative setting that fosters growth and excellence.",
+        title: "Learn from experienced professionals",
+        body: "Be part of a team where knowledge sharing, collaboration, and continuous improvement are part of everyday work.",
       },
     ],
   },
 
-  /* -- the practices we hire into ------------------------------------- */
-  /**
-   * The rows themselves come from `SERVICES.items` in `home-content.ts` — the
-   * seven practices, their labels and their one-line summaries, already written
-   * and already on the home page. Nothing is restated here.
-   */
-  practices: {
-    eyebrow: "Practices",
-    title: "We hire into the seven practices we deliver.",
-    body: "There is no board of open positions, because that is not how a consultancy this size staffs. We read CVs continuously across all seven and talk to people whose experience fits one of them.",
-    /** The line under the list. Says out loud why there are no job titles. */
-    note: "Certified or on the way, one module deep or several — say which of these is yours.",
-    /** Prefixes the mailto subject so an application lands sorted. */
-    applyLabel: "Apply",
+  /* -- culture --------------------------------------------------------- */
+  culture: {
+    eyebrow: "Our consulting culture",
+    title: "Built by consultants. Driven by collaboration.",
+    body: [
+      "Successful Workday transformations require more than technical skills. They require curiosity, teamwork, and the ability to understand business challenges.",
+      "At Hazeberg, we encourage our teams to share knowledge, take ownership, and continuously develop their expertise.",
+    ],
+    chips: ["Share knowledge", "Take ownership", "Keep developing"],
   },
 
-  /* -- how hiring works ----------------------------------------------- */
-  /** [PLACEHOLDER] — a four-step sequence is ordinary practice, but this is the
-      client's process to describe and the timings are theirs to commit to. */
-  hiring: {
-    eyebrow: "How hiring works",
-    title: "Four steps, and you hear back at every one.",
-    body: "No silence after step one — that is the part most people have been through and none of them liked.",
+  /* -- what you can expect --------------------------------------------- */
+  expect: {
+    eyebrow: "What you can expect",
+    title: "What you can expect at Hazeberg.",
     items: [
       {
         n: "01",
-        title: "Send a CV",
-        body: "By email, with the practice you are aiming at in the subject line.",
+        icon: "growth",
+        title: "Professional Growth",
+        body: "Build expertise through exposure to diverse Workday projects and industry challenges.",
       },
       {
         n: "02",
-        title: "A conversation",
-        body: "Thirty minutes on what you have worked on and what you want next.",
+        icon: "globe",
+        title: "Global Exposure",
+        body: "Collaborate with teams and clients across different markets and business environments.",
       },
       {
         n: "03",
-        title: "A technical discussion",
-        body: "With a consultant from the practice. Real tenant problems, not a quiz.",
+        icon: "learning",
+        title: "Continuous Learning",
+        body: "Stay ahead with opportunities to expand your skills across Workday technologies and consulting practices.",
       },
       {
         n: "04",
-        title: "Offer and onboarding",
-        body: "Scope, level and start date, in writing, with a named person to ask.",
+        icon: "ownership",
+        title: "Ownership & Responsibility",
+        body: "Take initiative, contribute ideas, and play an active role in delivering client outcomes.",
       },
     ],
   },
 
-  /* -- for independent consultants ------------------------------------ */
-  /**
-   * [PLACEHOLDER]. The sitemap is explicit that "For Consultants" belongs on
-   * Careers rather than on Berg, because it is hiring-facing — so the block
-   * exists. The proposition itself is mine and needs the client's words.
-   */
-  consultants: {
-    eyebrow: "For consultants",
-    title: "Independent, and not looking for a payroll.",
-    body: "We work with experienced independent Workday consultants on specific engagements. If that is you, the conversation is the same one — send what you have delivered and which modules you own.",
-    points: [
-      "Engagement-based, not a bench",
-      "Named on the work, with the client",
-      "Coimbatore, Penang or remote",
-    ],
-    cta: "Talk to us about contracting",
-  },
-
-  /* -- apply ---------------------------------------------------------- */
-  /** [live] §13 close: "Send your resume to connect@hazebergconsulting.com and
-      be part of our exciting journey!" — the address comes from `CONTACT`. */
+  /* -- apply ------------------------------------------------------------ */
   apply: {
-    eyebrow: "Apply",
-    title: "Send your CV and be part of the journey.",
-    body: "Email is deliberately the whole process — an attachment and three lines about what you want to work on gets further here than a form would.",
-    /** What to put in it. [derived] — this is only what the steps above imply. */
+    eyebrow: "Join us",
+    title: "Ready to shape the future of Workday transformation?",
+    body: "Join Hazeberg and become part of a team helping organizations unlock the full potential of their Workday ecosystem.",
+    cta: "Explore careers",
+    includeLabel: "What to include",
     include: [
-      "The practice you are aiming at",
+      "The Workday area you're aiming at",
       "Your CV, as a PDF",
       "Workday certifications, if you hold any",
       "Where you are and when you could start",
     ],
-    cta: "Email your CV",
   },
 
   cross: {

@@ -309,6 +309,54 @@
     );
   }
 
+  /* ---------------------------------------------------------------------- *
+   * The inner pages' opener.
+   *
+   * These pages used the home page's horizon arc, and it was the wrong light for
+   * them: the arc sweeps across the WHOLE frame, so on a page whose hero carries
+   * a headline, two paragraphs and a rail of facts, the brightest part of the
+   * picture crossed the type. Measured on /contact, the arc's crest ran straight
+   * through the meta rail.
+   *
+   * So the inner pages get the same light from a different position: the same
+   * shader family, the same blue -> pale -> amber ramp, the same pointer
+   * response — but the left edge of a circle standing off the RIGHT of the
+   * frame instead of the bottom of one rising out of the foot. See
+   * `components/motion/aperture-glow.tsx`; its bleed is asymmetric by nearly
+   * four to one, so the light physically cannot reach the type column.
+   *
+   * These two classes are the layer either side of it: structure over the top,
+   * and a guaranteed ground underneath. Both are independent of the shader, so
+   * the hero measures the same on a machine with no WebGL at all.
+   * ---------------------------------------------------------------------- */
+
+  /* The hairline grid. Structure rather than glow — it says "enterprise
+     software" where the arc says "atmosphere", which is the distinction between
+     the home page and the pages that do the work. 1px lines at 5% on near-black
+     are visible as texture and invisible as lines, which is the point. */
+  .page-grid {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    background-size: 7.5rem 7.5rem;
+    mask-image: radial-gradient(105% 95% at 76% 45%, #000 0%, transparent 74%);
+    -webkit-mask-image: radial-gradient(105% 95% at 76% 45%, #000 0%, transparent 74%);
+  }
+
+  /* The guaranteed ground under the type. Opaque at the left edge, gone by the
+     time it reaches the blooms — so the headline measures the same whatever the
+     light is doing, and the light is never flattened where it is actually
+     visible. */
+  .page-scrim {
+    background-image: linear-gradient(
+      to right,
+      rgb(5 8 13 / 0.96) 0%,
+      rgb(5 8 13 / 0.92) 42%,
+      rgb(5 8 13 / 0.55) 74%,
+      rgb(5 8 13 / 0) 100%
+    );
+  }
+
   /* The ground the services map floats on. Flat `--surface` under a diagram made
      of soft white discs reads as paper with stickers on it; two very wide, very
      weak washes — one warm from the top right, one cool from the bottom left —

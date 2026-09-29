@@ -5,6 +5,7 @@ import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { Specular } from "@/components/motion/specular";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header/site-header";
+import { ChromeGate } from "@/components/v2/chrome-gate";
 
 import "./globals.css";
 
@@ -54,13 +55,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SmoothScroll />
         {/* One pointer listener behind every [data-spec] button on the site. */}
         <Specular />
-        <SiteHeader />
+        {/* The site chrome, switched off under `/v2` — that route is a parallel
+            version of the home page and renders its own header and footer. See
+            `components/v2/chrome-gate.tsx`. */}
+        <ChromeGate>
+          <SiteHeader />
+        </ChromeGate>
         {/* The nav is fixed and floats over the page, so `main` starts at the
             very top — pages that open on artwork let the pill sit on it. */}
         <main id="main" className="flex-1">
           {children}
         </main>
-        <SiteFooter />
+        <ChromeGate>
+          <SiteFooter />
+        </ChromeGate>
       </body>
     </html>
   );

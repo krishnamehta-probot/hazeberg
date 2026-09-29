@@ -57,7 +57,11 @@ const COMP = {
     "/comp/section-13.webp",
     "/comp/section-09.webp",
   ],
-  cases: ["/comp/section-08.webp", "/comp/section-07.webp", "/comp/section-02.webp"],
+  cases: [
+    "/cases/01-hr-operations.jpg",
+    "/cases/02-global-workforce.jpg",
+    "/cases/03-financial-visibility.jpg",
+  ],
   /** The eight decorative frames on the services board, all distinct. */
   tiles: [
     "/comp/section-05.webp",

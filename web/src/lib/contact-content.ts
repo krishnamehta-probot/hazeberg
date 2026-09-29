@@ -20,13 +20,13 @@
  */
 
 export const CONTACT_PAGE = {
-  eyebrow: "Contact",
-  /** Split so the second half can carry the brand amber. Yellow is 11.97:1 on
-      the void ground and 1.65:1 on white, which is why it is type here and
-      nowhere on the light sections. */
-  titleLead: "Tell us what your",
-  titleAccent: " tenant is doing.",
-  lead: "Whether it is a first implementation, an integration that keeps failing, or a live tenant nobody has optimized since go-live — start with the specifics and we will come back with a view, not a brochure.",
+  /** [live] Every string in this block is from the client's "Hazeberg Contact Us
+      Page" document, 2026-09-28, verbatim. */
+  eyebrow: "Contact Hazeberg",
+  titleLead: "Let's talk about your",
+  titleAccent: " Workday journey.",
+  lead: "Whether you are planning a new implementation, optimizing your existing Workday environment, or exploring new possibilities, tell us what you are looking to achieve.",
+  leadSecond: "Our team will connect with you to understand your goals and identify the right next steps.",
   /** [PLACEHOLDER] on the first row only — the other two are facts already on
       the home page and in the sitemap. */
   meta: [
@@ -38,26 +38,38 @@ export const CONTACT_PAGE = {
   /* -- the form ------------------------------------------------------- */
   form: {
     eyebrow: "Start here",
-    title: "Six fields. It reaches a consultant, not a queue.",
-    body: "The more you can say about the modules and the state of the tenant, the more useful the first reply is.",
-    /** [derived] — every option is a Workday service or engagement model the
-        home page already names. "Something else" exists because a picker with
-        no way out makes people lie to it. */
+    title: "Tell us what you are looking to achieve",
+    body: "Share a few details about your requirement, and we will connect you with the right Hazeberg team.",
+    /** [live] the client's own eight dropdown options, in their order. */
     interests: [
-      "New Workday implementation",
-      "Optimization or a health check",
-      "AMS and ongoing support",
-      "Integrations",
-      "Payroll",
-      "Reporting and analytics",
-      "Partnering with Hazeberg",
-      "Something else",
+      "Workday Implementation",
+      "Workday Optimization",
+      "Workday AMS Support",
+      "Workday Integration",
+      "Workday Reporting & Analytics",
+      "Partnership Opportunity",
+      "Careers",
+      "Other",
     ],
-    /** Under the button. No privacy-policy link, because there is no privacy
-        policy yet — see the gap logged in `SITEMAP.md`. A link to a page that
-        does not exist is worse than the plain sentence. */
+    /** [live] their field labels and placeholders. */
+    labels: {
+      name: "Your Name",
+      namePlaceholder: "Enter your name",
+      email: "Work Email",
+      emailPlaceholder: "you@company.com",
+      company: "Company",
+      companyPlaceholder: "Company name",
+      phone: "Phone Number",
+      phonePlaceholder: "Phone number",
+      interest: "What can we help with?",
+      interestPlaceholder: "Choose the closest",
+      message: "Tell us more",
+      messagePlaceholder: "Describe your Workday requirement, challenge, or objective.",
+    },
+    /** No privacy-policy link was needed when this was written; there is one now,
+        and a form that takes a name should point at it. */
     note: "We use these details to reply to you and nothing else.",
-    submit: "Send it over",
+    submit: "Start the conversation",
     sending: "Sending",
   },
 
@@ -70,7 +82,7 @@ export const CONTACT_PAGE = {
       {
         n: "01",
         title: "A person reads it",
-        body: "Not a form handler. A consultant who works on the modules you named.",
+        body: "Not a form handler. A consultant who works on the areas you named.",
       },
       {
         n: "02",
@@ -86,10 +98,11 @@ export const CONTACT_PAGE = {
   },
 
   /* -- the direct lines ----------------------------------------------- */
+  /** [live] heading and supporting copy, verbatim. */
   direct: {
     eyebrow: "Or go direct",
-    title: "Skip the form.",
-    body: "Everything below reaches the same people.",
+    title: "Prefer to reach us directly?",
+    body: "You can also connect with our team through the details below.",
   },
 
   /* -- the offices ---------------------------------------------------- */
@@ -103,7 +116,7 @@ export const CONTACT_PAGE = {
   cross: {
     eyebrow: "Looking for a role?",
     title: "Careers at Hazeberg",
-    body: "Open practices, how hiring works, and where to send a CV.",
+    body: "How we work, what you can expect, and where to send a CV.",
     href: "/careers",
   },
 } as const;

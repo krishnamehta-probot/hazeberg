@@ -2,6 +2,7 @@ import { Mail, Phone } from "lucide-react";
 
 import { LinkedInMark } from "@/components/brand/linkedin-mark";
 import { ContactForm } from "@/components/contact/contact-form";
+import { StepsRail } from "@/components/contact/steps-rail";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 import { CrossLink } from "@/components/page/cross-link";
 import { PageHero } from "@/components/page/page-hero";
@@ -47,7 +48,7 @@ export const metadata = {
  * gap rather than a number.
  */
 function Rail() {
-  const { form, steps } = CONTACT_PAGE;
+  const { form } = CONTACT_PAGE;
   return (
     <div className="lg:sticky lg:top-[calc(var(--header-h)+2.5rem)]">
       <SectionHead
@@ -57,28 +58,8 @@ function Rail() {
         body={form.body}
         titleMax="max-w-[20ch]"
       />
-
       <Reveal delay={0.12} className="mt-12">
-        <p className="font-mono text-[0.6875rem] tracking-caps text-ink-subtle uppercase">
-          {steps.eyebrow}
-        </p>
-        {/* A numbered list with the rule down its left, rather than three cards.
-            Cards would compete with the form beside them, and this is a sequence
-            — one continuous line saying so is worth more than three boxes. */}
-        <ol className="mt-5 border-l border-border">
-          {steps.items.map((step) => (
-            <li key={step.n} className="relative pb-7 pl-6 last:pb-0">
-              {/* The marker sits ON the rule, centred on it: a 9px dot pulled
-                  back by half its width plus the rule's own pixel. */}
-              <span
-                aria-hidden
-                className="disc-blue absolute top-1.5 -left-[5px] size-[9px] rounded-pill"
-              />
-              <p className="text-sm font-medium text-ink">{step.title}</p>
-              <p className="mt-1.5 max-w-[34ch] text-sm text-ink-muted">{step.body}</p>
-            </li>
-          ))}
-        </ol>
+        <StepsRail />
       </Reveal>
     </div>
   );
@@ -255,6 +236,7 @@ export default function Page() {
           </>
         }
         lead={lead}
+        leadSecond={CONTACT_PAGE.leadSecond}
         meta={[...meta]}
       />
 
