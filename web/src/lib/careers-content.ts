@@ -33,7 +33,7 @@ export const CAREERS_PAGE = {
   cta: { label: "View open positions", href: "#apply" },
   /** [live] their own three-up rail. */
   meta: [
-    { label: "Based in", value: "Coimbatore, India · Penang, Malaysia" },
+    { label: "Based in", value: "Erode & Coimbatore, India · Penang, Malaysia" },
     { label: "Focus", value: "Workday, end to end" },
     { label: "Apply by", value: "Email — we read every one" },
   ],

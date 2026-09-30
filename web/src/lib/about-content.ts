@@ -59,11 +59,11 @@ export const ABOUT_PAGE = {
   lead: "Workday expertise, led by people who know the platform and understand the business behind it.",
   /** [live] The nav's lede body. */
   leadSecond:
-    "Recognized by the Government of India and ISO certified, with offices in Coimbatore and Penang.",
+    "Recognized by the Government of India and ISO certified, with offices in Erode, Coimbatore and Penang.",
   meta: [
     { label: "Workday experience", value: "12+ years" },
     { label: "Consolidated experience", value: "200+ years" },
-    { label: "Delivery centers", value: "Coimbatore, India · Penang, Malaysia" },
+    { label: "Offices", value: "Erode & Coimbatore, India · Penang, Malaysia" },
   ],
 
   /* -- 01 — our story --------------------------------------------------- */
@@ -186,7 +186,7 @@ export const ABOUT_PAGE = {
       {
         n: "03",
         title: "[DRAFT] What the offices are like",
-        body: "Coimbatore and Penang, and what is true of both.",
+        body: "Erode, Coimbatore and Penang, and what is true of all three.",
       },
     ],
     cta: { label: "See open roles", href: "/careers" },

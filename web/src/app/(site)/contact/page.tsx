@@ -13,7 +13,7 @@ import { CONTACT, OFFICES } from "@/lib/navigation";
 export const metadata = {
   title: "Contact",
   description:
-    "Tell us what your Workday tenant is doing — implementation, optimization, integrations or ongoing support. Offices in Coimbatore and Penang.",
+    "Tell us what your Workday tenant is doing — implementation, optimization, integrations or ongoing support. Offices in Erode, Coimbatore and Penang.",
 };
 
 /**
@@ -92,7 +92,7 @@ const CHANNELS = [
     value: CONTACT.phone,
     href: CONTACT.phoneHref,
     icon: Phone,
-    note: "Coimbatore and Penang business hours.",
+    note: "India and Malaysia business hours.",
     external: false,
     wide: false,
   },
@@ -175,13 +175,18 @@ function Channels() {
 /* ============================== 04 — OFFICES ============================ */
 
 /**
- * Two offices, and no map. A map is an external tile server, a third-party
+ * Three offices, and no map. A map is an external tile server, a third-party
  * script and a cookie banner in exchange for a picture of a road nobody is
  * driving to — every one of which the site has spent real effort avoiding.
  *
  * `.map-ground` instead: the same two brand washes the services board floats on,
  * here inside a card, so the block has brand light in it without a photograph or
  * an embed. The address is a `<address>` element, which is what it is for.
+ *
+ * Three across from lg. At that width a card is ~300px inside, too narrow for
+ * the facts strip's three columns ("Mon–Fri, 9:00–18:30" wrapped), so there the
+ * strip turns into three label/value rows instead; under lg the cards stack
+ * full width and the strip goes back to three columns.
  */
 function Offices() {
   const { offices } = CONTACT_PAGE;
@@ -195,7 +200,7 @@ function Offices() {
         titleMax="max-w-[22ch]"
       />
 
-      <RevealGroup as="ul" className="mt-12 grid gap-5 lg:grid-cols-2">
+      <RevealGroup as="ul" className="mt-12 grid gap-5 lg:grid-cols-3">
         {OFFICES.map((office) => (
           <RevealItem as="li" key={office.city}>
             <div className="map-ground flex h-full flex-col rounded-2xl p-7 ring-1 ring-border sm:p-9">
@@ -220,17 +225,17 @@ function Offices() {
               </address>
               {/* The three facts a person actually wants off an office card: what
                   it is for, what time it is there, and when somebody is in. */}
-              <dl className="mt-auto grid gap-x-6 gap-y-4 border-t border-border pt-7 sm:grid-cols-3">
+              <dl className="mt-auto grid gap-x-6 gap-y-4 border-t border-border pt-7 sm:grid-cols-3 lg:grid-cols-1 lg:gap-y-3">
                 {[
                   { k: "Role", v: office.role },
                   { k: "Time zone", v: office.tz },
                   { k: "Hours", v: office.hours },
                 ].map((row) => (
-                  <div key={row.k}>
-                    <dt className="font-mono text-[0.6875rem] tracking-caps text-ink-subtle uppercase">
+                  <div key={row.k} className="lg:flex lg:items-baseline lg:justify-between lg:gap-4">
+                    <dt className="shrink-0 font-mono text-[0.6875rem] tracking-caps text-ink-subtle uppercase">
                       {row.k}
                     </dt>
-                    <dd className="mt-1.5 text-sm text-ink">{row.v}</dd>
+                    <dd className="mt-1.5 text-sm text-ink lg:mt-0 lg:text-right">{row.v}</dd>
                   </div>
                 ))}
               </dl>

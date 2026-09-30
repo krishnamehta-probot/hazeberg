@@ -13,7 +13,7 @@ import { ABOUT_PAGE } from "@/lib/about-content";
 export const metadata = {
   title: "About",
   description:
-    "Hazeberg — a Workday-only consultancy with 12+ years of platform experience and delivery centers in Coimbatore and Penang. Our story, leadership, team, certifications and recognition.",
+    "Hazeberg — a Workday-only consultancy with 12+ years of platform experience and offices in Erode, Coimbatore and Penang. Our story, leadership, team, certifications and recognition.",
 };
 
 /**

@@ -31,7 +31,7 @@ export const CONTACT_PAGE = {
       the home page and in the sitemap. */
   meta: [
     { label: "Reply", value: "One business day" },
-    { label: "Offices", value: "Coimbatore, India · Penang, Malaysia" },
+    { label: "Offices", value: "Erode & Coimbatore, India · Penang, Malaysia" },
     { label: "Delivering to", value: "40+ countries" },
   ],
 
@@ -108,8 +108,8 @@ export const CONTACT_PAGE = {
   /* -- the offices ---------------------------------------------------- */
   offices: {
     eyebrow: "Where we are",
-    title: "Two offices, one delivery team.",
-    body: "Coimbatore leads delivery and Penang covers APAC hours. Clients are in 40+ countries; neither address is where the work has to happen.",
+    title: "Three offices, one delivery team.",
+    body: "Headquartered in Erode, delivering from Coimbatore, with Penang covering APAC hours. Clients are in 40+ countries; none of these addresses is where the work has to happen.",
   },
 
   /** The paired door at the foot of the page. Candidates land here constantly. */

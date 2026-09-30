@@ -221,8 +221,9 @@ const solidBg = await page.evaluate(
 (solidBg === "rgb(255, 255, 255)" ? pass : fail)("bar turns solid off the artwork", solidBg);
 checkContrast("nav link on solid bar", await page.evaluate(readColour, 'header nav a[href="/berg"]'));
 
-// ---- 4. mega panels --------------------------------------------------------
-for (const [i, label] of ["Services", "What we do", "About"].entries()) {
+// ---- 4. mega panel ---------------------------------------------------------
+// Services is the only dropdown since 2026-09-30; What we do and About are links.
+for (const [i, label] of ["Services"].entries()) {
   await page.getByRole("button", { name: new RegExp(`^${label}$`) }).click();
   await page.waitForTimeout(600);
   const box = await page.locator("#site-mega-panel").boundingBox();
@@ -315,7 +316,7 @@ for (const w of [320, 768, 1024, 1440, 1920]) {
 await page.setViewportSize({ width: 1024, height: 900 });
 await page.evaluate(() => window.scrollTo(0, 1200));
 await page.waitForTimeout(400);
-await page.getByRole("button", { name: /^What we do$/ }).click();
+await page.getByRole("button", { name: /^Services$/ }).click();
 await page.waitForTimeout(600);
 const overOpen = await page.evaluate(
   () => document.documentElement.scrollWidth - document.documentElement.clientWidth,

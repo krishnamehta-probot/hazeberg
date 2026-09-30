@@ -9,6 +9,7 @@ import {
   Services,
   Testimonials,
 } from "@/components/sections/home";
+import { BergBand } from "@/components/sections/berg-band";
 import { getHome } from "@/lib/home/get-home";
 
 /**
@@ -28,6 +29,7 @@ export default async function Home() {
       <About about={home.about} />
       <Impact impact={home.impact} />
       <Services services={home.services} />
+      <BergBand />
       <Results results={home.results} />
       <CaseStudies caseStudies={home.caseStudies} />
       <Models models={home.models} />

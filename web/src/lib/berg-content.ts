@@ -19,9 +19,14 @@
  *      somebody has to reconcile them.
  *
  * Not carried across, per `SITEMAP.md` — "A Hazeberg solution, not a sub-brand,
- * no separate visual identity": the Berg wordmark, and the purple-and-orange
- * palette their own page runs. The words are theirs; the system they are set in
- * is ours.
+ * no separate visual identity": the purple-and-orange palette their own page
+ * runs. The words are theirs; the system they are set in is ours.
+ *
+ * The Berg logo IS used, at the client's request of 2026-09-30: the hero's
+ * network scene turns its orb into it when Berg is picked, and the home page's
+ * Berg band carries it (`components/brand/berg-logo.tsx`).
+ * It brings no second identity with it — its blue and amber are exactly
+ * Hazeberg's `--primary` and `--accent`.
  */
 
 export const BERG = {
@@ -32,7 +37,6 @@ export const BERG = {
   lead: "The marketplace built for the Workday ecosystem. Customers, consulting firms, and consultants connect through one platform to discover opportunities, collaborate faster, and build stronger Workday outcomes.",
   strapline: "One platform. Three groups. Infinite opportunities.",
   cta: { label: "Get Started", href: "https://berg.hazebergconsulting.com" },
-  ctaSecondary: { label: "Quick enquiry", href: "#enquiry" },
 
   /* -- the three groups ------------------------------------------------ */
   /**
@@ -386,8 +390,10 @@ export const BERG = {
     titleAccent: " level up your Workday",
     body: "We take the stress out of your Workday, so your team can focus on what matters most.",
     email: "support.berg@hazebergconsulting.com",
-    phone: "+91 97505 33701",
-    phoneHref: "tel:+919750533701",
+    /** The client's new number, 2026-09-30. Berg's own footer still printed
+        the old one (+91 97505 33701) when this was changed. */
+    phone: "+91 90422 00899",
+    phoneHref: "tel:+919042200899",
     office: [
       "Ksquare Complex",
       "19/A, Villankurichi Rd, Vinayagapuram",
@@ -402,4 +408,29 @@ export const BERG = {
     body: "Implementation, optimization, integrations and ongoing support, delivered by our own consultants.",
     href: "/contact",
   },
+} as const;
+
+/**
+ * The band on the home page, straight after Services, that points at Berg —
+ * the client asked for one short section saying Berg is theirs, not a second
+ * Berg page. Every sentence is from the Berg page's own copy above; only the
+ * eyebrow (from `eyebrow`, "Berg — a Hazeberg platform") and the button label
+ * are mine. Not in Sanity: it is Berg's copy, and Berg's copy lives here.
+ */
+export const BERG_HOME_BAND = {
+  eyebrow: "A Hazeberg platform",
+  /** [live] the page's own title, split where the page splits it. */
+  titleLead: BERG.titleLead,
+  titleAccent: BERG.titleAccent,
+  /** [live] the first sentence of `lead`. */
+  body: "The marketplace built for the Workday ecosystem.",
+  /** The three groups, in the scene's order and with the scene's names. */
+  groups: [
+    { key: "customers", label: "Customers" },
+    { key: "firms", label: "Consulting Firms" },
+    { key: "consultants", label: "Consultants" },
+  ],
+  cta: { label: "Explore Berg", href: "/berg" },
+  /** [live] "Get Started", to the Berg app. */
+  app: BERG.cta,
 } as const;

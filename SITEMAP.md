@@ -19,8 +19,8 @@ truth. Routes, page types and section anchors are settled here before any page i
 | Workday Integrations | `/services/workday-integrations` | Landing |
 | Workday Reporting & Analytics | `/services/workday-reporting-and-analytics` | Landing |
 | Workday Extend | `/services/workday-extend` | Landing |
-| What we do | `/what-we-do` | Consolidated landing, 8 sections, all anchor-linked from the nav dropdown |
-| About | `/about` | Consolidated landing, 6 sections, all anchor-linked from the nav dropdown |
+| What we do | `/what-we-do` | Consolidated landing, 8 sections, anchor-linked from the page's own rail. First in the nav, a plain link (2026-09-30) |
+| About | `/about` | Consolidated landing, 6 sections, anchor-linked from the page's own rail. A plain nav link (2026-09-30) |
 | Berg | `/berg` | Single page. A Hazeberg solution, not a sub-brand - no separate visual identity |
 | Careers | `/careers` | Single page |
 | Contact | `/contact` | Single page |
@@ -136,6 +136,12 @@ capacity - i.e. delivery capacity as a service, not end-client implementation wo
 "For Consultants" content deliberately does **not** live here. It sits on Careers,
 because that audience is hiring-facing.
 
+**The Berg logo is used twice**, at the client's request (2026-09-30): at the centre of
+the hero's network scene, where the orb turns into it — glowing — when Berg is picked
+(the orb is the resting state), and on the home page's Berg band. Its colours are exactly
+Hazeberg's blue and amber, so it does not break "no separate visual identity". Traced to
+SVG from the Berg app's PNG — `web/src/components/brand/berg-logo.tsx`.
+
 ---
 
 ## The axis that separates Services from What we do
@@ -194,7 +200,11 @@ without a content migration.
 
 ## Home page sections (as built, 2026-09-23)
 
-Hero · Why Hazeberg · Impact · Services · Results · Case Studies · Engagement · Testimonials · Closing
+Hero · Why Hazeberg · Impact · Services · Berg · Results · Case Studies · Engagement · Testimonials · Closing
+
+**Berg band** (added 2026-09-30, client request): one card after Services pointing at Berg —
+logo, the Berg page's own title and first sentence, the three groups, "Explore Berg" and
+"Get Started". Copy from `BERG_HOME_BAND` in `web/src/lib/berg-content.ts`, not Sanity.
 
 **Retired from the home page:** "Why choose Hazeberg" and the FAQ. The page ran to 18 screens;
 these two came out. Both sets of copy are kept in `web/src/lib/home-content.ts` under a RETIRED

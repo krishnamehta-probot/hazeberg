@@ -33,7 +33,8 @@
  * Two things the client must confirm before this is published, both marked
  * [CONFIRM] in the text:
  *   1. the hosting provider named in the privacy policy
- *   2. that Coimbatore, Tamil Nadu is the intended jurisdiction
+ *   2. that Coimbatore, Tamil Nadu is the intended jurisdiction — a live
+ *      question since headquarters moved to Erode (2026-09-30)
  */
 
 export type LegalBlock =
@@ -56,7 +57,7 @@ export type LegalDoc = {
 
 /** Shared by both documents, so the entity is described once. */
 const ENTITY =
-  "Hazeberg Consulting LLP, a limited liability partnership incorporated in India on 28 February 2024, with offices at Annamalai Industrial Park, 227/1A, Sharp Nagar, Nehru Nagar West, Kalapatti, Coimbatore, Tamil Nadu 641048, India, and at 12A-2, Jalan Vervea 7, Bandar Cassia, Pulau Pinang 14110, Malaysia.";
+  "Hazeberg Consulting LLP, a limited liability partnership incorporated in India on 28 February 2024, headquartered at 214/5, Vinayagar Kovil Street 2, Moolapalayam, Erode, Tamil Nadu 638002, India, with offices at 19/A, Ksquare Complex, Villankurichi Rd, Murugan Nagar, Vinayagapuram, Coimbatore, Tamil Nadu 641035, India, and at 12A-2, Jalan Vervea 7, Bandar Cassia, Pulau Pinang 14110, Malaysia.";
 
 export const PRIVACY: LegalDoc = {
   eyebrow: "Legal",
@@ -247,7 +248,7 @@ export const PRIVACY: LegalDoc = {
       blocks: [
         {
           kind: "p",
-          text: "For anything in this policy, including a request to exercise your rights, write to connect@hazebergconsulting.com or call +91 9750533701. Postal enquiries can go to our Coimbatore office at the address in section 1.",
+          text: "For anything in this policy, including a request to exercise your rights, write to connect@hazebergconsulting.com or call +91 9042200899. Postal enquiries can go to our headquarters in Erode, at the address in section 1.",
         },
         {
           kind: "p",
@@ -406,7 +407,7 @@ export const TERMS: LegalDoc = {
       blocks: [
         {
           kind: "p",
-          text: "These terms and any dispute arising out of them or out of your use of this site are governed by the laws of India. The courts at Coimbatore, Tamil Nadu have exclusive jurisdiction, save that we retain the right to bring proceedings in the courts of the country in which you are resident. [CONFIRM: jurisdiction to be confirmed with the client's counsel.]",
+          text: "These terms and any dispute arising out of them or out of your use of this site are governed by the laws of India. The courts at Coimbatore, Tamil Nadu have exclusive jurisdiction, save that we retain the right to bring proceedings in the courts of the country in which you are resident. [CONFIRM: jurisdiction to be confirmed with the client's counsel — Coimbatore, or Erode now that headquarters is there.]",
         },
       ],
     },
@@ -416,7 +417,7 @@ export const TERMS: LegalDoc = {
       blocks: [
         {
           kind: "p",
-          text: "Questions about these terms go to connect@hazebergconsulting.com, or to our Coimbatore office at the address in section 1.",
+          text: "Questions about these terms go to connect@hazebergconsulting.com, or to our headquarters in Erode, at the address in section 1.",
         },
       ],
     },

@@ -444,7 +444,7 @@ log("\n== 9. footer ==");
     };
   });
   const has = (s) => r.text.includes(s);
-  const ok = has("Coimbatore") && has("Penang") && r.tel === "tel:+919750533701" && r.mail === "mailto:connect@hazebergconsulting.com";
+  const ok = has("Coimbatore") && has("Penang") && r.tel === "tel:+919042200899" && r.mail === "mailto:connect@hazebergconsulting.com";
   if (!ok) fail();
   log(`  offices: Coimbatore ${has("Coimbatore")}, Penang ${has("Penang")}`);
   log(`  ${r.tel} / ${r.mail} -> ${mark(ok)}`);

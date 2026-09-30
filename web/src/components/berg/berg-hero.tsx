@@ -1,4 +1,4 @@
-import { IslandScene } from "@/components/berg/island-scene";
+import { NetworkScene } from "@/components/berg/network-scene";
 import { Reveal } from "@/components/motion/reveal";
 import { CtaPill } from "@/components/ui/cta-pill";
 import { Eyebrow } from "@/components/ui/section";
@@ -13,10 +13,10 @@ import { BERG } from "@/lib/berg-content";
  * over-used shape in software marketing. Connected dots is what every AI landing
  * page in the world opens with, and it says nothing specific about this product.
  *
- * So the panel on the right is Berg's network drawn as a place — three
- * isometric islands wired into one lit platform, on a light ground, tilting to
- * the pointer. It is the client's strapline as a world rather than a sentence:
- * "One platform. Three groups." See `island-scene.tsx`; every word in it is
+ * So the panel on the right is Berg's network drawn as a place — the three
+ * groups' people, each in a pool of their own colour on one floor, wired into
+ * Berg's lit disc, on a light ground, tilting to the pointer. It is the client's strapline as a world rather than a sentence:
+ * "One platform. Three groups." See `network-scene.tsx`; every word in it is
  * theirs, and it says in its own foot that the view is illustrative.
  *
  * **Light ground, deliberately.** Every other page here opens on the dark void. A
@@ -60,24 +60,13 @@ export function BergHero() {
               <p className="mt-5 max-w-[48ch] text-base text-ink-muted">{BERG.lead}</p>
             </Reveal>
             <Reveal immediate delay={0.24}>
-              {/* Two actions, one hierarchy. Berg's own page runs two filled
-                  buttons side by side, which is two primary actions — and two
-                  primary actions is none. */}
-              {/* The second action is the WHITE pill, not a bare text link. A
-                  text link beside a 56px button is not a second action, it is a
-                  footnote — and on a product page the enquiry route is a real
-                  choice, not an afterthought. Same shape, inverted fill: the
-                  hierarchy is carried by the fill rather than by one of them
-                  barely being a control at all.
-
-                  White reads on this ground because the rim is lit at rest —
-                  `.spec`'s conic gradient is not gated on hover. */}
-              <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-4">
+              {/* One action. There was a second, a white "Quick enquiry" pill
+                  down to the contact block; the client took it out, 2026-09-30 —
+                  the opener asks for one thing, and that is to get started. The
+                  contact block is still at the foot of the page. */}
+              <div className="mt-8">
                 <CtaPill href={BERG.cta.href} external>
                   {BERG.cta.label}
-                </CtaPill>
-                <CtaPill href={BERG.ctaSecondary.href} tone="light">
-                  {BERG.ctaSecondary.label}
                 </CtaPill>
               </div>
             </Reveal>
@@ -97,7 +86,7 @@ export function BergHero() {
           </div>
 
           <Reveal immediate delay={0.2}>
-            <IslandScene />
+            <NetworkScene />
           </Reveal>
         </div>
       </div>

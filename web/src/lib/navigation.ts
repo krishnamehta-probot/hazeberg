@@ -2,20 +2,26 @@
  * The site's information architecture — single source of truth for the header,
  * the mobile drawer and (later) the footer.
  *
- * Encoded directly from the signed-off sitemap:
+ * Encoded directly from the signed-off sitemap, in the bar's order:
  *
  *   Home                    separate landing page
+ *   What we do              separate landing page; every solution is a section
+ *                           ON that page (the sitemap marks them "consolidated")
  *   Services                dropdown only, NO landing page of its own
  *     - 6 Workday services, each its own landing page
  *       (AMS is an engagement model, so it lives on /what-we-do instead)
- *   What we do              separate landing page; every solution is a section
- *                           ON that page (the sitemap marks them "consolidated")
  *   About                   separate landing page; sections consolidated onto it
  *   Berg                    single page — consulting firms / customers extending
  *                           delivery capacity. "For Consultants" deliberately
  *                           lives on Careers instead, as it is hiring-facing.
  *   Careers                 single page
  *   Contact                 single page
+ *
+ * ONE DROPDOWN. What we do and About used to open panels of their own, listing
+ * their sections; the client's call, 2026-09-30, is that only Services drops
+ * down and What we do leads the bar. Both pages carry their own anchor rail, so
+ * nothing their panels linked to is lost — it is one click further, on the page
+ * it belongs to.
  *
  * COPY STATUS — every `description` and every `feature` block below is drawn
  * from the live site (hazebergconsulting.com, captured in
@@ -34,21 +40,7 @@ export type NavIcon =
   | "financials"
   | "extend"
   | "integrations"
-  | "reporting"
-  | "ams"
-  | "implementation"
-  | "payroll-transformation"
-  | "integration-modernization"
-  | "health-check"
-  | "optimization"
-  | "release"
-  | "cost"
-  | "story"
-  | "leadership"
-  | "team"
-  | "life"
-  | "certifications"
-  | "rewards";
+  | "reporting";
 
 export type NavLeaf = {
   label: string;
@@ -98,6 +90,7 @@ export type NavNode =
     };
 
 export const PRIMARY_NAV: NavNode[] = [
+  { kind: "link", label: "What we do", href: "/what-we-do" },
   {
     kind: "menu",
     label: "Services",
@@ -168,149 +161,7 @@ export const PRIMARY_NAV: NavNode[] = [
       cta: { label: "Start with a Workday Health Check", href: "/what-we-do#workday-health-check" },
     },
   },
-  {
-    kind: "menu",
-    label: "What we do",
-    href: "/what-we-do",
-    lede: {
-      title: "From first deployment to year ten",
-      body: "Eight engagement models covering the whole Workday lifecycle — pick the one that matches where your tenant is today.",
-    },
-    viewAll: { label: "View all solutions", href: "/what-we-do" },
-    columns: [
-      {
-        heading: "Get live",
-        items: [
-          {
-            label: "Workday Implementation",
-            href: "/what-we-do#workday-implementation",
-            icon: "implementation",
-            description: "Consult, design and configure, through to cut-over.",
-          },
-          {
-            label: "Payroll Transformation",
-            href: "/what-we-do#payroll-transformation",
-            icon: "payroll-transformation",
-            description: "Move payroll onto Workday without breaking a cycle.",
-          },
-          {
-            label: "Integration Modernization",
-            href: "/what-we-do#integration-modernization",
-            icon: "integration-modernization",
-            description: "Retire brittle point-to-point feeds for supported patterns.",
-          },
-          {
-            label: "Workday Health Check",
-            href: "/what-we-do#workday-health-check",
-            icon: "health-check",
-            description: "A structured read on tenant health before you commit budget.",
-          },
-        ],
-      },
-      {
-        heading: "Stay ahead",
-        items: [
-          {
-            label: "Workday Optimization",
-            href: "/what-we-do#workday-optimization",
-            icon: "optimization",
-            description: "Post go-live fixes and new functionality, rolled out safely.",
-          },
-          {
-            label: "Workday AMS",
-            href: "/what-we-do#workday-ams",
-            icon: "ams",
-            description: "A standing team for the tenant you already run.",
-          },
-          {
-            label: "Release Management",
-            href: "/what-we-do#release-management",
-            icon: "release",
-            description: "Two Workday releases a year, tested and adopted on time.",
-          },
-          {
-            label: "Cost Optimization",
-            href: "/what-we-do#cost-optimization",
-            icon: "cost",
-            description: "Take spend out of the run without taking out capability.",
-          },
-        ],
-      },
-    ],
-    feature: {
-      eyebrow: "Case study",
-      title: "Half a million dollars a year",
-      body: "What a Fortune 500 client got from moving to Workday:",
-      tags: ["40% faster HR processing", "30% fewer payroll errors", "50% faster onboarding"],
-      href: "/what-we-do#case-studies",
-      ctaLabel: "Read the case studies",
-      tone: "quiet",
-    },
-    footnote: {
-      text: "Already live on Workday?",
-      cta: { label: "See how our AMS model works", href: "/what-we-do#workday-ams" },
-    },
-  },
-  {
-    kind: "menu",
-    label: "About",
-    href: "/about",
-    lede: {
-      title: "The people behind the tenant",
-      body: "Recognized by the Government of India and ISO certified, with offices in Coimbatore and Penang.",
-    },
-    viewAll: { label: "About Hazeberg", href: "/about" },
-    columns: [
-      {
-        items: [
-          {
-            label: "Our story",
-            href: "/about#our-story",
-            icon: "story",
-            description: "Why a Workday-only consultancy, and why now.",
-          },
-          {
-            label: "Leadership",
-            href: "/about#leadership",
-            icon: "leadership",
-            description: "Founded and led by Sakthi Vignesh.",
-          },
-          {
-            label: "Our team",
-            href: "/about#our-team",
-            icon: "team",
-            description: "The consultants who do the actual work.",
-          },
-        ],
-      },
-      {
-        items: [
-          {
-            label: "Life at Hazeberg",
-            href: "/about#life-at-hazeberg",
-            icon: "life",
-            description: "How we work, and what it is like to work here.",
-          },
-          {
-            label: "Certifications",
-            href: "/about#certifications",
-            icon: "certifications",
-            description: "ISO certified; recognized by the Government of India.",
-          },
-          {
-            label: "Rewards",
-            href: "/about#rewards",
-            icon: "rewards",
-            description: "Recognition earned by the team and by the work.",
-          },
-        ],
-      },
-    ],
-    footnote: {
-      text: "Want to work here?",
-      cta: { label: "See open roles", href: "/careers" },
-    },
-  },
+  { kind: "link", label: "About", href: "/about" },
   { kind: "link", label: "Berg", href: "/berg" },
   { kind: "link", label: "Careers", href: "/careers" },
 ];
@@ -318,42 +169,56 @@ export const PRIMARY_NAV: NavNode[] = [
 /** The header's trailing call to action. */
 export const NAV_CTA = { label: "Contact us", href: "/contact" } as const;
 
-/** Real, verified contact details — lifted from the live site. */
+/** Real, verified contact details. The email and LinkedIn are the live site's;
+    the phone number is the client's own, supplied 2026-09-30 to replace
+    +91 9750533701 everywhere it appeared. */
 export const CONTACT = {
   email: "connect@hazebergconsulting.com",
-  phone: "+91 9750533701",
-  phoneHref: "tel:+919750533701",
+  phone: "+91 9042200899",
+  phoneHref: "tel:+919042200899",
   linkedin: "https://www.linkedin.com/company/hazeberg",
 } as const;
 
 /**
- * The two offices, in full. `[live]` §17 — the addresses are exactly as the live
- * site prints them, only cased down from its all-caps Malaysian line.
+ * The three offices, in full, as the client supplied them on 2026-09-30:
+ * headquarters in Erode, an office in Coimbatore, and Penang. That list replaces
+ * the live site's two (the Coimbatore address at Annamalai Industrial Park, and
+ * Penang). The addresses are theirs, only cased down from the all-caps
+ * Malaysian line and broken where a postal address breaks.
  *
  * Here rather than in the footer, which is where they used to live: the footer
- * wants one line each and the Contact page wants the whole address, a timezone
+ * wants one line each and the Contact page wants the whole address, a time zone
  * and what the office is for. Two copies of an address is how one of them ends
  * up out of date.
  *
- * `role` and `hours` are `[derived]` — the split of work between the two offices
- * is not stated anywhere on the live site, and the hours are the ordinary
- * business day in each timezone. Both are safe to correct; neither is a claim
- * about capability.
+ * `role` is the client's word for Erode ("HQ") and `[derived]` for the other
+ * two; `hours` are `[derived]` — the ordinary business day in each time zone.
+ * Both are safe to correct; neither is a claim about capability.
  */
 export const OFFICES = [
+  {
+    city: "Erode",
+    code: "IN",
+    country: "India",
+    /** The footer's one-liner. */
+    short: "Moolapalayam, Erode",
+    lines: ["214/5, Vinayagar Kovil Street 2", "Moolapalayam, Erode", "Tamil Nadu 638002"],
+    role: "Headquarters",
+    tz: "IST · UTC+5:30",
+    hours: "Mon–Fri, 9:00–18:30",
+  },
   {
     city: "Coimbatore",
     code: "IN",
     country: "India",
-    /** The footer's one-liner. */
-    short: "Annamalai Industrial Park, Kalapatti",
+    short: "Ksquare Complex, Vinayagapuram",
     lines: [
-      "Annamalai Industrial Park, 227/1A",
-      "Sharp Nagar, Nehru Nagar West",
-      "Kalapatti, Coimbatore",
-      "Tamil Nadu 641048",
+      "19/A, Ksquare Complex",
+      "Villankurichi Rd, Murugan Nagar",
+      "Vinayagapuram, Coimbatore",
+      "Tamil Nadu 641035",
     ],
-    role: "Headquarters and delivery",
+    role: "Delivery",
     tz: "IST · UTC+5:30",
     hours: "Mon–Fri, 9:00–18:30",
   },

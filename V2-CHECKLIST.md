@@ -315,7 +315,7 @@ It exits non-zero on any failure. Current result: **all checks passed.**
 | 6 | Counters | the page's one counter (About, 12+) — visible figure == announced figure |
 | 7 | Contrast | 17 samples, **lowest 4.91:1** — measured at each gradient's worst stop, not its base colour |
 | 8 | Chrome gate | one header and one footer on both routes, v2's on `/v2`, v1's on `/` |
-| 9 | Footer facts | both offices, `tel:+919750533701`, `mailto:connect@hazebergconsulting.com` |
+| 9 | Footer facts | all three offices, `tel:+919042200899`, `mailto:connect@hazebergconsulting.com` |
 | 10 | Reduced motion | 0 text nodes stuck under 50% opacity |
 | 11 | Alignment | one content column, one heading size, one rhythm, no orphan rows |
 
@@ -362,7 +362,7 @@ The pass cannot judge any of this.
 
 **Header**
 - [ ] The bar floats clear of every edge and gains a shadow, not a border, on scroll
-- [ ] Services / What we do / About open on hover and on click; Escape closes them
+- [ ] Services (the only dropdown since 2026-09-30) opens on hover and on click; Escape closes it
 - [ ] The pointer can cross the gap from the chevron into the panel without it closing
 - [ ] Below 1024px the drawer opens, the page behind it does not scroll
 

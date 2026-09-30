@@ -12,7 +12,7 @@ import { CONTACT } from "@/lib/navigation";
 export const metadata = {
   title: "Careers",
   description:
-    "Build your career around Workday expertise. Join Hazeberg's certified consultants across implementations, integrations and optimization, from Coimbatore and Penang.",
+    "Build your career around Workday expertise. Join Hazeberg's certified consultants across implementations, integrations and optimization, from Erode, Coimbatore and Penang.",
 };
 
 /**
