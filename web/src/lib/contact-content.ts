@@ -92,7 +92,7 @@ export const CONTACT_PAGE = {
       {
         n: "03",
         title: "A call, if it is useful",
-        body: "Thirty minutes, your timezone. No deck unless you ask for one.",
+        body: "Thirty minutes, your time zone. No deck unless you ask for one.",
       },
     ],
   },
@@ -100,7 +100,7 @@ export const CONTACT_PAGE = {
   /* -- the direct lines ----------------------------------------------- */
   /** [live] heading and supporting copy, verbatim. */
   direct: {
-    eyebrow: "Or go direct",
+    eyebrow: "Go direct",
     title: "Prefer to reach us directly?",
     body: "You can also connect with our team through the details below.",
   },

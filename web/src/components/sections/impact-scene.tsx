@@ -5,7 +5,7 @@ import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScro
 
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 import { CtaPill } from "@/components/ui/cta-pill";
-import { IMPACT } from "@/lib/home-content";
+import type { HomeImpact } from "@/lib/home/types";
 
 /**
  * Impact, as four strands converging on one point.
@@ -126,7 +126,7 @@ function pathAt(i: number, p: number, narrow: boolean) {
   return `M -12 ${enter} C ${18} ${enter}, ${e.x - 26} ${e.y}, ${e.x} ${e.y}`;
 }
 
-export function ImpactScene() {
+export function ImpactScene({ impact }: { impact: HomeImpact }) {
   const track = useRef<HTMLDivElement>(null);
   const glowId = useId();
   const reduce = useReducedMotion();
@@ -164,7 +164,7 @@ export function ImpactScene() {
      they have started to merge, the labels are sitting on top of each other and a
      card opening over the arriving payoff helps nobody. */
   const hoverable = prog < MERGE_FROM + 0.08;
-  const card = hoverable && open !== null ? IMPACT.cards[open] : null;
+  const card = hoverable && open !== null ? impact.cards[open] : null;
 
   /* The track div is rendered in BOTH branches and always carries the ref.
      Returning a different tree for the unpinned case left `useScroll` pointed at
@@ -175,17 +175,17 @@ export function ImpactScene() {
       <div className="shell py-[var(--section-y)]">
         <Reveal className="max-w-[46rem]">
           <p className="font-mono text-xs tracking-caps text-on-panel/55 uppercase">
-            {IMPACT.eyebrow}
+            {impact.eyebrow}
           </p>
           <h2 className="mt-5 text-3xl leading-[1.08] font-light tracking-[-0.03em] text-pretty text-on-panel">
-            {IMPACT.titleLead}{" "}
-            <span className="text-accent">{IMPACT.titleAccent}</span>
+            {impact.titleLead}{" "}
+            <span className="text-accent">{impact.titleAccent}</span>
           </h2>
-          <p className="mt-5 max-w-[56ch] text-base text-on-panel/70">{IMPACT.body}</p>
+          <p className="mt-5 max-w-[56ch] text-base text-on-panel/70">{impact.body}</p>
         </Reveal>
 
         <RevealGroup as="ul" className="mt-12 divide-y divide-white/10">
-          {IMPACT.cards.map((c) => (
+          {impact.cards.map((c) => (
             <RevealItem as="li" key={c.title} className="py-6 first:pt-0">
               <p className="text-3xl leading-none font-light tracking-[-0.03em] text-on-panel tabular-nums">
                 {c.stat}
@@ -200,8 +200,8 @@ export function ImpactScene() {
         </RevealGroup>
 
         <div className="mt-10">
-          <CtaPill href={IMPACT.cta.href} tone="light">
-            {IMPACT.cta.label}
+          <CtaPill href={impact.cta.href} tone="light">
+            {impact.cta.label}
           </CtaPill>
         </div>
       </div>
@@ -220,7 +220,7 @@ export function ImpactScene() {
               : "right-0 left-[58%] pr-[var(--gutter)]"
           }`}
         >
-          {IMPACT.eyebrow}
+          {impact.eyebrow}
         </p>
 
         {/* The lines. `preserveAspectRatio="none"` lets the 0-100 grid stretch to
@@ -303,8 +303,11 @@ export function ImpactScene() {
         />
 
         {/* The labels. Buttons, not decorated text: this is the only way into the
-            detail, and a pointer is not the only way people drive a page. */}
-        {IMPACT.cards.map((c, i) => {
+            detail, and a pointer is not the only way people drive a page.
+            Capped at the strand count: the geometry is positional, and a fifth
+            card from the CMS would ask for a strand that is not drawn. The
+            schema holds the list at four; this holds the page if it is not. */}
+        {impact.cards.slice(0, STRANDS.length).map((c, i) => {
           const e = endAt(i, prog, narrow);
           const drawn = reduce ? 1 : ease(clamp01((prog - i * 0.035) / DRAW_END));
           return (
@@ -396,13 +399,13 @@ export function ImpactScene() {
               className={`${card ? "absolute inset-0" : ""} ${payoff > 0.02 ? "" : "invisible"}`}
             >
               <h2 className="text-2xl leading-[1.08] font-light tracking-[-0.03em] text-balance text-on-panel sm:text-3xl">
-                {IMPACT.titleLead}{" "}
-                <span className="text-accent">{IMPACT.titleAccent}</span>
+                {impact.titleLead}{" "}
+                <span className="text-accent">{impact.titleAccent}</span>
               </h2>
-              <p className="mt-4 max-w-[46ch] text-sm text-on-panel/70 sm:text-base lg:mt-5">{IMPACT.body}</p>
+              <p className="mt-4 max-w-[46ch] text-sm text-on-panel/70 sm:text-base lg:mt-5">{impact.body}</p>
               <div className="pointer-events-auto mt-6 lg:mt-8">
-                <CtaPill href={IMPACT.cta.href} tone="light">
-                  {IMPACT.cta.label}
+                <CtaPill href={impact.cta.href} tone="light">
+                  {impact.cta.label}
                 </CtaPill>
               </div>
             </div>
@@ -413,7 +416,7 @@ export function ImpactScene() {
             assistive technology, which should not have to drive an animation to
             reach two thirds of a section. */}
         <ul className="sr-only">
-          {IMPACT.cards.map((c) => (
+          {impact.cards.map((c) => (
             <li key={c.title}>
               {c.stat} {c.statLabel}. {c.title}. {c.body}
             </li>

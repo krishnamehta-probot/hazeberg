@@ -85,6 +85,7 @@ const CHANNELS = [
     icon: Mail,
     note: "Best for anything with detail in it.",
     external: false,
+    wide: true,
   },
   {
     label: "Phone",
@@ -93,14 +94,16 @@ const CHANNELS = [
     icon: Phone,
     note: "Coimbatore and Penang business hours.",
     external: false,
+    wide: false,
   },
   {
     label: "LinkedIn",
     value: "Hazeberg Consulting",
     href: CONTACT.linkedin,
     icon: LinkedInMark,
-    note: "Company page — updates and roles.",
+    note: "Company updates and open roles.",
     external: true,
+    wide: false,
   },
 ] as const;
 
@@ -117,34 +120,53 @@ function Channels() {
           titleMax="max-w-[16ch]"
         />
 
-        <RevealGroup as="ul" className="grid gap-4 sm:grid-cols-3">
-          {CHANNELS.map((channel) => (
-            <RevealItem as="li" key={channel.label}>
-              <a
-                href={channel.href}
-                {...(channel.external ? { target: "_blank", rel: "noreferrer" } : {})}
-                className="group/c flex h-full flex-col rounded-lg bg-canvas p-6 ring-1 ring-border transition dur-base ease-brand hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/10 hover:ring-primary/35"
+        {/* The address never breaks, so the grid makes room for it instead.
+            It needs 305px of tile in Space Mono at 14px, and three equal
+            tiles never get that — the list tops out at 840px. So, by the
+            list's own width rather than the viewport's, since the head sits
+            beside it at lg and above it below:
+              under 28rem   one column, and the values drop to 12px under
+                            20rem (a 320px phone) so the address still fits
+              28-48rem      the email takes the whole first row, the other two
+                            share the second
+              48rem up      one row; the email column never goes narrower
+                            than its address and the other two split the rest */}
+        <div className="@container">
+          <RevealGroup
+            as="ul"
+            className="grid grid-cols-1 gap-4 @md:grid-cols-2 @3xl:grid-cols-[minmax(min-content,1fr)_minmax(0,1fr)_minmax(0,1fr)]"
+          >
+            {CHANNELS.map((channel) => (
+              <RevealItem
+                as="li"
+                key={channel.label}
+                className={channel.wide ? "@md:col-span-2 @3xl:col-span-1" : ""}
               >
-                <span
-                  aria-hidden
-                  className="disc-blue grid size-10 place-items-center rounded-pill text-white"
+                <a
+                  href={channel.href}
+                  {...(channel.external ? { target: "_blank", rel: "noreferrer" } : {})}
+                  className="group/c flex h-full flex-col rounded-lg bg-canvas p-6 ring-1 ring-border transition dur-base ease-brand hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/10 hover:ring-primary/35"
                 >
-                  <channel.icon className="size-4" strokeWidth={1.9} />
-                </span>
-                <span className="mt-6 font-mono text-[0.6875rem] tracking-caps text-ink-subtle uppercase">
-                  {channel.label}
-                </span>
-                {/* `break-all` on the address only: the email is 30 characters
-                    with no break opportunity in it, and at 320px it is wider
-                    than the tile. */}
-                <span className="mt-2 font-mono text-sm break-all text-primary group-hover/c:underline">
-                  {channel.value}
-                </span>
-                <span className="mt-auto pt-5 text-sm text-ink-muted">{channel.note}</span>
-              </a>
-            </RevealItem>
-          ))}
-        </RevealGroup>
+                  <span
+                    aria-hidden
+                    className="disc-blue grid size-10 place-items-center rounded-pill text-white"
+                  >
+                    <channel.icon className="size-4" strokeWidth={1.9} />
+                  </span>
+                  <span className="mt-6 font-mono text-[0.6875rem] tracking-caps text-ink-subtle uppercase">
+                    {channel.label}
+                  </span>
+                  <span
+                    className={`mt-2 font-mono text-sm text-primary group-hover/c:underline @max-xs:text-xs ${channel.wide ? "whitespace-nowrap" : ""}`}
+                  >
+                    {channel.value}
+                  </span>
+                  <span className="mt-auto pt-5 text-sm text-ink-muted">{channel.note}</span>
+                </a>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </div>
       </div>
     </Section>
   );
@@ -201,7 +223,7 @@ function Offices() {
               <dl className="mt-auto grid gap-x-6 gap-y-4 border-t border-border pt-7 sm:grid-cols-3">
                 {[
                   { k: "Role", v: office.role },
-                  { k: "Timezone", v: office.tz },
+                  { k: "Time zone", v: office.tz },
                   { k: "Hours", v: office.hours },
                 ].map((row) => (
                   <div key={row.k}>

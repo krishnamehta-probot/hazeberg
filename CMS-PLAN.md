@@ -130,6 +130,28 @@ Deliberately not CMS-first.
 The 509 lines already in `src/lib/` were written as data, not markup, which is why this
 conversion is cheap. Home is the pilot; the rest is repetition.
 
+### Status — 2026-09-30: B and C done for home
+
+Built against home v1 only (v2 still reads code). Setup and the editors' guide
+are in `web/SANITY.md`. Where the build departs from the model above, and why:
+
+- **`homePage` + `caseStudy` exist; nothing else yet.** `caseStudy` went in now
+  because home already needs three, and the other three consumers will reuse
+  the same records.
+- **The services wheel is inline on `homePage`**, one item per service with a
+  fixed service key. The routes and icons come from code, and editors change
+  the words and the order. It becomes references once `servicePage` and
+  `solution` exist (phase D). Until then the footer and `/services/*` still
+  read the service names from code.
+- **The client logo rail stays in code.** Its files are pre-processed for the
+  dark band and sized by `scripts/inkscale.mjs`. An upload field would accept a
+  logo that is invisible there.
+- **No `siteSettings` yet.** Home's title and description still come from the
+  root layout.
+- **Code copy stays as the fallback.** With no project ID, or before the seed,
+  the site renders `home-content.ts`, so a deploy never depends on the CMS
+  being set up.
+
 ---
 
 ## Practical items that bite later if skipped

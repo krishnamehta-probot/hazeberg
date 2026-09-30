@@ -5,9 +5,7 @@ import { useId, useState } from "react";
 import { Plus } from "lucide-react";
 
 import { RevealItem } from "@/components/motion/reveal";
-import { CASE_STUDIES } from "@/lib/home-content";
-
-type Item = (typeof CASE_STUDIES)["items"][number];
+import type { HomeCaseStudy } from "@/lib/home/types";
 
 function Label({ children, dark = false }: { children: React.ReactNode; dark?: boolean }) {
   return (
@@ -66,7 +64,8 @@ function Title({ title }: { title: string }) {
   );
 }
 
-export function CaseCard({ item, image }: { item: Item; image: string }) {
+export function CaseCard({ item }: { item: HomeCaseStudy }) {
+  const { image } = item;
   const [open, setOpen] = useState(false);
   const panelId = useId();
 
@@ -96,11 +95,15 @@ export function CaseCard({ item, image }: { item: Item; image: string }) {
               is what put the BUSINESS IMPACT rule at three different heights.
               The slack goes under the list now, where nothing is aligned to it. */}
           <div className="relative aspect-[16/9] w-full overflow-hidden bg-surface-2">
+            {/* Decorative: the card's own text says everything the picture
+                does, so `alt` is empty unless an editor wrote one. The editor's
+                hotspot, when there is one, is the focal point of the crop. */}
             <Image
-              src={image}
-              alt=""
+              src={image.src}
+              alt={image.alt}
               fill
               sizes="(max-width: 1023px) 100vw, 33vw"
+              style={image.position ? { objectPosition: image.position } : undefined}
               className="object-cover transition-transform duration-700 ease-brand group-hover/c:scale-[1.03]"
             />
             <span className="absolute top-3 left-3 rounded-pill bg-void/80 px-2.5 py-1 font-mono text-[0.625rem] tracking-caps text-white uppercase backdrop-blur-md">
@@ -137,8 +140,8 @@ export function CaseCard({ item, image }: { item: Item; image: string }) {
                 It wraps there, on all three cards equally, and the rule above it
                 stays put because the rule is not downstream of the wrapping. */}
             <ul className="mt-3 space-y-1.5 border-t border-border pt-4">
-              {item.impact.map((o) => (
-                <li key={o} className="flex gap-2 text-xs leading-[1.7] text-ink-muted">
+              {item.impact.map((o, i) => (
+                <li key={i} className="flex gap-2 text-xs leading-[1.7] text-ink-muted">
                   <span aria-hidden className="mt-[0.55rem] size-1 shrink-0 rounded-pill bg-primary" />
                   <span>{o}</span>
                 </li>
@@ -209,9 +212,9 @@ export function CaseCard({ item, image }: { item: Item; image: string }) {
                   odd one out kept its label 30px lower. `xl` is where the
                   columns are wide enough for two rows again. */}
               <ul className="mt-2 flex min-h-[5.625rem] flex-wrap content-start gap-1.5 lg:min-h-[5.5rem] xl:min-h-[3.625rem]">
-                {item.capabilities.map((c) => (
+                {item.capabilities.map((c, i) => (
                   <li
-                    key={c}
+                    key={i}
                     className="rounded-pill bg-white/10 px-2.5 py-1 text-xs font-medium text-on-panel ring-1 ring-white/12"
                   >
                     {c}

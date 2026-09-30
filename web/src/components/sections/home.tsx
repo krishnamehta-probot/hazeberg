@@ -10,15 +10,19 @@ import { ResultsSplit } from "@/components/sections/results-split";
 import { CaseCard } from "@/components/sections/case-card";
 import { Carousel } from "@/components/ui/carousel";
 import { Eyebrow, Section, SectionHead } from "@/components/ui/section";
-import {
-  CASE_STUDIES,
-  CLOSING,
-  HERO,
-  LOGOS,
-  MODELS,
-  RESULTS,
-  TESTIMONIALS,
-} from "@/lib/home-content";
+import { LOGOS } from "@/lib/home-content";
+import type {
+  HomeAbout,
+  HomeCapability,
+  HomeCaseStudies,
+  HomeClosing,
+  HomeHero,
+  HomeImpact,
+  HomeModels,
+  HomeResults,
+  HomeServices,
+  HomeTestimonials,
+} from "@/lib/home/types";
 
 /* ---------------------------------------------------------------------------
    Shared furniture
@@ -31,50 +35,15 @@ import {
    surface -> canvas -> ink with no rules between sections: the ground change
    IS the separator. Section padding lives on the inner container.
 
-   Photography in /public/comp is COMP ONLY — pulled from the reference so the
-   page reads finished. Every one of them is replaced before launch, per rule 8.
---------------------------------------------------------------------------- */
+   Every section takes its content as a prop. `app/page.tsx` fetches it — from
+   Sanity when the CMS is configured, from `lib/home/fallback.ts` when it is
+   not — so nothing in this file knows where the words came from. The one
+   exception is the client logo rail, which stays in code: see `LogoRail`.
 
-/**
- * Two of the reference's frames are unusable here: section-03 is a family in a
- * doorway and section-04 is a house with a FOR SALE board. Both are real-estate
- * stock and would read as a mistake on a Workday consultancy. Every other frame
- * is workplace imagery and is kept. Eleven usable frames across thirteen slots,
- * so two repeat — placed far apart and cropped to different ratios.
- */
-const COMP = {
-  hero: "/comp/section-01.webp",
-  /** Client-supplied. Corners are already rounded in the file, so the card
-      clips to the same radius and the transparent corners fall on the page
-      ground rather than on a second, different curve. */
-  impact: "/sections/impact.png",
-  services: [
-    "/comp/section-02.webp",
-    "/comp/section-05.webp",
-    "/comp/section-06.webp",
-    "/comp/section-11.webp",
-    "/comp/section-12.webp",
-    "/comp/section-13.webp",
-    "/comp/section-09.webp",
-  ],
-  cases: [
-    "/cases/01-hr-operations.jpg",
-    "/cases/02-global-workforce.jpg",
-    "/cases/03-financial-visibility.jpg",
-  ],
-  /** The eight decorative frames on the services board, all distinct. */
-  tiles: [
-    "/comp/section-05.webp",
-    "/comp/section-11.webp",
-    "/comp/section-12.webp",
-    "/comp/section-09.webp",
-    "/comp/section-06.webp",
-    "/comp/section-13.webp",
-    "/comp/section-02.webp",
-    "/comp/section-08.webp",
-  ],
-  why: "/comp/section-06.webp",
-} as const;
+   The photographs live with the content now (`lib/home/fallback.ts` and the
+   CMS). The ones in /public/comp are COMP ONLY — pulled from the reference so
+   the page reads finished, and replaced before launch per rule 8.
+--------------------------------------------------------------------------- */
 
 /* ============================== 01 — HERO ============================== */
 
@@ -108,7 +77,12 @@ const COMP = {
  * measuring each mark individually.
  */
 /** One pass of the rail. Rendered more than once so the loop has something to
-    run into; `aria-hidden` on the copies keeps it to one announcement. */
+    run into; `aria-hidden` on the copies keeps it to one announcement.
+
+    The marks are the one piece of the home page that is NOT in the CMS. Each
+    file is pre-processed (fills forced white, knockouts forced to `--void`) and
+    its size is measured by `scripts/inkscale.mjs`; an upload field would accept
+    a logo that is invisible on this band, at a size nobody measured. */
 function LogoRail({ hidden = false }: { hidden?: boolean }) {
   return (
     /* Fixed height, centred. Some of these viewBoxes are far taller than the
@@ -156,14 +130,14 @@ function LogoRail({ hidden = false }: { hidden?: boolean }) {
  */
 const RAIL_PASSES = 2;
 
-function HeroTrust() {
+function HeroTrust({ trust }: { trust: string }) {
   return (
     <div className="relative border-t border-white/10 bg-void pt-6 pb-6 lg:flex lg:items-center lg:gap-9 lg:py-5 lg:pl-[var(--gutter)]">
       {/* The divider lives on the label, not on the rail beside it: the rail
           carries the edge mask, and a mask fades an element's border along with
           everything else in it. */}
       <p className="text-center font-mono text-[0.6875rem] tracking-caps text-on-panel/55 uppercase lg:max-w-[11.5rem] lg:shrink-0 lg:border-r lg:border-white/12 lg:py-1 lg:pr-9 lg:text-left">
-        {HERO.trust}
+        {trust}
       </p>
       <div
         className="mt-5 overflow-hidden lg:mt-0 lg:min-w-0 lg:flex-1"
@@ -184,7 +158,7 @@ function HeroTrust() {
   );
 }
 
-export function Hero() {
+export function Hero({ hero }: { hero: HomeHero }) {
   return (
     /* `data-nav-dark` is what tells the header to go light over this section.
        An attribute rather than a prop, because the header is site-wide and has
@@ -210,22 +184,26 @@ export function Hero() {
             <Reveal immediate>
               {/* The second half carries the amber. The span goes to `block` at
                   lg so the break lands where it was drawn; below that the
-                  sentence wraps on its own. */}
+                  sentence wraps on its own.
+                  The space before the amber words is put in HERE, as part of
+                  the white run, rather than stored on the end of a field — an
+                  editor tidying a trailing space would otherwise have run the
+                  two halves into one word. */}
               <h1 className="max-w-[15ch] text-3xl font-light text-balance sm:max-w-[20ch] sm:text-4xl lg:max-w-[34ch]">
-                {HERO.titleA}{" "}
+                {hero.titleA}{" "}
                 <span className="lg:block">
-                  {HERO.titleB}
-                  <span className="text-accent">{HERO.titleAccent}</span>
+                  {`${hero.titleB} `}
+                  <span className="text-accent">{hero.titleAccent}</span>
                 </span>
               </h1>
             </Reveal>
             <Reveal immediate delay={0.16}>
-              <p className="mt-7 max-w-[54ch] text-base text-on-panel/70">{HERO.lead}</p>
+              <p className="mt-7 max-w-[54ch] text-base text-on-panel/70">{hero.lead}</p>
             </Reveal>
             <Reveal immediate delay={0.24}>
               <div className="mt-10">
-                <CtaPill href={HERO.cta.href} tone="light">
-                  {HERO.cta.label}
+                <CtaPill href={hero.cta.href} tone="light">
+                  {hero.cta.label}
                 </CtaPill>
               </div>
             </Reveal>
@@ -233,7 +211,7 @@ export function Hero() {
         </div>
 
         <Reveal immediate delay={0.32}>
-          <HeroTrust />
+          <HeroTrust trust={hero.trust} />
         </Reveal>
       </div>
     </section>
@@ -251,10 +229,10 @@ export function Hero() {
  * vertical padding of its own — the scene owns its own rhythm, and a `Section`
  * wrapper's padding would be added on top of a 280vh track.
  */
-export function About() {
+export function About({ about }: { about: HomeAbout }) {
   return (
     <section id="about" className="relative bg-surface">
-      <AboutScene />
+      <AboutScene about={about} />
     </section>
   );
 }
@@ -272,10 +250,10 @@ export function About() {
  * converging-lines scene has no room for a picture, and the picture was never
  * the argument — the figures are.
  */
-export function Impact() {
+export function Impact({ impact }: { impact: HomeImpact }) {
   return (
     <section id="impact" className="relative bg-void text-on-panel" data-nav-dark>
-      <ImpactScene />
+      <ImpactScene impact={impact} />
     </section>
   );
 }
@@ -288,8 +266,8 @@ export function Impact() {
  * both are, and three pinned blocks in a row is a page that will not let you
  * past it.
  */
-export function Services() {
-  return <ServicesSection />;
+export function Services({ services }: { services: HomeServices }) {
+  return <ServicesSection services={services} />;
 }
 
 /* ============================ 06 — RESULTS ============================= */
@@ -338,7 +316,7 @@ function Highlight({ body, term }: { body: string; term?: string }) {
   );
 }
 
-function CapabilityCard({ item, delay }: { item: (typeof RESULTS.items)[number]; delay: number }) {
+function CapabilityCard({ item, delay }: { item: HomeCapability; delay: number }) {
   const amber = item.tone === "accent";
   return (
     <Reveal
@@ -371,14 +349,15 @@ function CapabilityCard({ item, delay }: { item: (typeof RESULTS.items)[number];
         {item.title}
       </span>
       <span className="relative mt-2.5 text-sm text-ink-muted">
-        <Highlight body={item.body} term={"highlight" in item ? item.highlight : undefined} />
+        <Highlight body={item.body} term={item.highlight} />
       </span>
     </Reveal>
   );
 }
 
-export function Results() {
-  const items = RESULTS.items;
+export function Results({ results }: { results: HomeResults }) {
+  /* Exactly four — `lib/home/normalize.ts` guarantees it before this renders. */
+  const { items, media } = results;
   return (
     <Section ground="surface" id="results">
       {/* Centred through `SectionHead`, like every other head on the page —
@@ -388,16 +367,16 @@ export function Results() {
           longer of those two lines, which measures 643px at the 40px ceiling of
           `--text-3xl` — `46rem` clears it with room, `24ch` would fold it. */}
       <SectionHead
-        eyebrow={RESULTS.eyebrow}
+        eyebrow={results.eyebrow}
         title={
           <>
-            <span className="text-primary">{RESULTS.titleLead}</span>
+            <span className="text-primary">{results.titleLead}</span>
             <br />
-            {RESULTS.titleRest}
+            {results.titleRest}
           </>
         }
         titleMax="max-w-[70rem]"
-        body={RESULTS.body}
+        body={results.body}
       />
 
       <div className="mt-12">
@@ -421,16 +400,19 @@ export function Results() {
           media={
             /* Client-supplied. Native 1145x1374 is 0.83:1 and the open column is
                23rem x 28rem, which is 0.82:1 — so the crop takes almost nothing
-               off it and the rising line survives the split intact. */
+               off it and the rising line survives the split intact. A portrait
+               upload of about that ratio is what the CMS field asks for. */
             <Image
-              src="/result..png"
-              alt="A consultant at a city window, a rising performance line drawn across the view"
-              width={1145}
-              height={1374}
+              src={media.src}
+              alt={media.alt}
+              width={media.width}
+              height={media.height}
               sizes="(max-width: 1023px) 100vw, 23rem"
               /* Below lg the split is off and this is a short full-width band, so the
                  crop is pulled up to hold the rising line and her head rather than
-                 a slice of her back. The open column is the right ratio already. */
+                 a slice of her back. The open column is the right ratio already.
+                 An editor's hotspot replaces both positions with one focal point. */
+              style={media.position ? { objectPosition: media.position } : undefined}
               className="h-full min-h-[16rem] w-full object-cover object-[50%_32%] lg:min-h-[28rem] lg:object-center"
             />
           }
@@ -442,10 +424,10 @@ export function Results() {
 
 /* ========================= 07 — CASE STUDIES =========================== */
 
-export function CaseStudies() {
+export function CaseStudies({ caseStudies }: { caseStudies: HomeCaseStudies }) {
   return (
     <Section ground="surface" id="case-studies">
-      <SectionHead eyebrow={CASE_STUDIES.eyebrow} title={CASE_STUDIES.title} body={CASE_STUDIES.body} />
+      <SectionHead eyebrow={caseStudies.eyebrow} title={caseStudies.title} body={caseStudies.body} />
 
       {/* Equal cards in one row — no lead card at twice the width of the others.
 
@@ -471,8 +453,8 @@ export function CaseStudies() {
         as="ul"
         className="mt-10 -mx-[var(--gutter)] flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto px-[var(--gutter)] pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3"
       >
-        {CASE_STUDIES.items.map((c, i) => (
-          <CaseCard key={c.n} item={c} image={COMP.cases[i % COMP.cases.length]} />
+        {caseStudies.items.map((c) => (
+          <CaseCard key={c.n} item={c} />
         ))}
       </RevealGroup>
     </Section>
@@ -486,11 +468,11 @@ export function CaseStudies() {
  * section's own paragraph describes a path through implementing, improving and
  * managing, and three equal boxes is the one layout that cannot say so.
  */
-export function Models() {
+export function Models({ models }: { models: HomeModels }) {
   return (
     <Section ground="surface" id="models">
-      <SectionHead eyebrow={MODELS.eyebrow} title={MODELS.title} body={MODELS.body} />
-      <ModelsJourney />
+      <SectionHead eyebrow={models.eyebrow} title={models.title} body={models.body} />
+      <ModelsJourney models={models} />
     </Section>
   );
 }
@@ -510,6 +492,7 @@ export function Models() {
  * Client" is the part that carries weight; "Program Lead" is who said it.
  *
  * **The portrait is comp.** There are no client photographs in the project.
+ * In the CMS it is optional per quote; a card without one closes on the name.
  */
 function QuoteMark({ tone }: { tone: "accent" | "primary" }) {
   return (
@@ -524,16 +507,13 @@ function QuoteMark({ tone }: { tone: "accent" | "primary" }) {
   );
 }
 
-/** COMP ONLY — one frame standing in for a portrait that does not exist yet. */
-const TESTIMONIAL_SHOT = "/comp/section-09.webp";
-
-export function Testimonials() {
+export function Testimonials({ testimonials }: { testimonials: HomeTestimonials }) {
   return (
     <Section ground="surface" id="testimonials">
-      <SectionHead eyebrow={TESTIMONIALS.eyebrow} title={TESTIMONIALS.title} />
+      <SectionHead eyebrow={testimonials.eyebrow} title={testimonials.title} />
       <Reveal className="mt-14">
         <Carousel label="Client testimonials">
-          {TESTIMONIALS.items.map((t, i) => (
+          {testimonials.items.map((t, i) => (
             <li
               key={i}
               className="flex w-[21rem] shrink-0 snap-start flex-col rounded-2xl bg-canvas p-8 ring-1 ring-border sm:w-[28rem]"
@@ -547,13 +527,16 @@ export function Testimonials() {
                   {t.role}
                 </span>
                 <span className="min-w-0 flex-1 text-sm text-ink-subtle">{t.name}</span>
-                <Image
-                  src={TESTIMONIAL_SHOT}
-                  alt=""
-                  width={56}
-                  height={56}
-                  className="size-14 shrink-0 rounded-md object-cover"
-                />
+                {t.portrait ? (
+                  <Image
+                    src={t.portrait.src}
+                    alt={t.portrait.alt}
+                    width={56}
+                    height={56}
+                    style={t.portrait.position ? { objectPosition: t.portrait.position } : undefined}
+                    className="size-14 shrink-0 rounded-md object-cover"
+                  />
+                ) : null}
               </figcaption>
             </li>
           ))}
@@ -577,7 +560,7 @@ export function Testimonials() {
  * No rule between this and the footer: they are one dark block, and the page
  * finishes rather than stopping twice.
  */
-export function Closing() {
+export function Closing({ closing }: { closing: HomeClosing }) {
   return (
     <section id="closing" data-nav-dark className="relative isolate overflow-hidden bg-void">
       {/* Flipped, so the page closes under the top of the circle rather than
@@ -597,20 +580,20 @@ export function Closing() {
           the panel exists for. */}
       <div className="relative shell flex flex-col items-center pt-[calc(var(--section-y)+2.5rem)] pb-[var(--section-y)] text-center">
         <Reveal>
-          <Eyebrow tone="onDark">{CLOSING.eyebrow}</Eyebrow>
+          <Eyebrow tone="onDark">{closing.eyebrow}</Eyebrow>
         </Reveal>
         <Reveal delay={0.06}>
           <h2 className="mt-6 max-w-[20ch] text-3xl leading-[1.08] font-light tracking-[-0.03em] text-balance text-on-panel">
-            {CLOSING.title}
+            {closing.title}
           </h2>
         </Reveal>
         <Reveal delay={0.12}>
-          <p className="mt-5 max-w-[46ch] text-base text-on-panel/70">{CLOSING.body}</p>
+          <p className="mt-5 max-w-[46ch] text-base text-on-panel/70">{closing.body}</p>
         </Reveal>
         <Reveal delay={0.18}>
           <div className="mt-10">
-            <CtaPill href={CLOSING.cta.href} tone="light">
-              {CLOSING.cta.label}
+            <CtaPill href={closing.cta.href} tone="light">
+              {closing.cta.label}
             </CtaPill>
           </div>
         </Reveal>

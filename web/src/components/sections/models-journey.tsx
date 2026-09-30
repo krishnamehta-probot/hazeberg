@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-import { MODELS } from "@/lib/home-content";
+import type { HomeModels } from "@/lib/home/types";
 
 /**
  * Engagement models: three equal tabs over one panel, cycling on a timer.
@@ -33,25 +33,30 @@ import { MODELS } from "@/lib/home-content";
  * Not pinned. There are four pinned blocks on this page already.
  *
  * **The photographs are comp.** There are no engagement-model images in the
- * project; these are three frames from the reference set, distinct from each
- * other and from the services images, and every one is replaced before launch.
+ * project; the fallback is three frames from the reference set (see
+ * `lib/home/fallback.ts`), and every one is replaced before launch — in the CMS,
+ * each model carries its own.
  */
 
 /** How long a model holds before the panel moves on. */
 const DWELL_MS = 7000;
 
-/** COMP ONLY — see the note above. */
-const SHOTS = ["/comp/section-07.webp", "/comp/section-11.webp", "/comp/section-13.webp"];
-
-export function ModelsJourney() {
+export function ModelsJourney({ models }: { models: HomeModels }) {
+  const count = models.items.length;
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
-  const item = MODELS.items[active];
+  /* Clamped: in a live CMS preview the list can get shorter under the timer. */
+  const current = Math.min(active, count - 1);
+  const item = models.items[current];
 
   /* Refs, not state: nothing has to re-render because focus arrived, and the
-     timer reads both inside its own frame. */
+     timer reads all three inside its own frame. */
   const held = useRef(false);
   const restart = useRef(false);
+  const total = useRef(count);
+  useEffect(() => {
+    total.current = count;
+  }, [count]);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -70,7 +75,7 @@ export function ModelsJourney() {
       if (!held.current) elapsed += dt;
       if (elapsed >= DWELL_MS) {
         elapsed = 0;
-        setActive((v) => (v + 1) % MODELS.items.length);
+        setActive((v) => (v + 1) % total.current);
       }
       setProgress(elapsed / DWELL_MS);
       raf = requestAnimationFrame(tick);
@@ -106,8 +111,8 @@ export function ModelsJourney() {
         aria-label="Engagement models"
         className="grid grid-cols-3 overflow-hidden rounded-xl bg-canvas ring-1 ring-border"
       >
-        {MODELS.items.map((m, i) => {
-          const on = i === active;
+        {models.items.map((m, i) => {
+          const on = i === current;
           return (
             <button
               key={m.title}
@@ -168,7 +173,7 @@ export function ModelsJourney() {
               data-spec
               className="spec group/l inline-flex h-11 items-center gap-2 rounded-pill bg-ink px-6 text-sm font-medium text-ink-invert"
             >
-              {MODELS.cta}
+              {models.cta}
               <ArrowRight
                 aria-hidden
                 className="size-4 transition-transform dur-fast ease-brand group-hover/l:translate-x-1"
@@ -179,15 +184,16 @@ export function ModelsJourney() {
         </div>
 
         <div className="relative min-h-[14rem] bg-surface-2 lg:min-h-0">
-          {MODELS.items.map((m, i) => (
+          {models.items.map((m, i) => (
             <Image
               key={m.title}
-              src={SHOTS[i]}
-              alt=""
+              src={m.image.src}
+              alt={m.image.alt}
               fill
               sizes="(max-width: 1023px) 100vw, 40vw"
+              style={m.image.position ? { objectPosition: m.image.position } : undefined}
               className={`object-cover transition-opacity dur-base ease-brand ${
-                i === active ? "opacity-100" : "opacity-0"
+                i === current ? "opacity-100" : "opacity-0"
               }`}
             />
           ))}
@@ -197,7 +203,7 @@ export function ModelsJourney() {
       {/* All three, always, for anyone the timer never reaches and for assistive
           technology, which should not have to wait out a rotation. */}
       <ul className="sr-only">
-        {MODELS.items.map((m) => (
+        {models.items.map((m) => (
           <li key={m.title}>
             {m.stage}. {m.title}. {m.body} Best for: {m.bestFor}
           </li>

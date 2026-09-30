@@ -1,4 +1,5 @@
 import { ServicesMap } from "@/components/sections/services-map";
+import type { HomeServices } from "@/lib/home/types";
 
 /**
  * Services: the wheel, and nothing else.
@@ -12,10 +13,10 @@ import { ServicesMap } from "@/components/sections/services-map";
  * discs reads as paper with stickers on it, and the two very wide, very weak
  * washes give the white something to be lit by.
  */
-export function ServicesSection() {
+export function ServicesSection({ services }: { services: HomeServices }) {
   return (
     <section id="services" className="relative map-ground">
-      <ServicesMap />
+      <ServicesMap services={services} />
     </section>
   );
 }

@@ -9,7 +9,7 @@ import { ScrollText } from "@/components/motion/scroll-text";
 import { AboutPoints } from "@/components/sections/about-points";
 import { Counter } from "@/components/ui/counter";
 import { CtaPill } from "@/components/ui/cta-pill";
-import { ABOUT } from "@/lib/home-content";
+import type { HomeAbout } from "@/lib/home/types";
 
 /**
  * About, as one pinned scene.
@@ -41,7 +41,7 @@ import { ABOUT } from "@/lib/home-content";
     Derived from the point count rather than written out: the revised copy took
     this section from three points to four, and a hard-coded `[0, 1/3, 2/3]`
     would have silently dropped the fourth off the end of the pin. */
-const CHECKPOINTS = ABOUT.points.map((_, i) => i / ABOUT.points.length);
+const checkpointsFor = (count: number) => Array.from({ length: count }, (_, i) => i / count);
 
 const SWAP = { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const };
 
@@ -65,8 +65,6 @@ const SWAP = { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const };
  * everywhere the ring can cross.
  */
 const RING_R = 46;
-/** One arc per point, always. */
-const SEGMENTS = ABOUT.points.length;
 /** Degrees of daylight between segments. Enough to read as separate arcs, not so
     much that the ring stops reading as a circle. */
 const GAP_DEG = 7;
@@ -101,15 +99,16 @@ function polar(deg: number) {
   return { x: 50 + RING_R * Math.cos(a), y: 50 + RING_R * Math.sin(a) };
 }
 
-function segPath(i: number) {
-  const step = 360 / SEGMENTS;
+function segPath(i: number, segments: number) {
+  const step = 360 / segments;
   const from = polar(i * step + GAP_DEG / 2);
   const to = polar((i + 1) * step - GAP_DEG / 2);
   // large-arc 0, sweep 1: the short way round, clockwise.
   return `M ${from.x} ${from.y} A ${RING_R} ${RING_R} 0 0 1 ${to.x} ${to.y}`;
 }
 
-function ProgressRing({ value }: { value: number }) {
+/** One arc per point, always. */
+function ProgressRing({ value, segments }: { value: number; segments: number }) {
   const id = useId();
   const lead = polar(Math.min(0.9999, value) * 360);
   const glow = rampAt(lead.x);
@@ -124,10 +123,10 @@ function ProgressRing({ value }: { value: number }) {
         </radialGradient>
       </defs>
 
-      {Array.from({ length: SEGMENTS }).map((_, i) => {
-        const d = segPath(i);
+      {Array.from({ length: segments }).map((_, i) => {
+        const d = segPath(i, segments);
         // Each segment owns its own third of the scroll.
-        const fill = Math.min(1, Math.max(0, value * SEGMENTS - i));
+        const fill = Math.min(1, Math.max(0, value * segments - i));
         return (
           <g key={i}>
             <path
@@ -161,7 +160,7 @@ function ProgressRing({ value }: { value: number }) {
   );
 }
 
-export function AboutScene() {
+export function AboutScene({ about }: { about: HomeAbout }) {
   const track = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const [pinned, setPinned] = useState(false);
@@ -186,17 +185,21 @@ export function AboutScene() {
   // the whole scene.
   const readProgress = useTransform(scrollYProgress, [0, 0.22], [0, 1]);
 
+  const checkpoints = checkpointsFor(about.points.length);
+
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     if (!pinned || reduce) return;
     let next = 0;
-    for (let i = 0; i < CHECKPOINTS.length; i++) if (v >= CHECKPOINTS[i]) next = i;
+    for (let i = 0; i < checkpoints.length; i++) if (v >= checkpoints[i]) next = i;
     setIndex(next);
     // The ring is the pin, one to one. It closes on the last frame of the pin,
     // so completing the circle and the page moving on are the same moment.
     setArc(Math.min(1, Math.max(0, v)));
   });
 
-  const point = ABOUT.points[index];
+  /* Clamped, so a list that got shorter since the last scroll event cannot
+     index past its own end. */
+  const point = about.points[Math.min(index, about.points.length - 1)];
 
   return (
     <div ref={track} className={pinned ? "h-[280vh]" : ""}>
@@ -205,7 +208,7 @@ export function AboutScene() {
           <div>
             <Reveal>
               <p className="font-mono text-xs tracking-caps text-ink-subtle uppercase">
-                {ABOUT.eyebrow}
+                {about.eyebrow}
               </p>
             </Reveal>
             <Reveal delay={0.06}>
@@ -213,11 +216,11 @@ export function AboutScene() {
                   screen to fill and section-heading size left most of it empty;
                   on a phone there is no pin and no spare room, so it stays. */}
               <h2 className="mt-4 max-w-[16ch] text-2xl font-light tracking-[-0.03em] text-balance text-ink sm:text-3xl lg:mt-6 lg:max-w-[19ch] lg:text-4xl">
-                <Counter value={ABOUT.stat} suffix={ABOUT.statSuffix} /> {ABOUT.statTail}
+                <Counter value={about.stat} suffix={about.statSuffix} /> {about.statTail}
               </h2>
             </Reveal>
             <ScrollText
-              text={ABOUT.body}
+              text={about.body}
               progress={pinned ? readProgress : undefined}
               /* One step down the scale at every breakpoint. The revised copy is
                  four times the length of what this held before, and at 20px the
@@ -231,7 +234,7 @@ export function AboutScene() {
               {/* The way out of the section. Yellow, because this ground is
                   light — the white fill is for the dark sections. */}
               <div className="mt-6 lg:mt-10">
-                <CtaPill href={ABOUT.cta.href}>{ABOUT.cta.label}</CtaPill>
+                <CtaPill href={about.cta.href}>{about.cta.label}</CtaPill>
               </div>
             </Reveal>
           </div>
@@ -240,7 +243,7 @@ export function AboutScene() {
             <div className="flex flex-col items-center">
               <div className="relative aspect-square w-full max-w-[13rem] sm:max-w-[18rem] lg:max-w-[26rem]">
                 <Blob progress={scrollYProgress} className="absolute inset-0 size-full" />
-                <ProgressRing value={reduce ? 1 : arc} />
+                <ProgressRing value={reduce ? 1 : arc} segments={about.points.length} />
 
                 {/* The title sits on the sphere's core, which the shader keeps
                     dark at every angle — see the note in `blob.tsx`. */}
@@ -282,7 +285,7 @@ export function AboutScene() {
                   assistive technology, which should not have to animate a page
                   to reach two thirds of a section. */}
               <ul className="sr-only">
-                {ABOUT.points.map((p) => (
+                {about.points.map((p) => (
                   <li key={p.title}>
                     {p.title}. {p.body}
                   </li>
@@ -290,7 +293,7 @@ export function AboutScene() {
               </ul>
             </div>
           ) : (
-            <AboutPoints points={ABOUT.points} />
+            <AboutPoints points={about.points} />
           )}
         </div>
       </div>

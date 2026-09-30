@@ -15,7 +15,9 @@ import {
 } from "lucide-react";
 import { useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
 
-import { SERVICES } from "@/lib/home-content";
+import { indexLabel } from "@/lib/home/index-label";
+import type { ServiceKey } from "@/lib/home/services";
+import type { HomeServices } from "@/lib/home/types";
 
 /**
  * Services as one wheel: a Workday core, and seven capabilities filling the ring
@@ -62,8 +64,18 @@ const R_ORBIT = 49;
 const GAP_DEG = 1.1;
 
 /** Presentation, not content: the client supplied no service icons, and these are
-    a UI icon set doing a UI job rather than artwork put in their name. */
-const ICONS: LucideIcon[] = [Users, Wallet, FileText, Share2, BarChart3, LifeBuoy, Blocks];
+    a UI icon set doing a UI job rather than artwork put in their name.
+    Keyed by service rather than by position, so reordering the wheel in the
+    CMS cannot hand Payroll the HCM icon. */
+const ICONS: Record<ServiceKey, LucideIcon> = {
+  hcm: Users,
+  payroll: Wallet,
+  financials: FileText,
+  integrations: Share2,
+  "reporting-analytics": BarChart3,
+  ams: LifeBuoy,
+  extend: Blocks,
+};
 
 /* The pin's timeline, as shares of the track. The sweep owns most of it, and the
    last fifth is the finished wheel simply being there to look at. */
@@ -89,7 +101,7 @@ function wedgePath(from: number, to: number) {
   return `M ${a.x} ${a.y} A ${R_OUT} ${R_OUT} 0 ${large} 1 ${b.x} ${b.y} L ${c.x} ${c.y} A ${R_IN} ${R_IN} 0 ${large} 0 ${d.x} ${d.y} Z`;
 }
 
-export function ServicesMap() {
+export function ServicesMap({ services }: { services: HomeServices }) {
   const track = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const [pinned, setPinned] = useState(false);
@@ -119,15 +131,15 @@ export function ServicesMap() {
   });
 
   const prog = reduce ? 1 : p;
-  const total = SERVICES.items.length;
+  const total = services.items.length;
   const step = 360 / total;
 
   const core = span(prog, 0, CORE_END);
   const orbit = span(prog, ORBIT_FROM, ORBIT_TO);
   const sweep = span(prog, SWEEP_FROM, SWEEP_TO);
   const reached = Math.min(total - 1, Math.floor(sweep * total));
-  const active = picked ?? reached;
-  const item = SERVICES.items[active];
+  const active = Math.min(picked ?? reached, total - 1);
+  const item = services.items[active];
 
   const copy = (
     <div>
@@ -137,10 +149,10 @@ export function ServicesMap() {
           The same eyebrow and the same title as the list view: one section, two
           drawings of it, not two different sections. */}
       <p className="font-mono text-xs tracking-caps text-ink-subtle uppercase">
-        {SERVICES.eyebrow}
+        {services.eyebrow}
       </p>
       <h2 className="mt-4 max-w-[18ch] text-2xl leading-[1.08] font-light tracking-[-0.03em] text-pretty text-ink sm:text-3xl lg:mt-5">
-        {SERVICES.title}
+        {services.title}
       </h2>
 
       {/* The active capability. Announced, because for most of the pin it changes
@@ -153,7 +165,7 @@ export function ServicesMap() {
           at all. */}
       <div aria-live="polite" className="mt-6 min-h-[8.5rem] lg:mt-10 lg:min-h-[12rem]">
         <p className="font-mono text-[0.6875rem] tracking-caps text-primary uppercase">
-          {item.n} &middot; {item.label}
+          {indexLabel(active)} &middot; {item.label}
         </p>
         <p className="mt-2.5 max-w-[40ch] text-sm text-ink-muted sm:text-base lg:mt-3">{item.body}</p>
         <Link
@@ -173,9 +185,9 @@ export function ServicesMap() {
 
   const list = (
     <ul className="sr-only">
-      {SERVICES.items.map((s) => (
-        <li key={s.label}>
-          <p className="font-mono text-[0.6875rem] tracking-caps text-ink-subtle uppercase">{s.n}</p>
+      {services.items.map((s, i) => (
+        <li key={s.key}>
+          <p className="font-mono text-[0.6875rem] tracking-caps text-ink-subtle uppercase">{indexLabel(i)}</p>
           <p className="mt-1 text-xl leading-tight font-light text-ink">{s.label}</p>
           <p className="mt-1.5 max-w-[52ch] text-sm text-ink-muted">{s.body}</p>
           <Link
@@ -230,7 +242,7 @@ export function ServicesMap() {
               {/* The ring. Each wedge sweeps out from its own leading edge, so the
                   whole thing reads as one hand going round rather than seven
                   panels fading up. */}
-              {SERVICES.items.map((s, i) => {
+              {services.items.map((s, i) => {
                 const from = -90 - step / 2 + i * step + GAP_DEG / 2;
                 const full = step - GAP_DEG;
                 const grown = ease(clamp01(sweep * total - i));
@@ -238,7 +250,7 @@ export function ServicesMap() {
                 if (grown <= 0.001) return null;
                 return (
                   <path
-                    key={s.label}
+                    key={s.key}
                     d={wedgePath(from, from + full * grown)}
                     className={`transition-colors dur-base ease-brand ${
                       on ? "fill-primary/12" : "fill-surface-2"
@@ -270,15 +282,15 @@ export function ServicesMap() {
 
             {/* The labels. HTML, not SVG text: these wrap, they are buttons, and
                 SVG text is bad at both. */}
-            {(narrow ? [] : SERVICES.items).map((s, i) => {
+            {(narrow ? [] : services.items).map((s, i) => {
               const centre = -90 + i * step;
               const q = at(R_LABEL, centre);
               const shown = ease(clamp01(sweep * total - i));
               const on = i === active;
-              const Icon = ICONS[i];
+              const Icon = ICONS[s.key];
               return (
                 <button
-                  key={s.label}
+                  key={s.key}
                   type="button"
                   onPointerEnter={() => setPicked(i)}
                   onPointerLeave={() => setPicked((v) => (v === i ? null : v))}

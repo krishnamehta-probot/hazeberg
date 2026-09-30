@@ -233,6 +233,8 @@ Populated as components are built. Before writing any new component, check here 
 | `ContactForm` (`components/contact/contact-form.tsx`) | contact | **built** — three states, and the third is a prefilled mail link so a failed send loses nothing |
 | `OFFICES` (`lib/navigation.ts`) | footer, contact | **built** — the footer wants one line per office and Contact wants the whole address; two copies is how one goes stale |
 | Page placeholder (`components/page-placeholder.tsx`) | every un-built route | **built** |
+| `SiteShell` (`components/site-shell.tsx`) | `app/(site)/layout.tsx`, `app/global-not-found.tsx` | **built** — skip link, Lenis, specular, header, `main`, footer. Moved out of the root layout so the Sanity Studio at `/studio` gets none of it |
+| CMS field kit (`sanity/schemaTypes/fields.ts`) | every Sanity schema | **built** — soft/hard length limits, page pickers instead of URLs, photo fields with the alt policy, fixed-length lists. New document types use these, never raw `defineField` for copy |
 | Footer | global | prototyped in showcase |
 
 "Prototyped in showcase" = the visual and states exist in `design/direction-showcase.html`
