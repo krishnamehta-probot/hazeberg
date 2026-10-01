@@ -19,7 +19,7 @@ truth. Routes, page types and section anchors are settled here before any page i
 | Workday Integrations | `/services/workday-integrations` | Landing |
 | Workday Reporting & Analytics | `/services/workday-reporting-and-analytics` | Landing |
 | Workday Extend | `/services/workday-extend` | Landing |
-| What we do | `/what-we-do` | Consolidated landing, 7 sections; the 8 capabilities are an accordion, each on its own anchor. First in the nav, a plain link (2026-09-30) |
+| What we do | `/what-we-do` | Consolidated landing, 8 sections; the 8 capabilities are an accordion, each on its own anchor. First in the nav, a plain link (2026-09-30) |
 | About | `/about` | Consolidated landing, 6 sections, anchor-linked from the page's own rail. A plain nav link (2026-09-30) |
 | Berg | `/berg` | Single page. A Hazeberg solution, not a sub-brand - no separate visual identity |
 | Careers | `/careers` | Single page |
@@ -61,12 +61,17 @@ drop, say so and it moves back.
 
 ---
 
-## What we do - one page, seven sections
+## What we do - one page, eight sections
 
 Rebuilt 2026-10-01 on the client's own copy ("What We Do Content", every line of it -
 see `web/src/lib/what-we-do-content.ts`). No placeholder prose is left on the page. Still
 open: the hero's proof strip is built but switched off until the client confirms the four
 figures (the document says so), and the photographs are comp stand-ins.
+
+AI in the flow of work was added the same day from its own document ("AI in the Flow of
+Work"), between the capabilities and How we work. That document drafts its head twice;
+the first draft is on the page and the second is kept in the content file. Its four
+figures are the client's illustrative targets and always carry the document's caveat.
 
 | Section | Anchor |
 |---|---|
@@ -74,6 +79,7 @@ figures (the document says so), and the photographs are comp stand-ins.
 | Wherever you are with Workday | `#your-journey` |
 | How it fits together | `#how-it-fits` |
 | Workday capabilities | `#capabilities` |
+| AI in the flow of work | `#ai-in-the-flow-of-work` |
 | How we work | `#how-we-work` |
 | What we cover | `#what-we-cover` |
 

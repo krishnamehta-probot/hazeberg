@@ -404,6 +404,81 @@
     box-shadow: 0 0 16px 1px rgb(0 142 255 / 0.5);
   }
 
+  /* AI in the flow of work: the bridge's two lanes, AI to Workday. Each is a
+     faint rail with a short run of light travelling it — the request out in
+     blue, the answer back in amber, half a cycle apart so one is always on the
+     move. Down the column below lg, across the row from it. Both pass under the
+     Hazeberg disc on the way, which is the picture's point: nothing gets from
+     one end to the other without going through the middle. */
+  .ai-lane {
+    --lane-light: #4aa8ff;
+    position: relative;
+    overflow: hidden;
+    border-radius: 999px;
+    background-color: rgb(43 138 224 / 0.3);
+  }
+  .ai-lane-back {
+    --lane-light: #fec00f;
+    background-color: rgb(254 192 15 / 0.24);
+  }
+  .ai-lane::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    border-radius: inherit;
+    background-image: linear-gradient(180deg, transparent, var(--lane-light));
+    animation: ai-lane-down 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+  .ai-lane-back::after {
+    background-image: linear-gradient(0deg, transparent, var(--lane-light));
+    animation-direction: reverse;
+    animation-delay: -1.6s;
+  }
+  @keyframes ai-lane-down {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(250%);
+    }
+  }
+  /* Across, the lane is three times the length it is down the column, so the
+     run is a shorter share of it — the same light, not a longer one. */
+  @keyframes ai-lane-across {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(360%);
+    }
+  }
+  @media (min-width: 1024px) {
+    .ai-lane::after {
+      width: 28%;
+      height: 100%;
+      background-image: linear-gradient(90deg, transparent, var(--lane-light));
+      animation-name: ai-lane-across;
+    }
+    .ai-lane-back::after {
+      background-image: linear-gradient(270deg, transparent, var(--lane-light));
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ai-lane::after {
+      display: none;
+    }
+  }
+  /* The disc both lanes run under: lit from inside, the way the CTA disc is,
+     and haloed so the light has somewhere to go. */
+  .ai-hub {
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.18),
+      0 0 56px 8px rgb(0 142 255 / 0.32);
+  }
+
   /* Stars stay off the copy: gone under the type column, full by the middle.
      On a phone the copy is the whole frame, so they only thin out. */
   .star-mask {

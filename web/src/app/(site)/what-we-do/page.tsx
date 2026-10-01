@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/motion/reveal";
 import { PageHero } from "@/components/page/page-hero";
 import { Section, SectionHead } from "@/components/ui/section";
+import { AiFlow } from "@/components/what-we-do/ai-flow";
 import { CapabilityAccordion } from "@/components/what-we-do/capability-accordion";
 import { CapabilityGlobe } from "@/components/what-we-do/capability-globe";
 import { HowWeWork } from "@/components/what-we-do/how-we-work";
@@ -16,7 +17,7 @@ export const metadata = {
 };
 
 /**
- * What we do — the client's copy, all seven sections of it (supplied
+ * What we do — the client's copy, all eight sections of it (supplied
  * 2026-10-01; see `lib/what-we-do-content.ts`).
  *
  * **The page's one idea: eight capabilities, and every mention of one is a door
@@ -39,6 +40,8 @@ export const metadata = {
  *   How it fits          the client's stage table on a time axis, with the
  *                        body's three handovers drawn and lit one at a time
  *   Capabilities         the accordion every link above lands in
+ *   AI in the flow       the tagline drawn: AI and Workday at either end,
+ *                        Hazeberg the disc in the middle both lanes run under
  *   How we work          the six steps on a drum that turns with the scroll
  *                        and never runs out: after Optimize, Discover again
  *   What we cover        platform and lifecycle, side by side
@@ -46,8 +49,10 @@ export const metadata = {
  * The hero carries the same eight before the page has said a word about
  * them: in orbit round a globe, each one a door straight to its row.
  *
- * Grounds alternate light and dark so no two neighbours match: the dark
- * breaks fall on the two diagrams (How it fits, How we work) and the close.
+ * Grounds alternate so no two neighbours match: the dark breaks fall on the
+ * two diagrams (How it fits, How we work) and the close. AI in the flow sits
+ * on white between the capabilities' grey and How we work's black, and
+ * carries its own dark panel.
  *
  * Photographs: one in Who we are, one per journey. Every one is a comp frame
  * standing in, marked in the content file, the same status as the home page's.
@@ -124,6 +129,7 @@ export default function Page() {
       <Journey />
       <Fits />
       <CapabilityAccordion data={WHAT_WE_DO.capabilities} />
+      <AiFlow data={WHAT_WE_DO.ai} />
       <HowWeWork data={WHAT_WE_DO.process} />
       <WhatWeCover data={WHAT_WE_DO.cover} />
       <Closing data={WHAT_WE_DO.closing} />

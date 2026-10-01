@@ -61,3 +61,17 @@ export function HazebergWordmark(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+/** The birds on their own, in the favicon's square crop (`app/icon.svg`): the
+    mark for anywhere the name is already said beside it. Decorative. */
+export function HazebergBirds(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="82.65 -20.47 74.14 74.14" aria-hidden {...props}>
+      <g transform={WORDMARK_FLIP} fill="currentColor" stroke="none">
+        {WORDMARK_BIRDS.map((d) => (
+          <path key={d} d={d} />
+        ))}
+      </g>
+    </svg>
+  );
+}

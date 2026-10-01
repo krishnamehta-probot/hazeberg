@@ -494,7 +494,108 @@ export const WHAT_WE_DO = {
        success.") is left off by direction, 2026-10-01. */
   },
 
-  /* 6 — How we work ------------------------------------------------------ */
+  /* 6 — AI in the flow of work ------------------------------------------- */
+  /**
+   * Source: "AI in the Flow of Work" (PDF), supplied 2026-10-01 — a use case
+   * of its own, set between the capabilities and How we work. Same marking and
+   * the same US spelling as the rest of this file (organization, center).
+   *
+   * The document drafts its head twice. The first draft is used; the second
+   * is kept here so the swap is one edit:
+   *   title    "Bring AI into Workday workflows with Hazeberg."
+   *   tagline  "AI understands the conversation. Hazeberg connects it to Workday."
+   *   intro    "Workday holds critical workforce data. Hazeberg connects it with
+   *            AI experiences so employees and managers can access, update, and
+   *            act on that information more naturally, while Workday remains the
+   *            governed source of truth."
+   */
+  ai: {
+    id: "ai-in-the-flow-of-work",
+    eyebrow: "Use case · AI + Workday",
+    titleLead: "Bring AI into the flow of Workday",
+    titleRest: "with Hazeberg",
+    /** One line, three sentences — kept apart so the last can carry the
+        accent. Joined with spaces, they are the client's line exactly. */
+    tagline: ["AI at the front.", "Workday at the core.", "Hazeberg connects the two."],
+    intro:
+      "Workday holds critical workforce data, but accessing it can take people out of the tools where they already work. Hazeberg connects AI with Workday so employees can update skills, managers can find expertise, and teams can act on workforce data more naturally, while Workday remains the governed source of truth.",
+    /**
+     * [derived] The tagline drawn: its three parts, in the order they sit in
+     * the picture rather than the sentence. Hazeberg is in the middle because
+     * it is the thing in the middle. The tagline is the text; this is the
+     * picture of it.
+     */
+    bridge: [
+      { key: "ai", name: "AI", role: "At the front" },
+      { key: "hazeberg", name: "Hazeberg", role: "Connects the two" },
+      { key: "workday", name: "Workday", role: "At the core" },
+    ],
+    people: {
+      title: "AI that brings Workday closer to your people",
+      items: [
+        {
+          key: "employees",
+          audience: "For Employees",
+          title: "Less navigating. More doing.",
+          body: "Access and update workforce information through simple AI conversations instead of switching between systems.",
+        },
+        {
+          key: "managers",
+          audience: "For Managers",
+          title: "Find the right expertise faster.",
+          body: "Use natural language to surface relevant skills, people, and workforce information when decisions need to be made.",
+        },
+        {
+          key: "talent",
+          audience: "For HR & Talent Teams",
+          title: "Make workforce data more actionable.",
+          body: "Bring skills and workforce intelligence closer to the decisions, conversations, and workflows that depend on it.",
+        },
+        {
+          key: "organization",
+          audience: "For Your Organization",
+          title: "Extend Workday into the flow of work.",
+          body: "Connect workforce intelligence with the everyday tools people already use, while Workday remains the governed source of truth.",
+        },
+      ],
+    },
+    value: {
+      title: "The value at a glance",
+      items: [
+        {
+          figure: "80%+",
+          label: "Skills profile completeness",
+          body: "Help more employees keep their skills profiles current and usable.",
+        },
+        {
+          figure: "<30 sec",
+          label: "To update a skill",
+          body: "Turn a multi-step update into a simple conversational interaction.",
+        },
+        {
+          figure: "Weekly",
+          label: "Manager skills check-ins",
+          body: "Make workforce skills easier to review and act on regularly.",
+        },
+        {
+          figure: "100%",
+          label: "Learning tied to a real skill gap",
+          body: "Connect learning activity to identified workforce capability needs.",
+        },
+      ],
+      /** The document's own caveat. It travels with the figures, always. */
+      note: "Illustrative targets. Actual outcomes and baselines are established during discovery.",
+    },
+    closing: {
+      titleLead: "AI makes the interaction simpler.",
+      titleRest: "Hazeberg makes the connection.",
+      body: "Hazeberg connects AI with Workday to make workforce intelligence easier to access and act on, while keeping Workday at the center of your data, processes, and governance.",
+      cta: { label: "Discuss an AI use case", href: "/contact" },
+      secondary: { label: "Explore Workday integrations", href: "/services/workday-integrations" },
+    },
+  },
+
+  /* 7 — How we work ------------------------------------------------------ */
   process: {
     id: "how-we-work",
     eyebrow: "How we work",
@@ -550,7 +651,7 @@ export const WHAT_WE_DO = {
     },
   },
 
-  /* 7 — What we cover ---------------------------------------------------- */
+  /* 8 — What we cover ---------------------------------------------------- */
   cover: {
     id: "what-we-cover",
     /** [derived] The section's own name in the document. */
