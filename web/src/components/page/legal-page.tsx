@@ -46,7 +46,7 @@ export function LegalPage({ doc, other }: { doc: LegalDoc; other: { label: strin
         <div className="grid gap-12 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] lg:gap-16">
           {/* -- contents ------------------------------------------------- */}
           {/* Lives in its own client component because it tracks the scroll —
-              see `anchor-rail.tsx`, shared with `/what-we-do`. Everything else
+              see `anchor-rail.tsx`. Everything else
               on this page is static and stays on the server. */}
           <AnchorRail sections={doc.sections} />
 

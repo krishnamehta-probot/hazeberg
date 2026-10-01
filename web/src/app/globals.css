@@ -357,6 +357,45 @@
     );
   }
 
+  /* The `space` opener's light: one soft blue bloom on the right, where the
+     globe sits from xl, with a low amber rise under it — the sunrise the arc
+     carries on the other pages, reduced to a hint. Wide and weak on purpose:
+     the globe is the light; this is only the air around it. */
+  .space-glow {
+    background-image:
+      radial-gradient(34% 46% at 77% 50%, rgb(25 114 185 / 0.3), transparent 72%),
+      radial-gradient(26% 22% at 72% 74%, rgb(254 192 15 / 0.09), transparent 70%),
+      radial-gradient(60% 70% at 85% 40%, rgb(16 36 70 / 0.55), transparent 80%);
+  }
+
+  /* How we work's pinned frame: one blue bloom behind the wheel's front word,
+     and a deeper one under the copy so the right column is not flat black. It
+     lives on the pinned frame, not the section, so it holds still while the
+     section scrolls through it. */
+  .wheel-glow {
+    background-image:
+      radial-gradient(30% 34% at 24% 54%, rgb(25 114 185 / 0.26), transparent 72%),
+      radial-gradient(50% 60% at 78% 50%, rgb(16 36 70 / 0.5), transparent 78%);
+  }
+  @media (max-width: 1023px) {
+    .wheel-glow {
+      background-image: radial-gradient(70% 26% at 40% 38%, rgb(25 114 185 / 0.24), transparent 72%);
+    }
+  }
+
+  /* Stars stay off the copy: gone under the type column, full by the middle.
+     On a phone the copy is the whole frame, so they only thin out. */
+  .star-mask {
+    opacity: 0.55;
+  }
+  @media (min-width: 768px) {
+    .star-mask {
+      opacity: 1;
+      mask-image: linear-gradient(to right, transparent 18%, #000 58%);
+      -webkit-mask-image: linear-gradient(to right, transparent 18%, #000 58%);
+    }
+  }
+
   /* The ground the services map floats on. Flat `--surface` under a diagram made
      of soft white discs reads as paper with stickers on it; two very wide, very
      weak washes — one warm from the top right, one cool from the bottom left —
@@ -542,6 +581,67 @@
     animation: marquee 42s linear infinite reverse;
   }
 
+  /* The header wordmark's mountain draws itself on once, as the page lands:
+     the ridge line left to right, then the rock and snow up out of the haze.
+     CSS rather than the wordmark's own loop, so it runs from the first paint
+     and needs no script. The ridge has pathLength 100, so its dash runs from
+     100 to 0. */
+  .berg-draw {
+    animation: berg-draw 1.4s var(--ease-brand) 0.15s both;
+  }
+  .berg-rise {
+    animation: berg-rise 0.9s var(--ease-brand) 0.75s both;
+  }
+
+  @keyframes berg-draw {
+    from {
+      stroke-dashoffset: 100;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes berg-rise {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* A highlighter stroke behind a run of text — amber as a FILL behind ink,
+     which is the one way rule 6 lets yellow near a word on a light ground
+     (ink on amber reads 10.8:1). It sweeps in left to right rather than fading,
+     and `box-decoration-break: clone` gives every wrapped line its own stroke.
+     Switched by `data-on`, so the caller owns the state. */
+  .marker {
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    transition: background-size 650ms var(--ease-brand);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .marker[data-on] {
+    background-size: 100% 100%;
+  }
+
+  /* A dashed line that travels — for a loop or a connector that has to read as
+     running rather than drawn. Pair it with `stroke-dasharray: 6 8` on the
+     path; the offset below is one whole dash period, so the loop is seamless.
+     The reduced-motion block at the foot of this file stops it. */
+  .dash-flow {
+    animation: dash-flow 1.6s linear infinite;
+  }
+
+  @keyframes dash-flow {
+    to {
+      stroke-dashoffset: -14;
+    }
+  }
+
   /* The rim never stops. A registered <angle> is what makes this possible at
      all — an unregistered custom property cannot be animated, so the conic
      would jump between keyframes instead of turning. 7s is slow enough to read
@@ -570,5 +670,13 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  /* The wordmark's mountain is simply there, drawn — no draw-on, and none of
+     the 0.75s delay the rule above would still leave it hidden for. */
+  .berg-draw,
+  .berg-rise,
+  .dash-flow {
+    animation: none !important;
   }
 }

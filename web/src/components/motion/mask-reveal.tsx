@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 /**
@@ -17,9 +17,14 @@ import { motion, useReducedMotion } from "motion/react";
  * faded in. It is the oldest trick in motion graphics and it still separates
  * work that was designed from work that was configured.
  *
- * Two things make it behave rather than clip:
- *   - the inner element carries the descender room (`pb`/`-mb`), because the
- *     mask is `overflow: hidden` and `leading-[1.04]` puts a `g` below the box
+ * Three things make it behave rather than clip:
+ *   - the mask itself carries the descender room (`pb`/`-mb`): `leading-[1.04]`
+ *     puts a `g` or a `y` below the line box, and only padding on the element
+ *     that clips widens what it clips to. The room is in `em`, so the caller
+ *     sets the headline's size on the mask (`className`) — at the wrapper's
+ *     own 16px, 0.25em is 4px, and a 64px `g` needs 13
+ *   - once the type has arrived the mask is taken off (`overflow: visible`),
+ *     so nothing about a face's metrics can crop a finished headline
  *   - the easing is a long out-expo: fast for the first third, and then it
  *     settles. Linear or a symmetric ease reads as a slide, not as a reveal.
  *
@@ -38,17 +43,23 @@ export function MaskReveal({
   as?: "span" | "div";
 }) {
   const reduce = useReducedMotion();
+  const [arrived, setArrived] = useState(false);
   const Outer = as === "div" ? "div" : "span";
 
   if (reduce) return <Outer className={className}>{children}</Outer>;
 
+  /* 130%, not 108%: the mask is now 0.25em deeper than the type, and the type
+     has to start below that, not just below its own box. */
   return (
-    <Outer className={`block overflow-hidden ${className}`}>
+    <Outer
+      className={`block pb-[0.25em] -mb-[0.25em] ${arrived ? "overflow-visible" : "overflow-hidden"} ${className}`}
+    >
       <motion.span
-        className="block pb-[0.14em] -mb-[0.14em]"
-        initial={{ y: "108%" }}
+        className="block"
+        initial={{ y: "130%" }}
         animate={{ y: "0%" }}
         transition={{ duration: 1.05, delay, ease: [0.16, 1, 0.3, 1] }}
+        onAnimationComplete={() => setArrived(true)}
       >
         {children}
       </motion.span>

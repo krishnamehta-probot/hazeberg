@@ -152,7 +152,7 @@ export const PRIMARY_NAV: NavNode[] = [
       title: "200+ integrations, 40+ countries",
       body: "Already connected to Workday for our clients:",
       tags: ["ADP", "Fidelity", "MetLife", "Okta", "DocuSign", "SD Worx", "Cigna", "Greenhouse"],
-      href: "/what-we-do",
+      href: "/what-we-do#how-we-work",
       ctaLabel: "See how we work",
       tone: "accent",
     },

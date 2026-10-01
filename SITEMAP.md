@@ -19,7 +19,7 @@ truth. Routes, page types and section anchors are settled here before any page i
 | Workday Integrations | `/services/workday-integrations` | Landing |
 | Workday Reporting & Analytics | `/services/workday-reporting-and-analytics` | Landing |
 | Workday Extend | `/services/workday-extend` | Landing |
-| What we do | `/what-we-do` | Consolidated landing, 8 sections, anchor-linked from the page's own rail. First in the nav, a plain link (2026-09-30) |
+| What we do | `/what-we-do` | Consolidated landing, 7 sections; the 8 capabilities are an accordion, each on its own anchor. First in the nav, a plain link (2026-09-30) |
 | About | `/about` | Consolidated landing, 6 sections, anchor-linked from the page's own rail. A plain nav link (2026-09-30) |
 | Berg | `/berg` | Single page. A Hazeberg solution, not a sub-brand - no separate visual identity |
 | Careers | `/careers` | Single page |
@@ -61,35 +61,33 @@ drop, say so and it moves back.
 
 ---
 
-## What we do - one page, eight sections
+## What we do - one page, seven sections
 
-Consolidated onto `/what-we-do`. Every section needs a stable anchor so the nav and
-internal links can deep-link to it.
+Rebuilt 2026-10-01 on the client's own copy ("What We Do Content", every line of it -
+see `web/src/lib/what-we-do-content.ts`). No placeholder prose is left on the page. Still
+open: the hero's proof strip is built but switched off until the client confirms the four
+figures (the document says so), and the photographs are comp stand-ins.
 
-Built 2026-09-29. **DRAFT — roughly seven eighths of the prose is placeholder**, all of
-it marked in `web/src/lib/what-we-do-content.ts`. Real: the eight names, the eight
-one-line descriptions (live in the nav today), the Get-live / Stay-ahead split, the
-figures, and the AMS paragraph, which is the client's own home-page copy.
+| Section | Anchor |
+|---|---|
+| Who we are | `#who-we-are` |
+| Wherever you are with Workday | `#your-journey` |
+| How it fits together | `#how-it-fits` |
+| Workday capabilities | `#capabilities` |
+| How we work | `#how-we-work` |
+| What we cover | `#what-we-cover` |
 
-Anchors corrected to the long forms `navigation.ts` has always linked - same call as
-`/about`: the nav ships in the header today, so it is the contract. Grouped and ordered
-as the nav's own two columns.
+The eight capability anchors are unchanged and still a contract - other pages link four of
+them. Each is now an accordion row inside `#capabilities`, and arriving on its hash opens
+it:
 
-| Section | Anchor | Group |
-|---|---|---|
-| Workday Implementation | `#workday-implementation` | Get live |
-| Payroll Transformation | `#payroll-transformation` | Get live |
-| Integration Modernization | `#integration-modernization` | Get live |
-| Workday Health Check | `#workday-health-check` | Get live |
-| Workday Optimization | `#workday-optimization` | Stay ahead |
-| Workday AMS | `#workday-ams` | Stay ahead |
-| Release Management | `#release-management` | Stay ahead |
-| Cost Optimization | `#cost-optimization` | Stay ahead |
+`#workday-implementation` `#workday-optimization` `#workday-ams` `#cost-optimization`
+`#integration-modernization` `#payroll-transformation` `#release-management`
+`#workday-health-check`
 
-The page is built around a sticky rail of its own eight sections that tracks the scroll -
-`components/page/anchor-rail.tsx`, shared with the legal pages. Almost nobody opens this
-page and reads it down; they click one engagement in the nav and land two thirds of the
-way into it, and the rail is what tells them where that is.
+Every mention of a capability anywhere on the page - the challenges, the journeys, the
+lifecycle map - is a link to its row that opens it. The anchor rail is gone from this page;
+it stays on the legal pages.
 
 ---
 

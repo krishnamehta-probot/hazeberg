@@ -6,10 +6,9 @@ import { motion, useReducedMotion } from "motion/react";
 /**
  * The contents rail: a list of the page's own sections that knows where you are.
  *
- * Built for the legal pages first and now shared with `/what-we-do`, which is
- * the other page on this site whose whole job is to be deep-linked into: the nav
- * links eight separate anchors on it, so a reader arrives mid-page and needs to
- * see where that is.
+ * Built for the legal pages, whose whole job is to be deep-linked into: a
+ * reader arrives mid-document and needs to see where that is. (`/what-we-do`
+ * used it too until 2026-10-01, when its eight sections became an accordion.)
  *
  * It was a static list, which on an eleven-section document is a list you read
  * once and then cannot use: you scroll into section 7 and the rail still looks

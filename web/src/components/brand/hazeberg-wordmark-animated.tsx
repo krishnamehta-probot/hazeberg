@@ -11,7 +11,7 @@ import {
 } from "@/components/brand/hazeberg-wordmark";
 
 /**
- * The header's wordmark, with its three birds as a flock.
+ * The header's wordmark: its three birds as a flock, and over "berg", the berg.
  *
  * The first version squashed the marks and slid a gradient across them, and the
  * client was right that it did not feel like anything. These are handled as
@@ -35,6 +35,23 @@ import {
  *   tap       phones have no hover, so a tap sends all three round the loop,
  *             one after another
  *   keyboard  focusing the link sends them round the middle of the wordmark
+ *
+ * The berg — HIDDEN for now (`SHOW_BERG`), built and ready. Added 2026-09-30,
+ * because people wanted the mountain in it too and the name is half mountain;
+ * the client then asked for it off. A small alpine ridge over "berg", balancing the flock
+ * over "aze". Three snow-capped summits, blue rock, its foot dissolving into
+ * haze — Haze-berg, literally.
+ *
+ *   load      the ridge line draws itself left to right, then the rock and snow
+ *             rise out of the haze (CSS, so it runs from the first paint)
+ *   at rest   mist drifts across the lower slopes, and every 6-9s a glint of
+ *             sun runs along the ridge
+ *   nearby    a first glow shows behind the peaks — the sky before sunrise —
+ *             and the range slides a touch against the pointer, being further
+ *             off than the birds
+ *   hover     dawn: the sun rises in the notch between the two right-hand peaks
+ *             and the summits turn gold, while the flock is in the air; it sets
+ *             again as they land. Focus and a tap bring it up too.
  *
  * The letters stay `currentColor`, so the bar's ink-to-white switch over dark
  * sections still works; the birds carry the colour. Blue is #1E88E5 rather than
@@ -181,6 +198,43 @@ const FLY_SCALE = 0.8;
 const TRAIL = 0.34;
 const LAP = 1.5;
 
+/** The berg is built but switched off — the client's call, 2026-09-30: the
+    flock stays, the mountain waits. Set true to bring it back; everything it
+    needs (drawing, loop, CSS draw-on) is still here. */
+const SHOW_BERG = false;
+
+/**
+ * The berg, over "berg" (x 154-242; the letters' tops are at y 34). The highest
+ * summit sits over the join of "e" and "r", with a notch to its right for the
+ * sun to come up in. Straight runs rather than curves: at 12px tall, a jagged
+ * line is what reads as rock.
+ */
+const RIDGE =
+  "M156 34 L166.5 26.5 L171.5 28 L183 18.5 L188 21 L201 6.5 L206.5 11.2 L210.5 9.8 L221.5 20 L228.5 16.5 L239.5 27 L250 34";
+const MOUNTAIN = `${RIDGE} Z`;
+/** The east faces, in shade. */
+const SHADE = "M201 6.5 L206.5 11.2 L210.5 9.8 L221.5 20 L228.5 16.5 L239.5 27 L250 34 L212 34 L205 21 Z";
+/** Snow on the three summits, cut along the ridge with a ragged lower edge. */
+const SNOW = [
+  "M194.7 13.5 L201 6.5 L206.5 11.2 L210.5 9.8 L215 14 L212.5 13.2 L210 15.2 L207.5 13.4 L204.5 15.8 L202 13.6 L199.5 15.4 L197 13.2 Z",
+  "M223.5 19 L228.5 16.5 L231.6 19.5 L229.5 19 L227.5 20.3 L225.5 19.2 Z",
+  "M179.4 21.5 L183 18.5 L186.4 20.2 L184.5 20 L183 21.6 L181.2 20.6 Z",
+];
+/** Everything above the ridge. The sun is clipped to it, so it comes up from
+    behind the rock rather than in front of it. */
+const SKY = `M146 34 L${RIDGE.slice(1)} L262 34 L262 -40 L146 -40 Z`;
+/** The sun: in the notch, below the ridge (so hidden) at rest, clear of it at
+    full dawn. */
+const SUN = { x: 221.5, down: 31, up: 11, r: 5.5 };
+/** Mist on the lower slopes: soft patches that thin the rock where they pass,
+    each on its own speed, wrapping round. */
+const MIST = [
+  { x: 168, y: 25, rx: 15, ry: 3.2, v: 2.6 },
+  { x: 214, y: 28.5, rx: 20, ry: 3.8, v: 1.7 },
+  { x: 242, y: 21.5, rx: 11, ry: 2.6, v: 3.4 },
+];
+const MIST_SPAN = { x0: 130, x1: 275 };
+
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 const clamp01 = (v: number) => clamp(v, 0, 1);
 const easeInOut = (a: number) => (a < 0.5 ? 2 * a * a : 1 - (-2 * a + 2) ** 2 / 2);
@@ -216,6 +270,12 @@ export function AnimatedHazebergWordmark({ className = "" }: { className?: strin
   const trailInks = useRef<(SVGLinearGradientElement | null)[]>([]);
   const lights = useRef<(SVGGElement | null)[]>([]);
   const lamps = useRef<(SVGRadialGradientElement | null)[]>([]);
+  const range = useRef<SVGGElement>(null);
+  const sun = useRef<SVGCircleElement>(null);
+  const halo = useRef<SVGCircleElement>(null);
+  const alpen = useRef<SVGGElement>(null);
+  const shine = useRef<SVGPathElement>(null);
+  const mists = useRef<(SVGEllipseElement | null)[]>([]);
 
   useEffect(() => {
     const svg = svgRef.current;
@@ -256,6 +316,14 @@ export function AnimatedHazebergWordmark({ className = "" }: { className?: strin
     const centre = { ...MIDDLE };
     const path: Mark[] = [];
     const lit = [false, false, false];
+    /* The berg: how far the sun is up (0-1), until when a tap holds it up, the
+       range's slide against the pointer, and the ridge glint's clock. */
+    let dawn = 0;
+    let drawnDawn = -1;
+    let dawnUntil = 0;
+    let shift = 0;
+    let nextShine = t0 + 2.4;
+    let shineAt = -10;
 
     const toView = (cx: number, cy: number) => {
       const m = svg.getScreenCTM();
@@ -323,6 +391,7 @@ export function AnimatedHazebergWordmark({ className = "" }: { className?: strin
         }
       });
       nextLap = Math.max(nextLap, t + rand(12, 18));
+      dawnUntil = t + 2.6;
     };
     const onDown = (e: Event) => {
       if ((e as PointerEvent).pointerType === "touch" && !flying) flurry();
@@ -397,6 +466,42 @@ export function AnimatedHazebergWordmark({ className = "" }: { className?: strin
           t,
         });
         while (path.length > 2 && path[0].t < t - 1) path.shift();
+      }
+
+      /* The berg. Dawn comes up while the flock is in the air (hover, focus, a
+         tap); as the pointer comes near, only a first glow behind the peaks. */
+      if (SHOW_BERG) {
+        const dawnTo = flying || t < dawnUntil ? 1 : 0.2 * near;
+        dawn += (dawnTo - dawn) * (1 - Math.exp(-dt * (dawnTo > dawn ? 2.4 : 1.8)));
+        if (Math.abs(dawn - drawnDawn) > 0.0005) {
+          drawnDawn = dawn;
+          const cy = (SUN.down - (SUN.down - SUN.up) * dawn).toFixed(2);
+          sun.current?.setAttribute("cy", cy);
+          halo.current?.setAttribute("cy", cy);
+          halo.current?.setAttribute("opacity", dawn.toFixed(3));
+          /* The summits warm once the sun is well up, not the moment it starts. */
+          alpen.current?.setAttribute("opacity", clamp01((dawn - 0.25) / 0.75).toFixed(3));
+        }
+        /* Depth: the range is further off than the flock, so it slides a little
+           the other way to the pointer. */
+        const shiftTo = pointer ? clamp((205 - pointer.x) * 0.02, -1.2, 1.2) * near : 0;
+        shift += (shiftTo - shift) * (1 - Math.exp(-dt * 3));
+        range.current?.setAttribute("transform", `translate(${shift.toFixed(3)} 0)`);
+        const span = MIST_SPAN.x1 - MIST_SPAN.x0;
+        MIST.forEach((m, j) => {
+          const x = MIST_SPAN.x0 + ((((m.x - MIST_SPAN.x0 + m.v * (t - t0)) % span) + span) % span);
+          mists.current[j]?.setAttribute("cx", x.toFixed(2));
+        });
+        /* A glint of sun along the ridge now and then — but not while the sun
+           is up, when the whole ridge is lit anyway. */
+        if (t >= nextShine) {
+          if (dawn < 0.2) shineAt = t;
+          nextShine = t + rand(6, 9);
+        }
+        const sp = (t - shineAt) / 1.3;
+        if (sp >= 0 && sp <= 1.05) {
+          shine.current?.setAttribute("stroke-dashoffset", (6 - 106 * easeInOut(clamp01(sp))).toFixed(2));
+        }
       }
 
       /* Now and then, one bird takes a loop on its own — only when nobody is
@@ -619,7 +724,113 @@ export function AnimatedHazebergWordmark({ className = "" }: { className?: strin
             </radialGradient>
           </Fragment>
         ))}
+
+        {/* the berg */}
+        {SHOW_BERG ? (
+          <>
+            <linearGradient id={`${uid}-rock`} gradientUnits="userSpaceOnUse" x1="0" y1="6" x2="0" y2="34">
+              <stop offset="0" stopColor={BLUE} stopOpacity="0.55" />
+              <stop offset="0.6" stopColor={BLUE} stopOpacity="0.22" />
+              <stop offset="1" stopColor={BLUE} stopOpacity="0" />
+            </linearGradient>
+            <linearGradient id={`${uid}-shade`} gradientUnits="userSpaceOnUse" x1="0" y1="6" x2="0" y2="34">
+              <stop offset="0" stopColor="#0B4C86" stopOpacity="0.45" />
+              <stop offset="1" stopColor="#0B4C86" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient id={`${uid}-alpen`} gradientUnits="userSpaceOnUse" x1="0" y1="6" x2="0" y2="27">
+              <stop offset="0" stopColor={GOLD} stopOpacity="0.9" />
+              <stop offset="1" stopColor={GOLD} stopOpacity="0" />
+            </linearGradient>
+            <radialGradient id={`${uid}-sun`} cx="0.4" cy="0.35">
+              <stop offset="0" stopColor="#FFF4C7" />
+              <stop offset="0.55" stopColor={GOLD} />
+              <stop offset="1" stopColor="#F1B403" />
+            </radialGradient>
+            <radialGradient id={`${uid}-halo`}>
+              <stop offset="0" stopColor={GOLD} stopOpacity="0.55" />
+              <stop offset="1" stopColor={GOLD} stopOpacity="0" />
+            </radialGradient>
+            <clipPath id={`${uid}-sky`}>
+              <path d={SKY} />
+            </clipPath>
+            {/* The haze: the foot of the range fades to nothing, and the mist
+                patches thin it further where they drift. A luminance mask, so the
+                haze is simply whatever the bar is showing — it works on the white
+                bar and the dark hero alike. */}
+            <linearGradient id={`${uid}-fade`} gradientUnits="userSpaceOnUse" x1="0" y1="18" x2="0" y2="35">
+              <stop offset="0" stopColor="#fff" />
+              <stop offset="1" stopColor="#000" />
+            </linearGradient>
+            <radialGradient id={`${uid}-mist`}>
+              <stop offset="0" stopColor="#000" stopOpacity="0.7" />
+              <stop offset="1" stopColor="#000" stopOpacity="0" />
+            </radialGradient>
+            <mask id={`${uid}-haze`} maskUnits="userSpaceOnUse" x="130" y="-20" width="150" height="60">
+              <rect x="130" y="-20" width="150" height="60" fill={`url(#${uid}-fade)`} />
+              {MIST.map((m, j) => (
+                <ellipse
+                  key={j}
+                  ref={(el) => {
+                    mists.current[j] = el;
+                  }}
+                  cx={m.x}
+                  cy={m.y}
+                  rx={m.rx}
+                  ry={m.ry}
+                  fill={`url(#${uid}-mist)`}
+                />
+              ))}
+            </mask>
+          </>
+        ) : null}
       </defs>
+
+      {/* The berg — behind the letters, so "berg" stands in front of its
+          mountain, and behind the birds, which fly in front of it. */}
+      {SHOW_BERG ? (
+        <g ref={range} data-berg>
+          <g clipPath={`url(#${uid}-sky)`}>
+            <circle ref={halo} cx={SUN.x} cy={SUN.down} r={16} fill={`url(#${uid}-halo)`} opacity={0} />
+            <circle ref={sun} data-berg-sun cx={SUN.x} cy={SUN.down} r={SUN.r} fill={`url(#${uid}-sun)`} />
+          </g>
+          <g mask={`url(#${uid}-haze)`}>
+            <g className="berg-rise">
+              <path d={MOUNTAIN} fill={`url(#${uid}-rock)`} />
+              <path d={SHADE} fill={`url(#${uid}-shade)`} />
+              {SNOW.map((d) => (
+                <path key={d} d={d} fill="#fff" fillOpacity={0.95} />
+              ))}
+            </g>
+            <path
+              className="berg-draw"
+              d={RIDGE}
+              pathLength={100}
+              strokeDasharray="100 100"
+              fill="none"
+              stroke={BLUE}
+              strokeWidth={1.5}
+              strokeLinejoin="round"
+            />
+            {/* alpenglow: the summits catching the sunrise */}
+            <g ref={alpen} data-berg-glow opacity={0}>
+              <path d={MOUNTAIN} fill={`url(#${uid}-alpen)`} />
+              <path d={RIDGE} fill="none" stroke={GOLD} strokeWidth={1.5} strokeLinejoin="round" />
+            </g>
+            <path
+              ref={shine}
+              data-berg-shine
+              d={RIDGE}
+              pathLength={100}
+              strokeDasharray="6 200"
+              strokeDashoffset={6}
+              fill="none"
+              stroke={GOLD}
+              strokeWidth={1.9}
+              strokeLinejoin="round"
+            />
+          </g>
+        </g>
+      ) : null}
 
       <g transform={WORDMARK_FLIP} fill="currentColor" stroke="none">
         {WORDMARK_LETTERS.map((d) => (

@@ -257,14 +257,22 @@ function Pricing() {
         titleMax="max-w-[18ch]"
       />
 
-      <RevealGroup as="ul" className="mt-12 grid gap-5 lg:grid-cols-3">
+      {/* From lg the three cards share seven rows (bar, icon, name, price,
+          body, benefits, button): each card is a subgrid over them, so every
+          divider, list and button sits on one line across the three, whatever
+          length any one card's copy runs to. */}
+      <RevealGroup as="ul" className="mt-12 grid gap-5 lg:grid-cols-3 lg:gap-y-0">
         {pricing.items.map((tier) => {
           const Icon = PRICE_ICONS[tier.icon as keyof typeof PRICE_ICONS];
           const featured = tier.featured;
           return (
-            <RevealItem as="li" key={tier.title}>
+            <RevealItem
+              as="li"
+              key={tier.title}
+              className="lg:row-span-7 lg:grid lg:grid-rows-subgrid"
+            >
               <div
-                className={`group/t flex h-full flex-col rounded-2xl bg-canvas p-7 ring-1 transition dur-base ease-brand hover:-translate-y-1 hover:shadow-xl sm:p-8 ${
+                className={`group/t flex h-full flex-col rounded-2xl bg-canvas p-7 ring-1 transition dur-base ease-brand hover:-translate-y-1 hover:shadow-xl sm:p-8 lg:row-span-7 lg:grid lg:grid-rows-subgrid lg:gap-y-0 ${
                   featured
                     ? "ring-accent/45 hover:shadow-accent/15 hover:ring-accent/70"
                     : "ring-border hover:shadow-primary/10 hover:ring-primary/35"
@@ -274,12 +282,21 @@ function Pricing() {
                   aria-hidden
                   className={`h-1 w-10 rounded-pill ${featured ? "grad-cta" : "grad-primary"}`}
                 />
-                <span
-                  aria-hidden
-                  className="mt-6 grid size-11 place-items-center rounded-pill bg-primary/10 text-primary transition-colors dur-base ease-brand group-hover/t:bg-primary group-hover/t:text-white"
-                >
-                  <Icon className="size-4.5" strokeWidth={1.9} />
-                </span>
+                {/* The plan's label rides the icon row, so it never adds a
+                    line under one price that the other two do not have. */}
+                <div className="mt-6 flex items-center justify-between gap-3">
+                  <span
+                    aria-hidden
+                    className="grid size-11 place-items-center rounded-pill bg-primary/10 text-primary transition-colors dur-base ease-brand group-hover/t:bg-primary group-hover/t:text-white"
+                  >
+                    <Icon className="size-4.5" strokeWidth={1.9} />
+                  </span>
+                  {"label" in tier && tier.label ? (
+                    <span className="rounded-pill bg-primary/10 px-3 py-1.5 font-mono text-[0.6875rem] tracking-caps text-primary uppercase">
+                      {tier.label}
+                    </span>
+                  ) : null}
+                </div>
                 <h3 className="mt-5 text-base font-medium text-ink">{tier.title}</h3>
                 <p className="mt-4 flex items-baseline gap-2">
                   <span className="text-3xl leading-none font-light tracking-[-0.03em] text-primary tabular-nums">
@@ -289,11 +306,6 @@ function Pricing() {
                     <span className="text-sm text-ink-subtle">{tier.unit}</span>
                   ) : null}
                 </p>
-                {"label" in tier && tier.label ? (
-                  <p className="mt-2 font-mono text-[0.6875rem] tracking-caps text-ink-subtle uppercase">
-                    {tier.label}
-                  </p>
-                ) : null}
                 <p className="mt-5 text-sm text-ink-muted">{tier.body}</p>
 
                 <ul className="mt-6 space-y-3 border-t border-border pt-6">

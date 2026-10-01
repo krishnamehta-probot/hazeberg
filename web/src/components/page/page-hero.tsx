@@ -1,5 +1,10 @@
+import Link from "next/link";
+import { ArrowDown, ArrowRight } from "lucide-react";
+
 import { ApertureGlow } from "@/components/motion/aperture-glow";
 import { MaskReveal, SoftRise } from "@/components/motion/mask-reveal";
+import { StarField } from "@/components/motion/star-field";
+import { Counter } from "@/components/ui/counter";
 import { CtaPill } from "@/components/ui/cta-pill";
 import { Eyebrow } from "@/components/ui/section";
 
@@ -43,7 +48,12 @@ export function PageHero({
   lead,
   leadSecond,
   meta,
+  stats,
   cta,
+  secondary,
+  aside,
+  backdrop = "light",
+  fit = false,
 }: {
   eyebrow: string;
   /** A node, not a string: every one of these pages breaks its own headline and
@@ -56,26 +66,76 @@ export function PageHero({
       one long one. */
   leadSecond?: string;
   meta?: { label: string; value: string }[];
-  /** An opener that asks for something. Only Careers has one — the white pill,
-      because this ground is dark. */
+  /** Figures that count up as the page lands — the alternative to `meta` for a
+      page whose facts are numbers. Same row, same measure, bigger type. */
+  stats?: readonly { value: number; suffix?: string; label: string }[];
+  /** An opener that asks for something — the white pill, because this ground
+      is dark. */
   cta?: { label: string; href: string };
+  /** A quieter second action beside the pill. A text link, not a second pill:
+      the frame keeps one filled call to action. An in-page `#` target gets a
+      plain anchor (Lenis carries it) and an arrow pointing down, which is where
+      it goes. */
+  secondary?: { label: string; href: string };
+  /** Something that lives in the light, right of the copy. Laid over the
+      copy's box and after it in the DOM, so it is on top for the pointer and
+      after the CTAs for the keyboard; it must keep `pointer-events-none` on
+      its own empty space. */
+  aside?: React.ReactNode;
+  /** `light` is the inner pages' arc. `space` is a still star field with a
+      soft glow on the right, for an opener whose `aside` is its own light
+      source — a globe in front of the arc is two suns. */
+  backdrop?: "light" | "space";
+  /** Exactly the first screen: the full viewport tall from lg, the copy
+      centred in what the header leaves. Phones keep growing with the copy
+      rather than clipping it. */
+  fit?: boolean;
 }) {
+  const jump = secondary?.href.startsWith("#");
+  const secondaryClass =
+    "group/s inline-flex min-h-11 items-center gap-2.5 font-mono text-xs tracking-caps text-on-panel/80 uppercase transition-colors dur-base ease-brand hover:text-on-panel";
+  const SecondaryArrow = jump ? ArrowDown : ArrowRight;
+  const secondaryArrow = (
+    <SecondaryArrow
+      aria-hidden
+      className={`size-4 transition-transform dur-base ease-brand ${
+        jump ? "group-hover/s:translate-y-0.5" : "group-hover/s:translate-x-0.5"
+      }`}
+      strokeWidth={2}
+    />
+  );
+
   return (
     <section
       data-nav-dark
-      className="relative isolate overflow-hidden bg-void text-on-panel"
+      className={`relative isolate overflow-hidden bg-void text-on-panel ${
+        fit ? "min-h-svh lg:flex lg:h-svh lg:min-h-[40rem] lg:flex-col lg:justify-center" : ""
+      }`}
     >
-      <ApertureGlow className="absolute inset-0 h-full w-full" />
+      {backdrop === "space" ? (
+        <>
+          <div aria-hidden className="space-glow absolute inset-0" />
+          <StarField className="star-mask absolute inset-0 h-full w-full" />
+        </>
+      ) : (
+        <>
+          <ApertureGlow className="absolute inset-0 h-full w-full" />
 
-      {/* Structure over the light. The grid is masked towards the arc, so it
-          reads as the surface the light is falling on rather than as a sheet
-          laid over the top of it. */}
-      <div aria-hidden className="page-grid absolute inset-0" />
+          {/* Structure over the light. The grid is masked towards the arc, so
+              it reads as the surface the light is falling on rather than as a
+              sheet laid over the top of it. */}
+          <div aria-hidden className="page-grid absolute inset-0" />
+        </>
+      )}
 
       {/* The type's ground, guaranteed independently of the shader. */}
       <div aria-hidden className="page-scrim absolute inset-0" />
 
-      <div className="relative shell pt-[calc(var(--header-h)+5rem)] pb-[calc(var(--section-y)+1rem)] lg:pt-[calc(var(--header-h)+7rem)]">
+      <div
+        className={`relative shell pt-[calc(var(--header-h)+5rem)] pb-[calc(var(--section-y)+1rem)] ${
+          fit ? "lg:pt-[var(--header-h)] lg:pb-0" : "lg:pt-[calc(var(--header-h)+7rem)]"
+        }`}
+      >
         {/* One measure for everything, so nothing in this block can reach the
             part of the frame the arc is in. */}
         <div className="max-w-[44rem]">
@@ -83,9 +143,9 @@ export function PageHero({
             <Eyebrow tone="onDark">{eyebrow}</Eyebrow>
           </SoftRise>
 
-          {/* The mask is on the h1 itself rather than on a wrapper, so the edge
-              the type comes out from under is the headline's own box. */}
-          <MaskReveal as="div" delay={0.12}>
+          {/* The mask wears the headline's size so its descender room is
+              measured in the headline's em, not the page's 16px. */}
+          <MaskReveal as="div" delay={0.12} className="text-4xl">
             <h1 className="mt-6 max-w-[20ch] text-4xl leading-[1.04] font-light tracking-[-0.025em] text-balance">
               {title}
             </h1>
@@ -101,12 +161,40 @@ export function PageHero({
           ) : null}
           {cta ? (
             <SoftRise delay={0.5}>
-              <div className="mt-10">
+              <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
                 <CtaPill href={cta.href} tone="light">
                   {cta.label}
                 </CtaPill>
+                {secondary ? (
+                  jump ? (
+                    <a href={secondary.href} className={secondaryClass}>
+                      {secondary.label}
+                      {secondaryArrow}
+                    </a>
+                  ) : (
+                    <Link href={secondary.href} className={secondaryClass}>
+                      {secondary.label}
+                      {secondaryArrow}
+                    </Link>
+                  )
+                ) : null}
               </div>
             </SoftRise>
+          ) : null}
+
+          {stats?.length ? (
+            <ul className="mt-14 grid grid-cols-2 gap-x-8 gap-y-7 border-t border-white/12 pt-7 sm:grid-cols-4">
+              {stats.map((row, i) => (
+                <li key={row.label}>
+                  <SoftRise delay={(cta ? 0.58 : 0.5) + i * 0.07}>
+                    <p className="text-3xl leading-none font-light tracking-[-0.03em] text-on-panel tabular-nums">
+                      <Counter value={row.value} suffix={row.suffix} immediate />
+                    </p>
+                    <p className="mt-3 max-w-[18ch] text-xs text-on-panel/65">{row.label}</p>
+                  </SoftRise>
+                </li>
+              ))}
+            </ul>
           ) : null}
 
           {meta?.length ? (
@@ -132,6 +220,8 @@ export function PageHero({
           ) : null}
         </div>
       </div>
+
+      {aside}
     </section>
   );
 }
