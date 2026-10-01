@@ -288,12 +288,15 @@ function Row({
                   </ul>
                 </div>
 
-                <div className="rounded-xl bg-surface p-5 @2xl:self-start">
+                {/* The site's ink panel: the outcome is the line a buyer reads
+                    first, so it is the one dark thing in a light row. Its label
+                    takes the amber every eyebrow on a dark ground wears. */}
+                <div className="grad-ink grain relative overflow-hidden rounded-xl p-5 text-on-panel @2xl:self-start">
                   <span aria-hidden className="grad-primary block h-1 w-8 rounded-pill" />
-                  <p className="mt-4 font-mono text-[0.6875rem] tracking-caps text-primary uppercase">
+                  <p className="mt-4 font-mono text-[0.6875rem] tracking-caps text-accent uppercase">
                     {labels.outcome}
                   </p>
-                  <p className="mt-2 text-base leading-snug text-ink">{item.outcome}</p>
+                  <p className="mt-2 text-base leading-snug text-on-panel">{item.outcome}</p>
                 </div>
               </div>
 

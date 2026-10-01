@@ -52,11 +52,20 @@ const STEP_ICON: Record<Data["steps"][number]["key"], LucideIcon> = {
  * step's title and line — has time to be read, and changes only once the word
  * has settled.
  *
- * The drum is real 3D: each word sits on a cylinder (`rotateX` then
- * `translateZ` by the radius) under one perspective. Its position comes from
- * scroll, wrapped the short way round the loop, so word six is word zero's
- * neighbour and the jump from the bottom of the drum to the top happens behind
- * it, where nothing is visible.
+ * The drum is projected by hand rather than by a CSS camera. A shared
+ * `perspective` puts the vanishing point in the middle of the column, and the
+ * words are set from its left edge, so every word off the front was sheared —
+ * it read as italic, not as curved. Here each word keeps its left edge and is
+ * only scaled: down by its depth, and down again vertically by how far it has
+ * turned away. Its position comes from scroll, wrapped the short way round the
+ * loop, so word six is word zero's neighbour and the jump from the bottom of
+ * the drum to the top happens behind it, where nothing is visible.
+ *
+ * The front word stops in a slot, and sits in it to the pixel. The word's line
+ * box is cut to Manrope's cap height (0.72em) and moved up by the 0.023em the
+ * face's ascent and descent leave it low, so the box is exactly the capitals
+ * and centring the box centres the letters: 0.30em clear above and below. The
+ * neighbours sit 0.19em outside the slot's rules at rest, never across them.
  *
  * Screen readers get the six steps, the cycle and the closing as plain text;
  * the drum is decoration over them. Reduced motion gets no pin and no drum:
@@ -66,7 +75,10 @@ const STEP_ICON: Record<Data["steps"][number]["key"], LucideIcon> = {
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 /** Degrees between neighbouring words on the drum: five are in view at once. */
-const PITCH = 32;
+const PITCH = 36;
+/** The drum's radius and the eye's distance from it, in multiples of the type size. */
+const RADIUS = 2;
+const EYE = 10;
 /** Share of each step's scroll spent standing still before the drum turns. */
 const DWELL = 0.42;
 /** Scroll held at the end, on the closed loop, in steps. */
@@ -94,12 +106,22 @@ function offset(i: number, p: number, n: number) {
   return d;
 }
 
-/** Front word full, its neighbours faint, the far pair barely there, the rest gone. */
+/** Front word full, its neighbours faint, the far pair barely there, and gone
+    before they turn edge-on (2.5 steps is 90°). */
 function fade(d: number) {
   const a = Math.abs(d);
-  if (a <= 1) return 1 - 0.64 * a;
-  if (a <= 2) return 0.36 - 0.23 * (a - 1);
-  return Math.max(0, 0.13 * (1 - (a - 2) / 0.6));
+  if (a <= 1) return 1 - 0.5 * a;
+  if (a <= 2) return 0.5 - 0.22 * (a - 1);
+  return Math.max(0, 0.28 * (1 - (a - 2) / 0.5));
+}
+
+/** Where a word `d` steps from the front lands: its centre's drop, in type
+    sizes, and its scale across and down. */
+function place(d: number) {
+  const a = (d * PITCH * Math.PI) / 180;
+  const cos = Math.cos(a);
+  const depth = EYE / (EYE - RADIUS * (cos - 1));
+  return { y: RADIUS * Math.sin(a) * depth, sx: depth, sy: Math.max(0, cos) * depth };
 }
 
 const pad = (i: number) => String(i + 1).padStart(2, "0");
@@ -170,7 +192,7 @@ function Wheel({ data }: { data: Data }) {
       <div
         ref={track}
         aria-hidden
-        className="pointer-events-none relative -mt-[calc(var(--header-h)_+_(100svh_-_var(--header-h)_-_var(--stage-h))_/_2_-_3.5rem)] [--stage-h:calc(var(--wheel-f)_*_3.9_+_20rem)] [--wheel-f:clamp(2.75rem,min(7.2vw,11svh),8.25rem)] [--wheel-r:calc(var(--wheel-f)*1.75)] lg:[--stage-h:max(calc(var(--wheel-f)_*_3.9),19.5rem)]"
+        className="pointer-events-none relative -mt-[calc(var(--header-h)_+_(100svh_-_var(--header-h)_-_var(--stage-h))_/_2_-_3.5rem)] [--stage-h:calc(var(--wheel-f)_*_3.9_+_20rem)] [--wheel-f:clamp(2.75rem,min(7.2vw,11svh),8.25rem)] lg:[--stage-h:max(calc(var(--wheel-f)_*_3.9),19.5rem)]"
         style={{ height: `calc(100svh + ${((n + END) * PER_STEP).toFixed(1)}svh)` }}
       >
         <div className="sticky top-0 flex h-svh items-center overflow-hidden">
@@ -179,9 +201,15 @@ function Wheel({ data }: { data: Data }) {
           <div className="shell relative grid w-full gap-8 pt-[var(--header-h)] lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-center lg:gap-16">
             {/* ---- the drum ---------------------------------------------- */}
             <div className="relative">
-              {/* The window the front word sits in. */}
-              <div className="absolute inset-x-0 top-1/2 h-[calc(var(--wheel-f)*1.3)] -translate-y-1/2 border-y border-white/10" />
-              <ol className="relative h-[calc(var(--wheel-f)*3.9)] [perspective:calc(var(--wheel-r)*5)]">
+              {/* The slot the front word stops in: a blue-lit row, its rules
+                  fading out to the right, and a lit mark the height of the
+                  capitals on its left edge. */}
+              <div className="wheel-slot absolute inset-x-0 top-1/2 h-[calc(var(--wheel-f)*1.32)] -translate-y-1/2">
+                <span className="wheel-mark absolute top-1/2 left-0 h-[calc(var(--wheel-f)*0.72)] w-0.5 -translate-y-1/2 rounded-pill" />
+              </div>
+              {/* The fade above and below is light falling off a curve, so it
+                  runs across each word as well as between them. */}
+              <ol className="relative h-[calc(var(--wheel-f)*3.9)] [mask-image:linear-gradient(to_bottom,transparent,#000_34%,#000_66%,transparent)]">
                 {steps.map((s, i) => (
                   <WheelWord key={s.key} p={p} i={i} n={n} name={s.name} />
                 ))}
@@ -252,7 +280,7 @@ function Wheel({ data }: { data: Data }) {
   );
 }
 
-/** One name on the drum: placed on the cylinder by its distance from the front. */
+/** One name on the drum: placed by its distance from the front. */
 function WheelWord({
   p,
   i,
@@ -265,24 +293,31 @@ function WheelWord({
   name: string;
 }) {
   const d = useTransform(p, (v) => offset(i, v, n));
-  const transform = useTransform(
-    d,
-    (x) =>
-      `translateY(-50%) translateZ(calc(var(--wheel-r) * -1)) rotateX(${(-x * PITCH).toFixed(2)}deg) translateZ(var(--wheel-r))`,
-  );
+  const transform = useTransform(d, (x) => {
+    const { y, sx, sy } = place(x);
+    return `translateY(calc(-50% + var(--wheel-f) * ${y.toFixed(4)})) scale(${sx.toFixed(4)}, ${sy.toFixed(4)})`;
+  });
   const opacity = useTransform(d, fade);
+  /* Only the word in the slot wears its number in amber. */
+  const lit = useTransform(d, (x) => Math.max(0, 1 - Math.abs(x) * 1.6));
 
   return (
     <motion.li
       style={{ transform, opacity }}
-      className="absolute inset-x-0 top-1/2 flex items-start gap-[0.9rem] will-change-transform [backface-visibility:hidden]"
+      className="absolute top-1/2 left-5 flex origin-left items-start gap-[0.9rem] lg:left-7"
     >
-      <span className="mt-[calc(var(--wheel-f)*0.12)] font-mono text-[0.6875rem] tracking-caps text-accent">
-        {pad(i)}
+      {/* Both line boxes are cut to their face's cap height and lifted by
+          what the face's metrics leave below it, so `items-start` sets the
+          number's capitals level with the word's. */}
+      <span className="relative -top-[0.03em] grid font-mono text-[0.6875rem] leading-[0.7] tracking-caps">
+        <span className="col-start-1 row-start-1 text-on-panel/45">{pad(i)}</span>
+        <motion.span style={{ opacity: lit }} className="col-start-1 row-start-1 text-accent">
+          {pad(i)}
+        </motion.span>
       </span>
       <span
         style={{ fontSize: "var(--wheel-f)" }}
-        className="leading-[0.9] font-light tracking-[-0.045em] whitespace-nowrap uppercase"
+        className="relative -top-[0.023em] leading-[0.72] font-light tracking-[-0.045em] whitespace-nowrap uppercase"
       >
         {name}
       </span>

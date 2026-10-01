@@ -451,6 +451,7 @@ export function CaseStudies({ caseStudies }: { caseStudies: HomeCaseStudies }) {
           document — measured at 0. */}
       <RevealGroup
         as="ul"
+        stagger={0.14}
         className="mt-10 -mx-[var(--gutter)] flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto px-[var(--gutter)] pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3"
       >
         {caseStudies.items.map((c) => (

@@ -2,10 +2,67 @@
 
 import Image from "next/image";
 import { useId, useState } from "react";
+import { motion, useReducedMotion, type Variants } from "motion/react";
 import { Plus } from "lucide-react";
 
-import { RevealItem } from "@/components/motion/reveal";
 import type { HomeCaseStudy } from "@/lib/home/types";
+
+/*
+ * The entrance — the card, then what is on it.
+ *
+ * The site's one reveal (fade and 64px of rise, `reveal.tsx`) is right for a
+ * block of copy and flat for a card: three cards sliding up together read as
+ * one slab moving. So these arrive as objects. Each card stands up into place
+ * — tipped back 16° on its foot, under its own perspective so the left and
+ * right cards do not lean off the middle of the row — and only once it is
+ * nearly there does what is printed on it follow: the title, the label, the
+ * rule drawing itself out, the points one by one, and last the button, which
+ * is the thing you can do with a card that has arrived.
+ *
+ * The photograph has no move of its own. It is part of the card, so it comes
+ * with the card.
+ *
+ * `RevealGroup` (home.tsx) still runs the row: the cards come in left to right
+ * on its stagger. Reduced motion gets every variant switched off.
+ */
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+const CARD: Variants = {
+  hidden: { opacity: 0, y: 72, rotateX: 16, scale: 0.97 },
+  shown: {
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    scale: 1,
+    transition: {
+      duration: 1.1,
+      ease: EASE,
+      opacity: { duration: 0.5, ease: "easeOut" },
+      delayChildren: 0.34,
+      staggerChildren: 0.07,
+    },
+  },
+};
+
+const LINE: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  shown: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
+};
+
+const RULE: Variants = {
+  hidden: { scaleX: 0 },
+  shown: { scaleX: 1, transition: { duration: 0.9, ease: EASE } },
+};
+
+const POP: Variants = {
+  hidden: { opacity: 0, scale: 0.5, rotate: -90 },
+  shown: {
+    opacity: 1,
+    scale: 1,
+    rotate: 0,
+    transition: { type: "spring", stiffness: 380, damping: 22 },
+  },
+};
 
 function Label({ children, dark = false }: { children: React.ReactNode; dark?: boolean }) {
   return (
@@ -68,6 +125,8 @@ export function CaseCard({ item }: { item: HomeCaseStudy }) {
   const { image } = item;
   const [open, setOpen] = useState(false);
   const panelId = useId();
+  const reduce = useReducedMotion();
+  const v = (variants: Variants) => (reduce ? undefined : variants);
 
   return (
     /* A snap target on a phone, a grid cell from sm. `shrink-0` plus a width is
@@ -75,7 +134,11 @@ export function CaseCard({ item }: { item: HomeCaseStudy }) {
        them scroll. `self-stretch` is what makes the three the same rectangle:
        in the flex strip `h-full` resolves against an auto-height container and
        does nothing, and the cards came out 656/604/560. */
-    <RevealItem as="li" className="relative w-[88%] shrink-0 snap-start self-stretch [perspective:1400px] sm:w-auto sm:shrink">
+    <motion.li
+      variants={v(CARD)}
+      style={reduce ? undefined : { transformPerspective: 1200 }}
+      className="relative w-[88%] shrink-0 origin-bottom snap-start self-stretch [perspective:1400px] sm:w-auto sm:shrink"
+    >
       <article
         style={{ transform: open ? "rotateY(180deg)" : undefined }}
         className="group/c relative grid h-full grid-cols-1 transition-transform duration-500 ease-brand [transform-style:preserve-3d]"
@@ -124,13 +187,16 @@ export function CaseCard({ item }: { item: HomeCaseStudy }) {
                 NOT `text-balance`. It optimises for even line LENGTHS, not for
                 the fewest lines, and it was choosing three short lines over two
                 full ones. Greedy wrapping gives the minimum every time. */}
-            <h3 className="min-h-[2.75em] text-[0.8125rem] leading-snug font-medium text-ink sm:text-sm lg:text-base">
+            <motion.h3
+              variants={v(LINE)}
+              className="min-h-[2.75em] text-[0.8125rem] leading-snug font-medium text-ink sm:text-sm lg:text-base"
+            >
               <Title title={item.title} />
-            </h3>
+            </motion.h3>
 
-            <div className="mt-5">
+            <motion.div variants={v(LINE)} className="mt-5">
               <Label>Business impact</Label>
-            </div>
+            </motion.div>
             {/* One line per point — which is why there is no bullet.
 
                 The longest of the nine needs 354px at 12px, and the card gives
@@ -139,12 +205,23 @@ export function CaseCard({ item }: { item: HomeCaseStudy }) {
                 at 768px the measure is 282px and the sentence still needs 354.
                 It wraps there, on all three cards equally, and the rule above it
                 stays put because the rule is not downstream of the wrapping. */}
-            <ul className="mt-3 space-y-1.5 border-t border-border pt-4">
+            {/* The rule is its own element so it can draw itself out; it is
+                the same 1px the list's top border was, at the same height. */}
+            <motion.span
+              aria-hidden
+              variants={v(RULE)}
+              className="mt-3 block h-px origin-left bg-border"
+            />
+            <ul className="space-y-1.5 pt-4">
               {item.impact.map((o, i) => (
-                <li key={i} className="flex gap-2 text-xs leading-[1.7] text-ink-muted">
+                <motion.li
+                  key={i}
+                  variants={v(LINE)}
+                  className="flex gap-2 text-xs leading-[1.7] text-ink-muted"
+                >
                   <span aria-hidden className="mt-[0.55rem] size-1 shrink-0 rounded-pill bg-primary" />
                   <span>{o}</span>
-                </li>
+                </motion.li>
               ))}
             </ul>
           </div>
@@ -240,7 +317,7 @@ export function CaseCard({ item }: { item: HomeCaseStudy }) {
           image band: that band is `aspect-[16/9]` of the card's WIDTH, so any
           percentage of the card's HEIGHT lands somewhere different at every
           breakpoint. */}
-      <span className="absolute top-4 right-4 z-10 sm:top-5 sm:right-5">
+      <motion.span variants={v(POP)} className="absolute top-4 right-4 z-10 sm:top-5 sm:right-5">
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
@@ -265,8 +342,7 @@ export function CaseCard({ item }: { item: HomeCaseStudy }) {
           </span>
           <Plus aria-hidden className="size-4" strokeWidth={2} />
         </button>
-      </span>
-
-    </RevealItem>
+      </motion.span>
+    </motion.li>
   );
 }
