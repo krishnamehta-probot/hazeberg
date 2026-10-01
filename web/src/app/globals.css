@@ -429,6 +429,57 @@
       radial-gradient(110% 85% at -10% 112%, rgb(25 114 185 / 0.14), transparent 52%);
   }
 
+  /* Impact: a short run of light travelling each strand towards its node, and
+     the rings the meeting point sends out once everything has arrived. Both
+     are on a `pathLength` of 1 / their own box, so they hold at any size. */
+  .impact-flow {
+    animation: impact-flow 3.2s linear infinite;
+  }
+  @keyframes impact-flow {
+    from {
+      stroke-dashoffset: 0.07;
+    }
+    to {
+      stroke-dashoffset: -0.93;
+    }
+  }
+  .impact-ripple {
+    animation: impact-ripple 2.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  @keyframes impact-ripple {
+    from {
+      transform: translate(-50%, -50%) scale(0.35);
+      opacity: 0.9;
+    }
+    to {
+      transform: translate(-50%, -50%) scale(2.2);
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .impact-flow,
+    .impact-ripple {
+      animation: none;
+    }
+  }
+
+  /* The services wheel's orbit: the dotted ring and its four markers, turning
+     once every ninety seconds — slow enough to be noticed rather than watched. */
+  .svc-orbit {
+    transform-origin: 50px 50px;
+    animation: svc-orbit 90s linear infinite;
+  }
+  @keyframes svc-orbit {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .svc-orbit {
+      animation: none;
+    }
+  }
+
   /* ---------------------------------------------------------------------- *
    * Specular — one hover and one press, for every button on the site.
    *
