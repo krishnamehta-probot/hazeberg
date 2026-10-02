@@ -5,6 +5,7 @@ import { HazebergBirds } from "@/components/brand/hazeberg-wordmark";
 import { Reveal } from "@/components/motion/reveal";
 import { CtaPill } from "@/components/ui/cta-pill";
 import { Section } from "@/components/ui/section";
+import { isPublishedHref } from "@/lib/home/services";
 import type { WrittenService } from "@/lib/service-content";
 
 import { LiveLoop } from "./engage-loop";
@@ -33,10 +34,13 @@ const RELATED_ID = "service-cta-related";
  * clipped at the hairline above the related row, so they read as setting
  * behind it rather than running under the links.
  *
- * The related row is three links in glass, each wearing the glyph of the page
- * it opens (`iconForHref`) and an arrow, and each at least 64px tall. They
- * stack below lg, where three across would wrap a name like "Workday Reporting
- * and Analytics" onto three lines.
+ * The related row is the document's three links in glass, each wearing the
+ * glyph of the page it opens (`iconForHref`) and an arrow, and each at least
+ * 64px tall. They stack below lg, where three across would wrap a name like
+ * "Workday Reporting and Analytics" onto three lines. A link to a service held
+ * back from the site (`isPublishedHref`) is left out rather than dead-ending,
+ * so a row can hold two; the columns are as many as the links, so two share
+ * the row instead of leaving a gap where the third was.
  *
  * The panel sits INSIDE a light section, so it carries no `data-nav-dark`: the
  * header flips to white type only over sections that are dark edge to edge,
@@ -75,8 +79,8 @@ export function ServiceCta({ data }: { data: Data }) {
             >
               {RELATED}
             </p>
-            <ul aria-labelledby={RELATED_ID} className="mt-4 grid gap-2.5 lg:grid-cols-3 lg:gap-3">
-              {data.related.map((link) => {
+            <ul aria-labelledby={RELATED_ID} className="mt-4 grid gap-2.5 lg:auto-cols-fr lg:grid-flow-col lg:gap-3">
+              {data.related.filter((link) => isPublishedHref(link.href)).map((link) => {
                 const Icon = iconForHref(link.href) ?? Compass;
                 return (
                   <li key={link.href}>

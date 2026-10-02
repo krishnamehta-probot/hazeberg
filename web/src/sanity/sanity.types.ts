@@ -90,8 +90,7 @@ export type HomePage = {
         | "/services/workday-payroll"
         | "/services/workday-financials"
         | "/services/workday-integrations"
-        | "/services/workday-reporting-analytics"
-        | "/what-we-do#workday-ams"
+        | "/services/workday-ams"
         | "/services/workday-extend";
     };
     trust: string;
@@ -114,8 +113,7 @@ export type HomePage = {
         | "/services/workday-payroll"
         | "/services/workday-financials"
         | "/services/workday-integrations"
-        | "/services/workday-reporting-analytics"
-        | "/what-we-do#workday-ams"
+        | "/services/workday-ams"
         | "/services/workday-extend";
     };
     points: Array<{
@@ -142,8 +140,7 @@ export type HomePage = {
         | "/services/workday-payroll"
         | "/services/workday-financials"
         | "/services/workday-integrations"
-        | "/services/workday-reporting-analytics"
-        | "/what-we-do#workday-ams"
+        | "/services/workday-ams"
         | "/services/workday-extend";
     };
     cards: Array<{
@@ -227,8 +224,7 @@ export type HomePage = {
         | "/services/workday-payroll"
         | "/services/workday-financials"
         | "/services/workday-integrations"
-        | "/services/workday-reporting-analytics"
-        | "/what-we-do#workday-ams"
+        | "/services/workday-ams"
         | "/services/workday-extend";
       image: {
         asset: SanityImageAssetReference;
@@ -280,8 +276,7 @@ export type HomePage = {
         | "/services/workday-payroll"
         | "/services/workday-financials"
         | "/services/workday-integrations"
-        | "/services/workday-reporting-analytics"
-        | "/what-we-do#workday-ams"
+        | "/services/workday-ams"
         | "/services/workday-extend";
     };
   };
@@ -423,14 +418,13 @@ export type HOME_PAGE_QUERY_RESULT = {
         | "/berg"
         | "/careers"
         | "/contact"
+        | "/services/workday-ams"
         | "/services/workday-extend"
         | "/services/workday-financials"
         | "/services/workday-hcm"
         | "/services/workday-integrations"
         | "/services/workday-payroll"
-        | "/services/workday-reporting-analytics"
-        | "/what-we-do"
-        | "/what-we-do#workday-ams";
+        | "/what-we-do";
     };
     trust: string;
   };
@@ -447,14 +441,13 @@ export type HOME_PAGE_QUERY_RESULT = {
         | "/berg"
         | "/careers"
         | "/contact"
+        | "/services/workday-ams"
         | "/services/workday-extend"
         | "/services/workday-financials"
         | "/services/workday-hcm"
         | "/services/workday-integrations"
         | "/services/workday-payroll"
-        | "/services/workday-reporting-analytics"
-        | "/what-we-do"
-        | "/what-we-do#workday-ams";
+        | "/what-we-do";
     };
     points: Array<{
       title: string;
@@ -473,14 +466,13 @@ export type HOME_PAGE_QUERY_RESULT = {
         | "/berg"
         | "/careers"
         | "/contact"
+        | "/services/workday-ams"
         | "/services/workday-extend"
         | "/services/workday-financials"
         | "/services/workday-hcm"
         | "/services/workday-integrations"
         | "/services/workday-payroll"
-        | "/services/workday-reporting-analytics"
-        | "/what-we-do"
-        | "/what-we-do#workday-ams";
+        | "/what-we-do";
     };
     cards: Array<{
       stat: string;
@@ -564,14 +556,13 @@ export type HOME_PAGE_QUERY_RESULT = {
         | "/berg"
         | "/careers"
         | "/contact"
+        | "/services/workday-ams"
         | "/services/workday-extend"
         | "/services/workday-financials"
         | "/services/workday-hcm"
         | "/services/workday-integrations"
         | "/services/workday-payroll"
-        | "/services/workday-reporting-analytics"
-        | "/what-we-do"
-        | "/what-we-do#workday-ams";
+        | "/what-we-do";
       image: {
         alt: string | null;
         crop: SanityImageCrop | null;
@@ -614,14 +605,13 @@ export type HOME_PAGE_QUERY_RESULT = {
         | "/berg"
         | "/careers"
         | "/contact"
+        | "/services/workday-ams"
         | "/services/workday-extend"
         | "/services/workday-financials"
         | "/services/workday-hcm"
         | "/services/workday-integrations"
         | "/services/workday-payroll"
-        | "/services/workday-reporting-analytics"
-        | "/what-we-do"
-        | "/what-we-do#workday-ams";
+        | "/what-we-do";
     };
   };
 } | null;

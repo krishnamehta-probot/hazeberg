@@ -409,11 +409,7 @@
                         },
                         {
                           "type": "string",
-                          "value": "/services/workday-reporting-analytics"
-                        },
-                        {
-                          "type": "string",
-                          "value": "/what-we-do#workday-ams"
+                          "value": "/services/workday-ams"
                         },
                         {
                           "type": "string",
@@ -533,11 +529,7 @@
                         },
                         {
                           "type": "string",
-                          "value": "/services/workday-reporting-analytics"
-                        },
-                        {
-                          "type": "string",
-                          "value": "/what-we-do#workday-ams"
+                          "value": "/services/workday-ams"
                         },
                         {
                           "type": "string",
@@ -687,11 +679,7 @@
                         },
                         {
                           "type": "string",
-                          "value": "/services/workday-reporting-analytics"
-                        },
-                        {
-                          "type": "string",
-                          "value": "/what-we-do#workday-ams"
+                          "value": "/services/workday-ams"
                         },
                         {
                           "type": "string",
@@ -1197,11 +1185,7 @@
                           },
                           {
                             "type": "string",
-                            "value": "/services/workday-reporting-analytics"
-                          },
-                          {
-                            "type": "string",
-                            "value": "/what-we-do#workday-ams"
+                            "value": "/services/workday-ams"
                           },
                           {
                             "type": "string",
@@ -1522,11 +1506,7 @@
                         },
                         {
                           "type": "string",
-                          "value": "/services/workday-reporting-analytics"
-                        },
-                        {
-                          "type": "string",
-                          "value": "/what-we-do#workday-ams"
+                          "value": "/services/workday-ams"
                         },
                         {
                           "type": "string",

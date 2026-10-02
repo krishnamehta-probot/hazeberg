@@ -1,23 +1,31 @@
 /**
  * The module pages — `/services/[slug]`.
  *
- * Six routes, ONE template, per `SITEMAP.md`: "All six share one template and
- * one CMS document type — six documents, not six hand-built pages." This file is
+ * Seven routes, ONE template, per `SITEMAP.md`: "All seven share one template
+ * and one CMS document type - seven documents, not seven hand-built pages." This file is
  * that document type, standing in for Sanity until Sanity exists. When the CMS
  * lands, the shape below is the schema and the objects are the documents; the
  * page component does not change.
  *
- * **FOUR PAGES ARE WRITTEN**, each from its own client document, supplied
+ * **SIX PAGES ARE WRITTEN**, each from its own client document, supplied
  * 2026-10-02: Workday HCM, Workday Payroll, Workday Financials and Workday
- * Integrations. Reporting & Analytics and Extend have no document yet; they keep
- * their live opener and the marked scaffold.
+ * Integrations, then Workday AMS and Workday Extend ("Service Pages Part 2").
+ * Reporting & Analytics has no document yet. Its entry keeps the live opener
+ * for the day it does, but the service is held back from the site
+ * (`published: false` in `lib/home/services.ts`), so nothing renders it.
  *
- * All four documents share one structure — hero, six capability stages, three
+ * All six documents share one structure — hero, six capability stages, three
  * audiences of four, three engagement routes, one section of the module's own,
  * a call to action and five questions — so the template does too. The one
  * section that differs is `feature`, a union: Industries (HCM), the two payroll
- * models (Payroll), connected finance (Financials), and what we connect
- * (Integrations).
+ * models (Payroll), connected finance (Financials), what we connect
+ * (Integrations), the three support models (AMS) and where Extend fits
+ * (Extend).
+ *
+ * AMS used to be an engagement model only, living on `/what-we-do#workday-ams`.
+ * The client's AMS document is written as a service page, "same as the other
+ * service pages", so it is one now: `/services/workday-ams`. The capability on
+ * What we do stays, and links here.
  *
  * Marking:
  *
@@ -29,18 +37,25 @@
  *   [live]      the client's own words already published on this site
  *
  * Links: every "Links to" in the documents points at the capability of that
- * name on `/what-we-do`, whose eight anchors are a contract. Related services
- * link to the module page of that name, or to `#workday-ams`, which is an
- * engagement model rather than a module (see `SITEMAP.md`).
+ * name on `/what-we-do`, whose eight anchors are a contract — so a "Support"
+ * route still opens the AMS capability there, as the documents say. Related
+ * services link to the module page of that name, AMS included.
  */
 
 /** Which module — keys the icon, and nothing else. */
-export type ServiceIconKey = "hcm" | "payroll" | "financials" | "integrations" | "reporting" | "extend";
+export type ServiceIconKey =
+  | "hcm"
+  | "payroll"
+  | "financials"
+  | "integrations"
+  | "reporting"
+  | "extend"
+  | "ams";
 
 export type ServiceLink = { label: string; href: string };
 
-/** A capability under a stage: a plain line, or — once, on HCM — a line that is
-    a door to another module page. */
+/** A capability under a stage: a plain line, or — HCM's payroll line and
+    Extend's AMS line — a line that is a door to another module page. */
 export type StageItem = string | ServiceLink;
 
 export type ServiceStage = {
@@ -66,7 +81,9 @@ export type ServiceRoute = {
   n: string;
   name: string;
   line: string;
-  link: ServiceLink;
+  /** Where the route leads on What we do. Absent on AMS, whose three are the
+      stages of one engagement in order rather than three ways in. */
+  link?: ServiceLink;
 };
 
 export type ServiceFeature =
@@ -101,6 +118,24 @@ export type ServiceFeature =
           feeds everything (Workday, the record). */
       direction: "in" | "out";
       items: readonly { key: string; name: string; vendor?: string; line: string }[];
+    }
+  | {
+      /** AMS — three ways to buy support, the same team behind each. */
+      kind: "support";
+      id: string;
+      eyebrow: string;
+      title: string;
+      body: string;
+      models: readonly { key: string; name: string; how: string; fits: string }[];
+    }
+  | {
+      /** Extend — the kinds of app that usually earn their place. */
+      kind: "uses";
+      id: string;
+      eyebrow: string;
+      title: string;
+      body: string;
+      items: readonly { key: string; name: string; line: string }[];
     };
 
 export type WrittenService = {
@@ -159,7 +194,7 @@ export type WrittenService = {
   };
 };
 
-/** The two modules with no document yet: the live opener and nothing else. */
+/** A module with no document yet: the live opener and nothing else. */
 export type StubService = {
   written: false;
   slug: string;
@@ -208,6 +243,7 @@ const R_REPORTING: ServiceLink = {
   href: "/services/workday-reporting-analytics",
 };
 const R_EXTEND: ServiceLink = { label: "Workday Extend", href: "/services/workday-extend" };
+const R_AMS: ServiceLink = { label: "Workday AMS", href: "/services/workday-ams" };
 
 /* ---------------------------------------------------------------------------
    Workday HCM
@@ -741,7 +777,7 @@ const WORKDAY_PAYROLL: WrittenService = {
     title: "Is payroll still the riskiest week of your month?",
     body: "Tell us how payroll runs today, from inputs to posting, and we'll show you where it can be made safer and simpler.",
     button: { label: "Talk to a payroll specialist", href: CONTACT_HREF },
-    related: [R_HCM, R_INTEGRATIONS, AMS],
+    related: [R_HCM, R_INTEGRATIONS, R_AMS],
   },
   faq: {
     id: "questions",
@@ -1355,10 +1391,569 @@ const WORKDAY_INTEGRATIONS: WrittenService = {
 };
 
 /* ---------------------------------------------------------------------------
-   The two not yet written
+   Workday AMS
+   ---------------------------------------------------------------------------
+   The document's How we engage is three stages of one engagement — Transition,
+   Run, Improve — not three ways in, and it names no link for any of them, so
+   its routes carry none.
+   --------------------------------------------------------------------------- */
+
+const WORKDAY_AMS: WrittenService = {
+  written: true,
+  slug: "workday-ams",
+  label: "Workday AMS",
+  icon: "ams",
+  short: "Support that keeps working after go-live",
+  hero: {
+    eyebrow: "Workday AMS",
+    titleLead: "Steady every day, ",
+    titleAccent: "sharper every quarter.",
+    intro:
+      "Functional and technical support, integration fixes, release testing and annual cycles, set up so issues are fixed at the cause and your Workday keeps improving instead of drifting.",
+    differentiator:
+      "Every customer Hazeberg supports has stayed, and the reason is simple: the consultants on your account stay too, so they learn the reasoning behind how your Workday is set up.",
+    primary: { label: "Scope your AMS coverage", href: CONTACT_HREF },
+    secondary: { label: "Book a Workday Health Check", href: HEALTH_CHECK },
+    outcomes: [
+      { title: "Fixed at the cause", label: "Repeat issues traced and closed for good" },
+      { title: "Releases without surprises", label: "Every update tested before it goes live" },
+      { title: "Cover around the clock", label: "Teams in India and Malaysia, 24/7" },
+      { title: "Better every quarter", label: "Improvements brought to each review" },
+    ],
+  },
+  capabilities: {
+    id: "capabilities",
+    eyebrow: "AMS capabilities",
+    title: "From the daily ticket to the twice-yearly release.",
+    body: "Support after go-live is more than a help desk. Workday keeps changing, your organization keeps changing, and the busiest weeks of the year arrive on schedule. We cover all of it under one service, with one team that knows your setup.",
+    stages: [
+      {
+        key: "resolve",
+        stage: "Resolve",
+        area: "Functional and technical support",
+        line: "Tickets closed at the cause, so the same one doesn't come back.",
+        items: [
+          "Triage by severity and business impact",
+          "Root-cause fixes for repeat issues",
+          "Support across HCM, Payroll, Financials and Security",
+          "Service levels agreed and reported monthly",
+        ],
+      },
+      {
+        key: "change",
+        stage: "Change",
+        area: "Enhancements and configuration",
+        line: "Small changes made properly, without waiting for a project.",
+        items: [
+          "Business process and security updates",
+          "New reports and dashboards on request",
+          "Reorganizations and mass updates through EIB",
+          "Every change tested and documented first",
+        ],
+      },
+      {
+        key: "connect",
+        stage: "Connect",
+        area: "Integration support",
+        line: "Failed runs caught and fixed before payday or month-end feels them.",
+        items: [
+          "Monitoring of Studio, EIB and Core Connector runs",
+          "Fixes when a vendor updates its file layout",
+          "Reprocessing of failed files",
+          "New vendor connections as you grow",
+        ],
+      },
+      {
+        key: "release",
+        stage: "Release",
+        area: "Release management",
+        line: "Twice a year Workday changes, and nothing of yours should break.",
+        items: [
+          "Release briefings in plain language",
+          "Impact analysis against your configuration",
+          "Regression testing in the preview window",
+          "An adoption plan for features worth switching on",
+        ],
+      },
+      {
+        key: "cycle",
+        stage: "Cycle",
+        area: "Annual and periodic cycles",
+        line: "The busy weeks planned for, not just survived.",
+        items: [
+          "Open enrollment and benefits renewals",
+          "Compensation and performance cycles",
+          "Year-end payroll and tax updates",
+          "Period close and audit requests in Financials",
+        ],
+      },
+      {
+        key: "improve",
+        stage: "Improve",
+        area: "Continuous improvement",
+        line: "Each review brings proposals for what to improve next, not only a record of what was fixed.",
+        items: [
+          "KPIs tracked against service levels",
+          "Automation of repeat tasks",
+          "Health checks on configuration and security",
+          "An improvement roadmap agreed each quarter",
+        ],
+      },
+    ],
+    footnote:
+      "Coverage spans Core HCM, Payroll, Benefits and Compensation, Time and Absence, Talent, Financials, Security, Integrations and Reporting, so one team can look after the whole system.",
+  },
+  audiences: {
+    id: "who-its-for",
+    eyebrow: "Who it's built for",
+    title: "Three groups who rely on Workday every day.",
+    body: "Good support is felt most by the people who never have to raise a ticket. Here is what changes for each of them.",
+    groups: [
+      {
+        key: "hris-it",
+        name: "HRIS and IT leads",
+        features: [
+          {
+            title: "One team to call",
+            line: "A single team across functional and technical work, instead of several vendors.",
+          },
+          {
+            title: "Service you can measure",
+            line: "Response and resolution targets reported every month.",
+          },
+          {
+            title: "Less key-person risk",
+            line: "Knowledge written down, so nothing rests on one person's memory.",
+          },
+          {
+            title: "Capacity that flexes",
+            line: "Extra consultants when demand spikes, and less when it settles.",
+          },
+        ],
+      },
+      {
+        key: "hr-payroll-finance",
+        name: "HR, payroll and finance teams",
+        features: [
+          {
+            title: "Changes without a project",
+            line: "Process tweaks and new reports handled inside the service.",
+          },
+          {
+            title: "Calmer peak weeks",
+            line: "Extra cover planned for enrollment, reviews and year-end.",
+          },
+          {
+            title: "Help in your working day",
+            line: "Cover arranged around your hours, wherever your teams are.",
+          },
+          {
+            title: "Fixes that stay fixed",
+            line: "Repeat issues traced to the cause rather than patched again.",
+          },
+        ],
+      },
+      {
+        key: "employees-managers",
+        name: "Employees and managers",
+        features: [
+          {
+            title: "Things that just work",
+            line: "Tasks, approvals and payslips without errors or workarounds.",
+          },
+          {
+            title: "Faster help",
+            line: "Issues raised through your usual channel and resolved to agreed times.",
+          },
+          {
+            title: "New features sooner",
+            line: "Useful release features switched on, with short guidance notes.",
+          },
+          {
+            title: "Fewer surprises",
+            line: "Changes tested before they reach anyone's screen.",
+          },
+        ],
+      },
+    ],
+  },
+  engage: {
+    id: "how-we-engage",
+    eyebrow: "How we engage",
+    title: "Three stages, one standing team.",
+    body: "Every AMS engagement moves through the same three stages, whether support is coming from another partner, an in-house team or our own implementation.",
+    routes: [
+      {
+        n: "01",
+        name: "Transition",
+        line: "We take over from your current partner or internal team in planned steps, mapped around vendors and other dependencies, and confirm what our team has learned before the handover date.",
+      },
+      {
+        n: "02",
+        name: "Run",
+        line: "Tickets handled to agreed response and resolution times, in your ticketing tool and following your ITIL process, with a monthly report against each target.",
+      },
+      {
+        n: "03",
+        name: "Improve",
+        line: "KPIs that show where the system slows people down, automation for tasks that keep repeating, and a short list of proposals at each service review.",
+      },
+    ],
+  },
+  feature: {
+    kind: "support",
+    id: "support-models",
+    eyebrow: "Support models",
+    title: "Three ways to buy support, with the same team behind each.",
+    body: "Support needs differ with your size, your in-house skills and how predictable the work is. Every model draws on the same consultants and the same way of working.",
+    models: [
+      {
+        key: "managed",
+        name: "Managed service",
+        how: "A standing team that owns your Workday support end to end, to agreed service levels.",
+        fits: "Organizations that want one partner accountable for the whole system.",
+      },
+      {
+        key: "flexible",
+        name: "Flexible support packages",
+        how: "Expert time you draw on as requests come in.",
+        fits: "Steady, modest demand, or a small in-house team that needs backup.",
+      },
+      {
+        key: "augmentation",
+        name: "Staff augmentation",
+        how: "Our consultants working inside your team, under your direction.",
+        fits: "Covering a gap, a peak or a skill your team doesn't have yet.",
+      },
+    ],
+  },
+  cta: {
+    title: "Paying for support but still chasing fixes?",
+    body: "Tell us how support runs today, what gets logged and what keeps coming back, and we'll show you what a standing team would change.",
+    button: { label: "Scope your AMS coverage", href: CONTACT_HREF },
+    related: [R_HCM, R_PAYROLL, R_INTEGRATIONS],
+  },
+  faq: {
+    id: "questions",
+    eyebrow: "Questions",
+    title: "Questions we hear about Workday AMS.",
+    items: [
+      {
+        q: "How does a handover from our current partner work?",
+        a: "In planned stages. We map open tickets, integrations and vendor dependencies, transfer knowledge with checks along the way, and take over only once those checks are passed, so no request is dropped between two teams.",
+      },
+      {
+        q: "What service levels do you offer?",
+        a: "Response and resolution targets are set by severity, agreed with you before the service starts and reported every month. Critical issues get round-the-clock attention.",
+      },
+      {
+        q: "Is AMS only for fixing problems?",
+        a: "No. Much of the value is in changes and improvements: new business processes, reports, release features and automation of repeat work. Every service review at Hazeberg comes with improvement proposals, not just a ticket count.",
+      },
+      {
+        q: "Do you support Workday Financials as well as HCM?",
+        a: "Yes. The same service covers Financials alongside HCM, Payroll and the integrations between them, so one team sees how a change in one area affects the others.",
+      },
+      {
+        q: "How do you handle Workday's twice-yearly releases?",
+        a: "Release management is part of the service. We brief you on what is changing, check it against your setup, run regression tests during the preview window and plan which new features are worth switching on.",
+      },
+    ],
+  },
+};
+
+/* ---------------------------------------------------------------------------
+   Workday Extend
+   ---------------------------------------------------------------------------
+   The document gives no accent split for the headline; "we build it." carries
+   the amber [derived], the answer half of the sentence, as on every other page.
+   Both hero buttons are invitations to talk, so both go to Contact [derived].
+   The last Run item is a door to the AMS page [derived], the way HCM's last
+   Paid item is a door to Payroll: the document's own words name the service.
+   --------------------------------------------------------------------------- */
+
+const WORKDAY_EXTEND: WrittenService = {
+  written: true,
+  slug: "workday-extend",
+  label: "Workday Extend",
+  icon: "extend",
+  short: "Tailored experiences inside your Workday",
+  hero: {
+    eyebrow: "Workday Extend",
+    titleLead: "When Workday doesn't do it, ",
+    titleAccent: "we build it.",
+    intro:
+      "Custom apps, orchestrations and AI-ready extensions made with Workday Extend, set up so work that happens outside Workday moves inside it, with Workday's own security and data.",
+    differentiator:
+      "An Extend app is only as useful as the data it can reach, and connecting Workday to other systems is the work Hazeberg knows best, with more than 200 integrations behind it.",
+    primary: { label: "Talk to an Extend specialist", href: CONTACT_HREF },
+    secondary: { label: "Bring us a workaround", href: CONTACT_HREF },
+    outcomes: [
+      { title: "One place to work", label: "Side apps and spreadsheets moved into Workday" },
+      { title: "Security already in place", label: "Apps follow Workday's roles and permissions" },
+      { title: "Safe through releases", label: "Built on supported Workday tools, tested each update" },
+      { title: "Ready for AI", label: "Designed to work with Workday's agent tools" },
+    ],
+  },
+  capabilities: {
+    id: "capabilities",
+    eyebrow: "Extend capabilities",
+    title: "From the first workaround to the app that replaces it.",
+    body: "Every organization has work that happens next to Workday: a tracker in a spreadsheet, a form in another tool, an approval by email. When configuration can't bring it in, Extend can. We help you decide which of those to build, then build them so they feel like part of Workday.",
+    stages: [
+      {
+        key: "decide",
+        stage: "Decide",
+        area: "Fit assessment",
+        line: "Extend is the right tool when configuration runs out, not before.",
+        items: [
+          "Configuration options checked first",
+          "Use cases scored on value and effort",
+          "Extend Essentials or Professional, sized to need",
+          "A clear build or skip recommendation",
+        ],
+      },
+      {
+        key: "design",
+        stage: "Design",
+        area: "App design",
+        line: "Designed with the people who will use it, in Workday's own look.",
+        items: [
+          "Workshops with the people doing the work today",
+          "New data objects for information Workday doesn't hold",
+          "Screens that follow Workday's design standards",
+          "Security roles mapped before build begins",
+        ],
+      },
+      {
+        key: "build",
+        stage: "Build",
+        area: "App development",
+        line: "Built with Workday's own tools, so it behaves like the rest of Workday.",
+        items: [
+          "App Builder pages, in visual or code mode",
+          "Business processes and approvals for the new work",
+          "Reports and dashboards on app data",
+          "Code reviewed against Workday's guidelines",
+        ],
+      },
+      {
+        key: "connect",
+        stage: "Connect",
+        area: "Orchestrations and data",
+        line: "Data from other systems, pulled in at the moment the app needs it.",
+        items: [
+          "Workday Orchestrate flows across Workday and other systems",
+          "Calls to external APIs and services",
+          "Events that trigger the next step automatically",
+          "Workday data read and written under its own security",
+        ],
+      },
+      {
+        key: "assist",
+        stage: "Assist",
+        area: "AI and agents",
+        line: "Ready for the agents Workday is building, and the ones you will.",
+        items: [
+          "AI widgets inside Extend apps",
+          "Agents built with Workday's agent tools",
+          "Connections to your own AI assistant",
+          "Agent actions governed by Workday security",
+        ],
+      },
+      {
+        key: "run",
+        stage: "Run",
+        area: "Testing, release and support",
+        line: "Custom apps need looking after like everything else in Workday.",
+        items: [
+          "Testing before each deployment",
+          "Checks in the preview window before every Workday release",
+          "Documentation your team can own",
+          { label: "Ongoing support through AMS", href: R_AMS.href },
+        ],
+      },
+    ],
+  },
+  audiences: {
+    id: "who-its-for",
+    eyebrow: "Who it's built for",
+    title: "Three groups who gain when the workaround goes.",
+    body: "A custom app changes the working day for everyone who used to work around the gap. Here is what changes for each of them.",
+    groups: [
+      {
+        key: "hr-finance-ops",
+        name: "HR, finance and operations teams",
+        features: [
+          {
+            title: "One system, not five",
+            line: "Requests, approvals and records in Workday instead of side tools.",
+          },
+          {
+            title: "Their process, as it runs",
+            line: "Apps shaped around how the work is really done.",
+          },
+          {
+            title: "Fewer manual handoffs",
+            line: "Steps that used to need an email or rekeying run on their own.",
+          },
+          {
+            title: "Data they can report on",
+            line: "App data sits in Workday, ready for reports and dashboards.",
+          },
+        ],
+      },
+      {
+        key: "it-hris",
+        name: "IT and HRIS teams",
+        features: [
+          {
+            title: "Fewer tools to support",
+            line: "Side apps and spreadsheets retired as their work moves into Workday.",
+          },
+          {
+            title: "Security already done",
+            line: "Apps follow Workday's roles and permissions without a separate setup.",
+          },
+          {
+            title: "Upgrade-safe builds",
+            line: "Supported Workday tools instead of custom code running outside it.",
+          },
+          {
+            title: "Clear ownership",
+            line: "Documentation and handover, so your team can maintain what we build.",
+          },
+        ],
+      },
+      {
+        key: "employees-managers",
+        name: "Employees and managers",
+        features: [
+          {
+            title: "Nothing new to learn",
+            line: "Apps that look and work like the rest of Workday.",
+          },
+          {
+            title: "One inbox",
+            line: "New tasks and approvals arrive where everything else already does.",
+          },
+          {
+            title: "Requests that move",
+            line: "Approvals that progress without chasing anyone by email.",
+          },
+          {
+            title: "Help from AI where it fits",
+            line: "Assistants that act within each person's own Workday access.",
+          },
+        ],
+      },
+    ],
+  },
+  engage: {
+    id: "how-we-engage",
+    eyebrow: "How we engage",
+    title: "Three ways in, depending on where you are with Workday.",
+    body: "The right route depends on whether you are building your first Extend app, improving apps already live, or need a team to keep them running.",
+    routes: [
+      {
+        n: "01",
+        name: "Implement",
+        line: "First apps planned and built: fit assessment, design, build, testing and a controlled release into production.",
+        link: IMPLEMENTATION,
+      },
+      {
+        n: "02",
+        name: "Optimize",
+        line: "Reviewing apps already live, replacing the workarounds that remain, and moving custom code that runs outside Workday onto Extend where it makes sense.",
+        link: OPTIMIZATION,
+      },
+      {
+        n: "03",
+        name: "Support",
+        line: "Extend apps looked after alongside the rest of your Workday: fixes, small changes and checks before each release.",
+        link: AMS,
+      },
+    ],
+  },
+  feature: {
+    kind: "uses",
+    id: "where-extend-fits",
+    eyebrow: "Where Extend fits",
+    title: "Where an Extend app usually earns its place.",
+    body: "Good candidates share a pattern: work that depends on Workday data but happens somewhere else. These are the patterns that come up most often.",
+    items: [
+      {
+        key: "requests",
+        name: "Requests and approvals",
+        line: "Equipment, access or policy-exception requests that currently live in email.",
+      },
+      {
+        key: "trackers",
+        name: "Trackers and registers",
+        line: "Certifications, licenses, conflicts of interest or grant conditions kept in spreadsheets.",
+      },
+      {
+        key: "programs",
+        name: "Workforce programs",
+        line: "Recognition, mentoring or volunteering programs tied to the worker record.",
+      },
+      {
+        key: "planning",
+        name: "Planning views",
+        line: "Team capacity or project staffing pictures built on live Workday data.",
+      },
+      {
+        key: "sector",
+        name: "Sector-specific records",
+        line: "Credential checks in healthcare, faculty duties in universities, staff attestations in financial services.",
+      },
+      {
+        key: "assistants",
+        name: "AI assistants and agents",
+        line: "Skills, leave or policy questions answered in chat, with the action completed in Workday.",
+      },
+    ],
+  },
+  cta: {
+    title: "Running part of HR or finance on a spreadsheet?",
+    body: "Send us the workaround your team relies on most, and we'll tell you whether configuration, an integration or an Extend app is the right fix.",
+    button: { label: "Talk to an Extend specialist", href: CONTACT_HREF },
+    related: [R_INTEGRATIONS, R_REPORTING, R_AMS],
+  },
+  faq: {
+    id: "questions",
+    eyebrow: "Questions",
+    title: "Questions we hear about Workday Extend.",
+    items: [
+      {
+        q: "When should we use Extend instead of configuration?",
+        a: "Only once configuration runs out. Many requests can be met with business processes, custom fields or reports, which cost less to run. Extend is the answer when you need new data, new screens or a process Workday doesn't offer. Saying so when configuration will do is part of the job at Hazeberg.",
+      },
+      {
+        q: "Do Workday releases ever break Extend apps?",
+        a: "Extend runs on Workday's own platform, which Workday designs to be update safe, so a release shouldn't break an app the way it can break code running outside Workday. Every app is still tested during Workday's preview period before each release goes live.",
+      },
+      {
+        q: "Can Extend apps use data from other systems?",
+        a: "Yes. Workday Orchestrate connects apps to external APIs and services, so an app can fetch or send data elsewhere as part of its process.",
+      },
+      {
+        q: "Do we need Extend Professional?",
+        a: "It depends on what you plan to build. Workday sells Extend in tiers, and some capabilities, such as Workday's newer agent-building tools, need the Professional tier. We size the license to the apps on your roadmap before you commit.",
+      },
+      {
+        q: "Who looks after the apps once they are live?",
+        a: "Your team, ours or both. We document each app and hand it over, or look after it through AMS alongside the rest of your Workday.",
+      },
+    ],
+  },
+};
+
+/* ---------------------------------------------------------------------------
+   The one not yet written
    ---------------------------------------------------------------------------
    Hero copy only, all of it [live] from `SERVICES.items`. The template renders
-   these as a marked scaffold — a real opener and an honest statement that the
+   it as a marked scaffold — a real opener and an honest statement that the
    rest of the page is not written.
    --------------------------------------------------------------------------- */
 
@@ -1377,29 +1972,21 @@ export const SERVICE_PAGES: Record<string, ServicePage> = {
     titleLead: "Workday data turned into ",
     titleAccent: "business insight.",
   },
-  "workday-extend": {
-    written: false,
-    slug: "workday-extend",
-    label: "Workday Extend",
-    icon: "extend",
-    short: "Tailored experiences inside your Workday",
-    lead: "Build tailored Workday experiences that address specific business requirements while working within your broader Workday environment.",
-    titleLead: "Tailored experiences inside ",
-    titleAccent: "your Workday.",
-  },
+  "workday-ams": WORKDAY_AMS,
+  "workday-extend": WORKDAY_EXTEND,
 };
 
-/** The four written pages, in the nav's order — for the related-services row
-    and anything else that wants to walk them. */
+/** The written pages, in the nav's order — for the related-services row and
+    anything else that wants to walk them. */
 export const WRITTEN_SERVICES = Object.values(SERVICE_PAGES).filter(
   (p): p is WrittenService => p.written,
 );
 
-/** The scaffold notice, one place, so both unwritten pages say the same thing. */
+/** The scaffold notice, one place, so any unwritten page says the same thing. */
 export const SERVICE_SCAFFOLD = {
   eyebrow: "Not written yet",
   title: "This module page is a scaffold.",
-  body: "The opener above is the client's own copy, already live on the home page. Everything below it — what the module covers, who it is for, how an engagement runs, and the questions — is written once per module, and four of the six are done.",
+  body: "The opener above is the client's own copy, already live on the home page. Everything below it — what the module covers, who it is for, how an engagement runs, and the questions — is written once per module, and six of the seven are done.",
   reference: { label: "See a written one — Workday HCM", href: "/services/workday-hcm" },
   needs: [
     "Six capability stages, with a line and four capabilities each",

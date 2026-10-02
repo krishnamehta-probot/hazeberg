@@ -3,7 +3,7 @@
 Source: client spreadsheet, supplied 2026-09-17. This file is the structural source of
 truth. Routes, page types and section anchors are settled here before any page is built.
 
-**12 pages.** Client decisions of 2026-09-17 folded in.
+**13 pages.** Client decisions of 2026-09-17 folded in; AMS added as a service page 2026-10-02.
 
 ---
 
@@ -17,8 +17,9 @@ truth. Routes, page types and section anchors are settled here before any page i
 | Workday Payroll | `/services/workday-payroll` | Landing |
 | Workday Financials | `/services/workday-financials` | Landing |
 | Workday Integrations | `/services/workday-integrations` | Landing |
-| Workday Reporting & Analytics | `/services/workday-reporting-and-analytics` | Landing |
+| Workday Reporting & Analytics | `/services/workday-reporting-analytics` | Landing - **held back** until its document arrives (404, linked from nowhere) |
 | Workday Extend | `/services/workday-extend` | Landing |
+| Workday AMS | `/services/workday-ams` | Landing (added 2026-10-02) |
 | What we do | `/what-we-do` | Consolidated landing, 8 sections; the 8 capabilities are an accordion, each on its own anchor. First in the nav, a plain link (2026-09-30) |
 | About | `/about` | Consolidated landing, 6 sections, anchor-linked from the page's own rail. A plain nav link (2026-09-30) |
 | Berg | `/berg` | Single page. A Hazeberg solution, not a sub-brand - no separate visual identity |
@@ -27,43 +28,59 @@ truth. Routes, page types and section anchors are settled here before any page i
 
 ---
 
-## Services - six separate landing pages
+## Services - seven separate landing pages
 
-Nav dropdown with no parent destination. Each child is its own page. All six share one
-template and one CMS document type - six documents, not six hand-built pages.
+Nav dropdown with no parent destination. Each child is its own page. All seven share one
+template and one CMS document type - seven documents, not seven hand-built pages.
 
 1. Workday HCM - `/services/workday-hcm` - **written** (client doc, 2026-10-02)
 2. Workday Payroll - `/services/workday-payroll` - **written** (client doc, 2026-10-02)
 3. Workday Financials - `/services/workday-financials` - **written** (client doc, 2026-10-02)
 4. Workday Integrations - `/services/workday-integrations` - **written** (client doc, 2026-10-02)
-5. Workday Reporting & Analytics - `/services/workday-reporting-analytics` - scaffold
-6. Workday Extend - `/services/workday-extend` - scaffold
+5. Workday Reporting & Analytics - `/services/workday-reporting-analytics` - **held back** (no document yet)
+6. Workday Extend - `/services/workday-extend` - **written** (client doc, "Service Pages Part 2", 2026-10-02)
+7. Workday AMS - `/services/workday-ams` - **written** (client doc, "Service Pages Part 2", 2026-10-02)
 
-Template built 2026-09-29, rebuilt 2026-10-02 on the client's four service documents:
-`app/services/[slug]/page.tsx` renders every one of the six from `lib/service-content.ts`,
-which is the CMS document type standing in for Sanity until Sanity exists. The seventh
-module, whenever it comes, is a content entry and not a build.
+Template built 2026-09-29, rebuilt 2026-10-02 on the client's service documents:
+`app/services/[slug]/page.tsx` renders every one of the seven from `lib/service-content.ts`,
+which is the CMS document type standing in for Sanity until Sanity exists. Reporting &
+Analytics' document, whenever it comes, is a content entry and not a build.
 
-All four documents share one structure, so the template does too - hero (with an outcome
+All six documents share one structure, so the template does too - hero (with an outcome
 strip and the module's six-stage cycle drawn as a ring), capabilities (`#capabilities`, each
 stage on `#stage-<key>`), who it's built for (`#who-its-for`), how we engage
 (`#how-we-engage`), one section of the module's own, a call to action with related
 modules, and questions (`#questions`). The module's own section: Industries on HCM
 (`#industries`), the two payroll models on Payroll (`#payroll-model`), connected finance on
-Financials (`#connected-finance`), and what we connect on Integrations (`#what-we-connect`).
+Financials (`#connected-finance`), what we connect on Integrations (`#what-we-connect`), the
+three support models on AMS (`#support-models`), and where Extend fits on Extend
+(`#where-extend-fits`). AMS's How we engage is three stages of one engagement (Transition,
+Run, Improve) rather than three doors to What we do, so its cards are not links.
 
-Reporting & Analytics and Extend have no document yet. They render their live opener and
-a clearly marked scaffold, rather than borrowed copy or a 404 that would break the header.
+Reporting & Analytics has no document yet, and the client's call (2026-10-02) is to take
+it off the site until it has one rather than show a scaffold. One switch does it -
+`published: false` on its entry in `web/src/lib/home/services.ts` - and everything that
+lists or links a service reads that switch: the Services menu (now three and three, with
+Extend moved to Technical), the home wheel (the CMS keeps its wedge; the site skips it),
+the footer, What we do's service links (the client's sentence there drops its name too,
+kept in a comment), the related-services rows on HCM, Financials and Extend (two links
+each until it returns), the CMS's button link options, and the router, so its URL is a
+404. Flip the switch when the page is written and it all comes back.
+
+The Part 2 batch also carried a second Workday Integrations document
+(`1TFWmY8R59OsfUeZ4a-jf81B4iIsdrhYsXKLiHP4jUY0`), which is not shared publicly and could
+not be read. The Integrations page still follows the first document.
 
 Note the slug: the nav and `SERVICES.items` both use `workday-reporting-analytics`, not
 `workday-reporting-and-analytics` as an earlier revision of this file had it. The routes
 are generated from `SERVICES.items`, so the shipped list wins.
 
-**Workday AMS is not in this list.** The client confirmed six Services pages, and AMS is
-the only entry that the original seven had to lose to reach six. It lives on
-`/what-we-do#ams` instead, which also matches the module-versus-engagement axis below.
-Flagged rather than assumed: if AMS was meant to stay and something else was meant to
-drop, say so and it moves back.
+**Workday AMS joined the list on 2026-10-02.** It had been left off to reach six pages,
+living on `/what-we-do#workday-ams` as an engagement model. The client then wrote it as a
+service page, "same as the other service pages", so it has one: `/services/workday-ams`,
+in the Services menu, the home wheel, the footer and the related-services rows that name
+it (Payroll, Extend). The capability on What we do stays and links to the page; the
+"Support" route on every module page still opens that capability, as the documents say.
 
 ---
 
@@ -89,9 +106,9 @@ figures are the client's illustrative targets and always carry the document's ca
 | How we work | `#how-we-work` |
 | What we cover | `#what-we-cover` |
 
-The eight capability anchors are unchanged and still a contract - other pages link four of
-them. Each is now an accordion row inside `#capabilities`, and arriving on its hash opens
-it:
+The eight capability anchors are unchanged and still a contract - other pages link five of
+them (implementation, optimization, AMS, integration modernization, health check). Each is
+now an accordion row inside `#capabilities`, and arriving on its hash opens it:
 
 `#workday-implementation` `#workday-optimization` `#workday-ams` `#cost-optimization`
 `#integration-modernization` `#payroll-transformation` `#release-management`
@@ -147,13 +164,14 @@ SVG from the Berg app's PNG — `web/src/components/brand/berg-logo.tsx`.
 Two different questions, which is why the overlap in names is not duplication:
 
 - **Services** answers *which Workday module* - HCM, Payroll, Financials, Integrations,
-  Reporting, Extend.
+  Reporting, Extend - and, since 2026-10-02, AMS.
 - **What we do** answers *what kind of engagement* - Implementation, Optimization, Cost
   Optimization, Release Management, Health Check.
 
 Read that way, "Workday Payroll" (module) and "Payroll Transformation" (engagement) are
 legitimately different pages, as are "Workday Integrations" and "Integration
-Modernization". Only one entry breaks the axis: see below.
+Modernization". Only one entry breaks the axis: AMS, an engagement rather than a module,
+which is now in both trees - see below.
 
 ---
 
@@ -164,10 +182,14 @@ Modernization". Only one entry breaks the axis: see below.
   treatment.
 - **Services has no landing page.** Recommendation for a hub declined. `/services` will
   redirect rather than 404.
-- **Six Services pages**, one shared template.
+- **Six Services pages**, one shared template. (Seven from 2026-10-02, with AMS.)
 - **Workday AMS duplication**: client deferred ("not a major problem"). Resolved for now
   by the six-page count. The cost if it ever returns to both trees is two near-identical
   pages competing in search and two nav routes to one answer.
+  **Superseded 2026-10-02:** the client wrote AMS as a service page, so it is in both trees
+  by their hand. The two are not near-identical - `/services/workday-ams` is the full page,
+  the What we do capability is one accordion row that links to it - but the module pages'
+  "Support" routes still open the capability rather than the page, as the documents say.
 
 ## Still open
 

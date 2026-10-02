@@ -11,6 +11,7 @@ import {
   Blocks,
   ChartColumn,
   ChevronDown,
+  Headset,
   Landmark,
   Menu,
   Users,
@@ -43,8 +44,8 @@ import { CONTACT, NAV_CTA, PRIMARY_NAV, type NavIcon, type NavNode } from "@/lib
  *   - once the bar goes solid, a hairline along its foot fills blue to gold with
  *     the page — the birds' contrail colours
  *
- * Services opens as a full-width dark mega panel: a lede rail, the six services
- * with their icons, and a proof card whose partner names drift past, all under
+ * Services opens as a full-width dark mega panel: a lede rail, the published
+ * services with their icons (three and three, Reporting & Analytics held back), and a proof card whose partner names drift past, all under
  * a soft light that follows the pointer. The panel is the one surface on the
  * site where yellow is legal as type — #FEC00F measures 7.9:1 against the ink
  * gradient's lightest corner and 12.2:1 against its darkest, against 1.65:1 on
@@ -69,6 +70,7 @@ const NAV_ICONS: Record<NavIcon, LucideIcon> = {
   extend: Blocks,
   integrations: Workflow,
   reporting: ChartColumn,
+  ams: Headset,
 };
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -165,7 +167,11 @@ function MegaPanel({
     menu.columns.slice(0, i).reduce((n, c) => n + c.items.length, 0),
   );
   /* The footnote sits at the foot of the shorter column, filling the space
-     the column leaves, rather than as a strip under the whole panel. */
+     the column leaves, rather than as a strip under the whole panel. The
+     list above it takes that space (`lg:flex-1`), not the footnote's own
+     margin: since AMS made the columns four and three, the two are about the
+     same height, and an auto margin collapsed the gap to 0-5px. `mt-4` is now
+     the floor. */
   const shortest = menu.columns.reduce(
     (m, c, i, all) => (c.items.length < all[m].items.length ? i : m),
     0,
@@ -232,7 +238,7 @@ function MegaPanel({
                   {col.heading}
                 </motion.p>
               ) : null}
-              <ul className="space-y-0.5">
+              <ul className="space-y-0.5 lg:flex-1">
                 {col.items.map((item, ii) => {
                   const Icon = NAV_ICONS[item.icon];
                   return (
@@ -273,7 +279,7 @@ function MegaPanel({
               {menu.footnote && ci === shortest ? (
                 <motion.div
                   {...rise(count)}
-                  className="mx-3 mt-4 rounded-md border border-dashed border-white/15 p-4 lg:mt-auto"
+                  className="mx-3 mt-4 rounded-md border border-dashed border-white/15 p-4"
                 >
                   <p className="text-xs text-on-panel/60">{menu.footnote.text}</p>
                   <Link

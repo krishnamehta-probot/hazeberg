@@ -44,3 +44,7 @@ yarn-error.log*
 
 # header QA screenshots
 .header-qa/
+
+# The owner's raw photo drop (2026-10-02): 204 MB of originals. Web-sized copies
+# live elsewhere under web/public/; these never go into the repo.
+web/public/Hazeberg/

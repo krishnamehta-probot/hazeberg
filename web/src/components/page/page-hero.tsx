@@ -51,10 +51,13 @@ import { Eyebrow } from "@/components/ui/section";
  * every clamp), so the same rules set a 1280x650 laptop and a 1920x950 desktop
  * without a breakpoint. The clamps were solved, not tuned: line counts from
  * the served Manrope's own shaped advance widths, at 1280x650, 1366x657,
- * 1440x780, 1536x730 and 1920x950, leave the tightest opener (About at
- * 1280x650) 22px to spare and every module page at least 30px (Financials,
- * same screen) — and still 22px if every line of text were 4% wider. Change a
- * value here and redo that arithmetic; do not eyeball it.
+ * 1440x780, 1536x730 and 1920x950, leave the tightest opener (Extend at
+ * 1280x650, two paragraphs of three lines and an outcome that wraps) 14px to
+ * spare, About about 29px and every other module page more — and Extend still
+ * 14px if every line of text were 4% wider, its long lines having wrapped
+ * already. The headline's ceiling went from 8svh to 7.5svh on 2026-10-02 for
+ * exactly that page; it had 7.5px. Change a value here and redo that
+ * arithmetic; do not eyeball it.
  *
  * Moving the rail to full width moved it into the light, which breaks the
  * guarantee above for its right half. `.hero-rail-scrim` is the answer: the
@@ -349,14 +352,14 @@ export function PageHero({
 }
 
 /** `fit`: height-aware. Every step is `clamp(floor, svh, the FLOW value)`;
-    the headline is `text-4xl`'s own clamp with an `8svh` ceiling added, so
-    wherever the screen is tall for its width — 800px or more, or a phone held
+    the headline is `text-4xl`'s own clamp with a `7.5svh` ceiling added, so
+    wherever the screen is tall for its width — 854px or more, or a phone held
     upright — it is `text-4xl` exactly. The paragraphs' 34.5rem is 56ch at
     16px give or take 5px, and sets What we do's two paragraphs on the same
     breaks as before; at 15px it holds ~60ch, which is what saves Financials a
     line on a short screen. */
 const FIT = {
-  h1Size: "text-[length:clamp(2.5rem,min(1.7rem_+_3vw,8svh),4rem)]",
+  h1Size: "text-[length:clamp(2.5rem,min(1.7rem_+_3vw,7.5svh),4rem)]",
   h1Gap: "mt-[clamp(0.875rem,2.8svh,1.5rem)]",
   lead: "max-w-[34.5rem] text-[length:clamp(0.9375rem,2.3svh,1rem)] leading-normal",
   leadGap: "mt-[clamp(1rem,3.2svh,1.75rem)]",

@@ -15,10 +15,11 @@
  *   [COMP]      a photograph from the reference set, standing in. Same status
  *               as the comp frames on the home page — replaced before launch
  *
- * THE EIGHT ANCHORS ARE A CONTRACT. `navigation.ts`, `home-content.ts` and
- * `service-content.ts` link `#workday-ams`, `#workday-health-check`,
- * `#workday-implementation` and `#workday-optimization` from other pages, so
- * the ids below never change. Each one is an accordion item now, and arriving
+ * THE EIGHT ANCHORS ARE A CONTRACT. `navigation.ts` and `service-content.ts`
+ * link `#workday-ams`, `#workday-health-check`, `#workday-implementation`,
+ * `#workday-optimization` and `#integration-modernization` from other pages,
+ * so the ids below never change. (`home-content.ts` linked `#workday-ams`
+ * until AMS got its own page on 2026-10-02.) Each one is an accordion item now, and arriving
  * on its hash opens it.
  *
  * Every capability is referred to by id everywhere else in this file — the
@@ -116,6 +117,7 @@ const CAPABILITIES: readonly Capability[] = [
       "Continuous improvements",
     ],
     outcome: "A reliable Workday environment supported by specialists who understand your platform.",
+    related: { label: "Workday AMS", href: "/services/workday-ams" },
   },
   {
     id: "cost-optimization",
@@ -715,7 +717,11 @@ export const WHAT_WE_DO = {
   },
 
   /* Footer / navigation line --------------------------------------------- */
+  /* The client's sentence named Reporting & Analytics too; it comes out while
+     that page is held back (2026-10-02), so the sentence names exactly the
+     links under it. Put it back with the page:
+     "…Financials, Integrations, Reporting & Analytics, AMS, and Extend." */
   explore: {
-    text: "Explore our specialized service offerings for deeper expertise across Workday HCM, Payroll, Financials, Integrations, Reporting & Analytics, AMS, and Extend.",
+    text: "Explore our specialized service offerings for deeper expertise across Workday HCM, Payroll, Financials, Integrations, AMS, and Extend.",
   },
 } as const;

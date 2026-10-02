@@ -4,7 +4,7 @@ import type { HOME_PAGE_QUERY_RESULT } from "@/sanity/sanity.types";
 import { isSiteRoute } from "@/lib/site-routes";
 
 import { indexLabel } from "./index-label";
-import { isServiceKey, serviceHref } from "./services";
+import { SERVICE_OPTIONS, isPublishedService, isServiceKey, serviceHref } from "./services";
 import type {
   HomeAbout,
   HomeCaseStudies,
@@ -184,8 +184,10 @@ function impact(raw: Raw["impact"], fb: HomeImpact): HomeImpact {
 function services(raw: Raw["services"], fb: HomeServices): HomeServices {
   const items = raw?.items ?? [];
   const keys = items.map((s) => clean(s?.service));
-  if (items.length === 0 || items.length > fb.items.length) {
-    warn("services", `expected up to ${fb.items.length} wheel items, got ${items.length}`);
+  /* Checked against every service the CMS can hold, not against the fallback,
+     which has already dropped any service held back from the site. */
+  if (items.length === 0 || items.length > SERVICE_OPTIONS.length) {
+    warn("services", `expected up to ${SERVICE_OPTIONS.length} wheel items, got ${items.length}`);
     return fb;
   }
   if (!keys.every(isServiceKey) || new Set(keys).size !== keys.length) {
@@ -195,9 +197,11 @@ function services(raw: Raw["services"], fb: HomeServices): HomeServices {
   return {
     eyebrow: text(raw?.eyebrow),
     title: text(raw?.title),
-    items: items.map((s, i) => {
+    /* A held-back service keeps its wedge in the CMS and loses it here. */
+    items: items.flatMap((s, i) => {
       const key = keys[i] as Parameters<typeof serviceHref>[0];
-      return { key, label: text(s?.label), body: text(s?.body), cta: text(s?.cta), href: serviceHref(key) };
+      if (!isPublishedService(key)) return [];
+      return [{ key, label: text(s?.label), body: text(s?.body), cta: text(s?.cta), href: serviceHref(key) }];
     }),
   };
 }

@@ -262,7 +262,7 @@ const services = defineField({
       name: "items",
       title: "The wheel",
       description:
-        "One wedge per service, clockwise from the top. Drag to change the order. Each item is tied to its service page, so its link and icon follow it.",
+        "One wedge per service, clockwise from the top. Drag to change the order. Each item is tied to its service page, so its link and icon follow it. Reporting & Analytics stays in this list but is not shown on the site until its page is written.",
       type: "array",
       options: FIXED_ARRAY,
       of: [

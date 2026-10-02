@@ -10,7 +10,7 @@ import {
   TESTIMONIALS,
 } from "../home-content";
 import { indexLabel } from "./index-label";
-import { serviceHref, serviceKeyForHref } from "./services";
+import { isPublishedService, serviceHref, serviceKeyForHref } from "./services";
 import type { HomeContent, HomeImage } from "./types";
 
 /**
@@ -99,10 +99,12 @@ export const FALLBACK_HOME: HomeContent = {
   services: {
     eyebrow: SERVICES.eyebrow,
     title: SERVICES.title,
-    items: SERVICES.items.map((s) => {
+    items: SERVICES.items.flatMap((s) => {
       const key = serviceKeyForHref(s.href);
       if (!key) throw new Error(`home-content: no service key for ${s.href}`);
-      return { key, label: s.label, body: s.body, cta: s.cta, href: serviceHref(key) };
+      /* A held-back service keeps its copy here and loses its wedge. */
+      if (!isPublishedService(key)) return [];
+      return [{ key, label: s.label, body: s.body, cta: s.cta, href: serviceHref(key) }];
     }),
   },
 

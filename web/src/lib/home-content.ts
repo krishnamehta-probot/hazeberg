@@ -218,9 +218,9 @@ export const IMPACT = {
 
 /* 05 — services --------------------------------------------------------- */
 /**
- * The copy carries seven cards. Only six are routes: AMS is an engagement model, so its
- * card points at /what-we-do#workday-ams rather than a service page that does not exist.
- * That keeps all seven pieces of copy and still leaves six Services pages.
+ * The copy carries seven cards, and all seven are routes. AMS used to point at
+ * /what-we-do#workday-ams, as an engagement model with no page; the client's AMS
+ * document (2026-10-02) is written as a service page, so it has one now.
  */
 /**
  * Each item carries a `short` as well as its `body`. These are `[derived]`, not
@@ -279,7 +279,7 @@ export const SERVICES = {
       short: "Support that keeps working after go-live",
       body: "Keep your Workday environment running after go-live with responsive support, ongoing improvements, and a team that understands your system.",
       cta: "Explore AMS",
-      href: "/what-we-do#workday-ams",
+      href: "/services/workday-ams",
     },
     {
       n: "07",

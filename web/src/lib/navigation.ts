@@ -8,8 +8,10 @@
  *   What we do              separate landing page; every solution is a section
  *                           ON that page (the sitemap marks them "consolidated")
  *   Services                dropdown only, NO landing page of its own
- *     - 6 Workday services, each its own landing page
- *       (AMS is an engagement model, so it lives on /what-we-do instead)
+ *     - the Workday services, each its own landing page: six live, three
+ *       and three (AMS joined 2026-10-02, when the client wrote it as a
+ *       service page; Reporting & Analytics is held back until its document
+ *       arrives, and Extend moved to Technical to keep the columns even)
  *   About                   separate landing page; sections consolidated onto it
  *   Berg                    single page — consulting firms / customers extending
  *                           delivery capacity. "For Consultants" deliberately
@@ -30,6 +32,8 @@
  * the query result rather than a literal; the shape is designed for that swap.
  */
 
+import { isPublishedHref } from "./home/services";
+
 /**
  * Icon keys, not components — the data stays serialisable so it can come
  * straight from Sanity later. `NAV_ICONS` in the header maps key -> Lucide.
@@ -40,7 +44,8 @@ export type NavIcon =
   | "financials"
   | "extend"
   | "integrations"
-  | "reporting";
+  | "reporting"
+  | "ams";
 
 export type NavLeaf = {
   label: string;
@@ -89,6 +94,11 @@ export type NavNode =
       footnote?: { text: string; cta: { label: string; href: string } };
     };
 
+/** A column's links, less any service held back from the site
+    (`lib/home/services.ts`): Reporting & Analytics stays written into its
+    column below and comes back on its own when it is published. */
+const live = (items: NavLeaf[]) => items.filter((item) => isPublishedHref(item.href));
+
 export const PRIMARY_NAV: NavNode[] = [
   { kind: "link", label: "What we do", href: "/what-we-do" },
   {
@@ -102,7 +112,7 @@ export const PRIMARY_NAV: NavNode[] = [
     columns: [
       {
         heading: "Human capital",
-        items: [
+        items: live([
           {
             label: "Workday HCM",
             href: "/services/workday-hcm",
@@ -121,17 +131,11 @@ export const PRIMARY_NAV: NavNode[] = [
             icon: "financials",
             description: "Spend management, accounting, invoicing and vendor management.",
           },
-          {
-            label: "Workday Extend",
-            href: "/services/workday-extend",
-            icon: "extend",
-            description: "Custom apps built natively on the Workday platform.",
-          },
-        ],
+        ]),
       },
       {
         heading: "Technical",
-        items: [
+        items: live([
           {
             label: "Workday Integrations",
             href: "/services/workday-integrations",
@@ -144,7 +148,20 @@ export const PRIMARY_NAV: NavNode[] = [
             icon: "reporting",
             description: "Advanced reports, calculated fields, BIRTs and dashboards.",
           },
-        ],
+          {
+            label: "Workday Extend",
+            href: "/services/workday-extend",
+            icon: "extend",
+            description: "Custom apps built natively on the Workday platform.",
+          },
+          {
+            label: "Workday AMS",
+            href: "/services/workday-ams",
+            icon: "ams",
+            /* The client's AMS document, its hero intro cut to a line. */
+            description: "Functional and technical support, release testing and annual cycles.",
+          },
+        ]),
       },
     ],
     feature: {

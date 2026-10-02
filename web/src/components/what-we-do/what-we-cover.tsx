@@ -14,6 +14,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { CtaPill } from "@/components/ui/cta-pill";
 import { Eyebrow, Section } from "@/components/ui/section";
 import { SERVICES } from "@/lib/home-content";
+import { isPublishedHref } from "@/lib/home/services";
 import type { WHAT_WE_DO } from "@/lib/what-we-do-content";
 
 type Cover = (typeof WHAT_WE_DO)["cover"];
@@ -174,8 +175,9 @@ const PILL =
  * the order the sentence uses and the list the header and footer already
  * read, so a renamed or added service reaches all three.
  *
- * Six are pages and wear the page arrow. AMS has no page; it is a capability
- * on this one, so it wears the down arrow every in-page chip uses.
+ * All seven are pages now (AMS got its own on 2026-10-02) and wear the page
+ * arrow. A service pointed back at a capability on this page would wear the
+ * down arrow every in-page chip uses, so the branch stays.
  */
 export function ExploreServices({ text }: { text: string }) {
   return (
@@ -188,7 +190,7 @@ export function ExploreServices({ text }: { text: string }) {
         </Reveal>
         <Reveal delay={0.06}>
           <ul className="mt-7 flex flex-wrap gap-2.5">
-            {SERVICES.items.map((s) => {
+            {SERVICES.items.filter((s) => isPublishedHref(s.href)).map((s) => {
               const href = s.href.startsWith(HERE) ? s.href.slice(HERE.length - 1) : s.href;
               return (
                 <li key={s.href}>

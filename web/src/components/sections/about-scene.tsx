@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useRef, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "motion/react";
 
 import { Blob } from "@/components/motion/blob";
@@ -41,6 +41,10 @@ import type { HomeAbout } from "@/lib/home/types";
     Derived from the point count rather than written out: the revised copy took
     this section from three points to four, and a hard-coded `[0, 1/3, 2/3]`
     would have silently dropped the fourth off the end of the pin. */
+/** A store that never changes: with `useSyncExternalStore` it reads false on
+    the server and during hydration, true after. */
+const noop = () => () => {};
+
 const checkpointsFor = (count: number) => Array.from({ length: count }, (_, i) => i / count);
 
 const SWAP = { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const };
@@ -163,7 +167,6 @@ function ProgressRing({ value, segments }: { value: number; segments: number }) 
 export function AboutScene({ about }: { about: HomeAbout }) {
   const track = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
-  const [pinned, setPinned] = useState(false);
   const [index, setIndex] = useState(0);
   const [arc, setArc] = useState(0);
 
@@ -174,9 +177,10 @@ export function AboutScene({ about }: { about: HomeAbout }) {
      hides, so the frame is the same height throughout the pin. What a phone
      actually needs is a smaller composition, not a different section, and that
      is what the sizes below are.
-     Still false until mounted, because useScroll has nothing to measure on the
-     server and the unpinned tree is the honest first paint. */
-  useEffect(() => setPinned(true), []);
+     Still false until hydrated, because useScroll has nothing to measure on
+     the server and the unpinned tree is the honest first paint. The services
+     wheel's switch (`services-map.tsx`): no effect setting state on mount. */
+  const pinned = useSyncExternalStore(noop, () => true, () => false);
 
   const { scrollYProgress } = useScroll({ target: track, offset: ["start start", "end end"] });
 

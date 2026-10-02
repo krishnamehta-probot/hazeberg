@@ -4,9 +4,11 @@ import {
   Award,
   Banknote,
   BookOpenCheck,
+  Bot,
   Calculator,
   CalendarCheck,
   CalendarClock,
+  CalendarRange,
   ChartLine,
   CircleDot,
   CodeXml,
@@ -14,14 +16,20 @@ import {
   FileUp,
   HandCoins,
   Layers,
+  PenTool,
   Plug,
+  RefreshCw,
+  Scale,
   SearchCheck,
   ShieldCheck,
   ShoppingCart,
+  SlidersHorizontal,
   Sprout,
+  TrendingUp,
   UserPlus,
   Wallet,
   Waypoints,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 
@@ -38,6 +46,12 @@ import {
  *            worker records in one, the chart of accounts in the other
  *   close    Payroll's tax and year-end, and Financials' close. A calendar
  *            with a tick: a period signed off, whichever books it was
+ *   connect  Integrations' connectors, AMS's integration support and Extend's
+ *            orchestrations. A plug: Workday joined to something else
+ *   build    Integrations' custom work and Extend's app development. Code:
+ *            both are built in Workday's own developer tools
+ *   run      Integrations' monitoring and Extend's testing and support. A
+ *            pulse: the thing is live and being watched
  *
  * HCM's "Paid" wears the wallet the Payroll page wears everywhere
  * (`SERVICE_ICON`), because that stage is payroll and its last item is the
@@ -74,6 +88,16 @@ export const STAGE_ICON: Readonly<Record<string, LucideIcon>> = {
   build: CodeXml,
   sync: ArrowLeftRight,
   run: Activity,
+  /* AMS — `connect` is above */
+  resolve: Wrench,
+  change: SlidersHorizontal,
+  release: RefreshCw,
+  cycle: CalendarRange,
+  improve: TrendingUp,
+  /* Extend — `build`, `connect` and `run` are above */
+  decide: Scale,
+  design: PenTool,
+  assist: Bot,
 };
 
 export const STAGE_ICON_FALLBACK: LucideIcon = CircleDot;

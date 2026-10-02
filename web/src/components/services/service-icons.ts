@@ -24,6 +24,9 @@ export const SERVICE_ICON: Record<ServiceIconKey, LucideIcon> = {
   integrations: Workflow,
   reporting: ChartColumn,
   extend: Blocks,
+  /* The AMS capability's glyph on What we do (`capability-chip.tsx`), so the
+     page and the capability it grew out of wear the same one. */
+  ams: Headset,
 };
 
 const BY_HREF: Record<string, LucideIcon> = {
@@ -33,8 +36,8 @@ const BY_HREF: Record<string, LucideIcon> = {
   "/services/workday-integrations": Workflow,
   "/services/workday-reporting-analytics": ChartColumn,
   "/services/workday-extend": Blocks,
-  /* An engagement model, not a module — the AMS capability's own glyph on
-     What we do (`capability-chip.tsx`). */
+  "/services/workday-ams": Headset,
+  /* The AMS capability on What we do, which the "Support" routes still open. */
   "/what-we-do#workday-ams": Headset,
 };
 

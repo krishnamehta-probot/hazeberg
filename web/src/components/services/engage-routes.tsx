@@ -1,5 +1,12 @@
 import Link from "next/link";
-import { ArrowUpRight, Route as RouteGlyph, type LucideIcon } from "lucide-react";
+import {
+  Activity,
+  ArrowUpRight,
+  Handshake,
+  Route as RouteGlyph,
+  TrendingUp,
+  type LucideIcon,
+} from "lucide-react";
 
 import { RevealGroup, RevealItem } from "@/components/motion/reveal";
 import { Section } from "@/components/ui/section";
@@ -19,6 +26,15 @@ const GLYPH: Record<string, LucideIcon> = Object.fromEntries(
   Object.entries(CAPABILITY_ICON).map(([id, icon]) => [`/what-we-do#${id}`, icon]),
 );
 
+/** AMS's three are stages of one engagement and lead nowhere, so they are keyed
+    by name instead: the handover, the live service, the review. Presentation —
+    the document names no icons. */
+const STEP_GLYPH: Record<string, LucideIcon> = {
+  transition: Handshake,
+  run: Activity,
+  improve: TrendingUp,
+};
+
 /**
  * How we engage — three ways in, on one track.
  *
@@ -29,6 +45,12 @@ const GLYPH: Record<string, LucideIcon> = Object.fromEntries(
  * row from lg, down the left edge on a phone. The pulse is CSS and runs only
  * while the track is on screen (`LiveLoop`); reduced motion leaves the rail
  * still.
+ *
+ * AMS is the exception: its three are the stages of one engagement — handover,
+ * run, improve — and its document gives them no links, so its cards are plain
+ * articles on the same rail, with no lift, no arrow and no amber stop on hover
+ * to promise a door that is not there. The rail's order reads even more
+ * literally there.
  *
  * Each card is ONE link — the whole card — to the capability it names on What
  * we do. Its accessible name is the route and its destination; the line under
@@ -56,11 +78,13 @@ export function EngageRoutes({ data }: { data: Data }) {
           <LiveLoop className="engage-rail absolute top-0 bottom-0 left-2.5 w-0.5 lg:top-2.5 lg:right-0 lg:bottom-auto lg:left-0 lg:h-0.5 lg:w-auto" />
 
           <RevealGroup as="ol" className="relative grid gap-4 lg:grid-cols-3 lg:gap-5">
+            {/* `engage-stop` is what lights a stop on hover and focus, so only a
+                route that is a door carries it. */}
             {data.routes.map((route) => (
               <RevealItem
                 as="li"
                 key={route.n}
-                className="engage-stop relative flex flex-col pl-10 lg:pl-0 lg:pt-14"
+                className={`${route.link ? "engage-stop " : ""}relative flex flex-col pl-10 lg:pl-0 lg:pt-14`}
               >
                 <Stop route={route} idBase={data.id} />
               </RevealItem>
@@ -83,8 +107,9 @@ export function EngageRoutes({ data }: { data: Data }) {
  * the card's top at 56px.
  */
 function Stop({ route, idBase }: { route: ServiceRoute; idBase: string }) {
-  const Icon = GLYPH[route.link.href] ?? RouteGlyph;
   const id = `${idBase}-${route.n}`;
+  if (!route.link) return <Step route={route} id={id} />;
+  const Icon = GLYPH[route.link.href] ?? RouteGlyph;
   return (
     <>
       <span
@@ -148,6 +173,59 @@ function Stop({ route, idBase }: { route: ServiceRoute; idBase: string }) {
           </span>
         </span>
       </Link>
+    </>
+  );
+}
+
+/**
+ * A stage with nowhere to go (AMS): the same stop, tick and glass card, minus
+ * everything that makes a card a door — no link, no lift on hover, no arrow
+ * row, and its `li` is not an `engage-stop`, so hovering it does not light the
+ * stop. The name is the stage's heading, so the three read as an ordered list
+ * of headed steps.
+ */
+function Step({ route, id }: { route: ServiceRoute; id: string }) {
+  const Icon = STEP_GLYPH[route.name.toLowerCase()] ?? RouteGlyph;
+  return (
+    <>
+      <span
+        aria-hidden
+        className="engage-node absolute top-[2.4375rem] left-1 size-3.5 lg:top-1 lg:left-[1.3125rem]"
+      />
+      <span
+        aria-hidden
+        className="engage-tick absolute top-[2.875rem] left-[1.125rem] h-px w-[1.375rem] lg:top-[1.125rem] lg:left-7 lg:h-[2.375rem] lg:w-px"
+      />
+
+      <article
+        aria-labelledby={`${id}-name`}
+        className="relative flex flex-1 flex-col overflow-hidden rounded-2xl bg-white/4 p-6 ring-1 ring-white/10 lg:p-7"
+      >
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-x-6 top-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent opacity-50"
+        />
+
+        <span className="flex items-center justify-between gap-4">
+          <span aria-hidden className="font-mono text-xs tracking-caps text-accent">
+            {route.n}
+          </span>
+          <span
+            aria-hidden
+            className="grid size-11 shrink-0 place-items-center rounded-pill bg-white/6 text-on-panel ring-1 ring-white/14"
+          >
+            <Icon className="size-5" strokeWidth={1.6} />
+          </span>
+        </span>
+
+        <h3
+          id={`${id}-name`}
+          className="mt-8 text-4xl leading-none font-light tracking-[-0.035em] text-on-panel lg:mt-10 lg:text-3xl xl:text-4xl"
+        >
+          {route.name}
+        </h3>
+        <p className="mt-5 max-w-[44ch] flex-1 text-sm text-on-panel/70">{route.line}</p>
+      </article>
     </>
   );
 }

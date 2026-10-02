@@ -5,6 +5,7 @@ import { Mail, Phone } from "lucide-react";
 import { HazebergWordmark } from "@/components/brand/hazeberg-wordmark";
 import { LinkedInMark } from "@/components/brand/linkedin-mark";
 import { SERVICES } from "@/lib/home-content";
+import { isPublishedHref } from "@/lib/home/services";
 import { CONTACT, OFFICES } from "@/lib/navigation";
 
 /**
@@ -35,11 +36,12 @@ function Column({
 }: {
   heading: string;
   links: { label: string; href: string }[];
-  /** Run the list in two, filling the first four down before starting the
-      second. Services is seven long and everything beside it is three — one
-      tall column against three short ones is not a row, it is a list with
-      decoration. `grid-flow-col` over four rows is what gives 4 then 3; a plain
-      two-column grid fills across instead and interleaves them. */
+  /** Run the list in two, filling the first half down before starting the
+      second. Services is six or seven long and everything beside it is three —
+      one tall column against three short ones is not a row, it is a list with
+      decoration. `grid-flow-col` over half as many rows as links is what gives
+      3 then 3, or 4 then 3; a plain two-column grid fills across instead and
+      interleaves them. */
   split?: boolean;
 }) {
   return (
@@ -48,9 +50,8 @@ function Column({
         {heading}
       </h3>
       <ul
-        className={`mt-4 gap-y-2.5 ${
-          split ? "grid grid-flow-col grid-rows-4 gap-x-6" : "space-y-2.5"
-        }`}
+        className={`mt-4 gap-y-2.5 ${split ? "grid grid-flow-col gap-x-6" : "space-y-2.5"}`}
+        style={split ? { gridTemplateRows: `repeat(${Math.ceil(links.length / 2)}, auto)` } : undefined}
       >
         {links.map((link) => (
           <li key={link.href + link.label}>
@@ -121,7 +122,8 @@ export function SiteFooter() {
           {/* -- the links ---------------------------------------------------- */}
           {/* A footer is a map of the site, not a copy of the nav.
 
-              Services keeps all seven and runs them 4 then 3, because it is the
+              Services keeps every published one and runs them in two halves (3
+              then 3 while Reporting & Analytics is held back), because it is the
               one column anybody came down here for. Everything else is a page,
               so everything else is one line under Company — What we do included.
               Its eight in-page anchors made the footer a second navigation, and
@@ -134,7 +136,9 @@ export function SiteFooter() {
             <Column
               split
               heading="Services"
-              links={SERVICES.items.map((s) => ({ label: s.label, href: s.href }))}
+              links={SERVICES.items
+                .filter((s) => isPublishedHref(s.href))
+                .map((s) => ({ label: s.label, href: s.href }))}
             />
             <Column
               heading="Company"

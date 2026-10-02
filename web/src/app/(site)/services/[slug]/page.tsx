@@ -4,6 +4,7 @@ import { FileText } from "lucide-react";
 import { PageHero } from "@/components/page/page-hero";
 import { AudienceLens } from "@/components/services/audience-lens";
 import { EngageRoutes } from "@/components/services/engage-routes";
+import { ExtendUses } from "@/components/services/extend-uses";
 import { FlowHub } from "@/components/services/flow-hub";
 import { Industries } from "@/components/services/industries";
 import { PayrollModels } from "@/components/services/payroll-models";
@@ -11,9 +12,11 @@ import { ServiceCta } from "@/components/services/service-cta";
 import { ServiceCycle } from "@/components/services/service-cycle";
 import { ServiceFaq } from "@/components/services/service-faq";
 import { StageRail } from "@/components/services/stage-rail";
+import { SupportModels } from "@/components/services/support-models";
 import { CtaPill } from "@/components/ui/cta-pill";
 import { Section } from "@/components/ui/section";
 import { SERVICES } from "@/lib/home-content";
+import { isPublishedHref } from "@/lib/home/services";
 import {
   SERVICE_PAGES,
   SERVICE_SCAFFOLD,
@@ -23,23 +26,25 @@ import {
 } from "@/lib/service-content";
 
 /**
- * The module pages — one template, six routes.
+ * The module pages — one template, seven routes.
  *
- * `SITEMAP.md` is explicit: "All six share one template and one CMS document
- * type — six documents, not six hand-built pages." This file is the template
+ * `SITEMAP.md` is explicit: "All seven share one template and one CMS document
+ * type - seven documents, not seven hand-built pages." This file is the template
  * and `lib/service-content.ts` is the document type, standing in for Sanity.
  *
- * **Four are written** — HCM, Payroll, Financials and Integrations, each from
- * its own client document (2026-10-02). All four documents have the same seven
- * sections, so the page does too, and the movement in each is the same on every
- * module — a reader who has seen one knows how to read the next:
+ * **Six are written** — HCM, Payroll, Financials and Integrations, then AMS
+ * and Extend, each from its own client document (2026-10-02). All six documents
+ * have the same seven sections, so the page does too, and the movement in each
+ * is the same on every module — a reader who has seen one knows how to read the
+ * next:
  *
  *   Hero            the module's cycle as a dial that turns its six stages
  *                   under one marker, in the dark (`backdrop="space"`); each
  *                   stage is a door straight to that stage below
  *   Capabilities    the six stages down a sticky rail that fills as you read
  *   Who it's for    three audiences, one lens: pick a group, see what changes
- *   How we engage   three routes on one track, each a door to What we do
+ *   How we engage   three routes on one track, each a door to What we do (on
+ *                   AMS, three stages of one engagement, which lead nowhere)
  *   (the module's own section — the one place the pages differ)
  *   Call to action  with the three related modules
  *   Questions       five, one open at a time
@@ -51,19 +56,29 @@ import {
  *   models       Payroll — the two ways to run it, and how far each reaches
  *   flows        Financials (into the ledger) and Integrations (out of
  *                Workday): one hub, everything connected to it moving
+ *   support      AMS — three ways to buy support, drawn as one team that
+ *                rearranges itself for each
+ *   uses         Extend — the six kinds of app that earn their place, each
+ *                card drawing work moving from somewhere else into Workday
  *
  * Grounds alternate so no two neighbours match: void (hero), surface, canvas,
  * ink, surface, canvas, surface.
  *
- * Reporting & Analytics and Extend have no document yet. They render their live
- * opener and a marked scaffold rather than a 404 or borrowed copy.
+ * Reporting & Analytics has no document yet, and on the client's call
+ * (2026-10-02) it is held back rather than shown as a scaffold: no route, no
+ * link anywhere. `Scaffold` stays for any module published before its document
+ * is written; none is today.
  *
  * The routes come from `SERVICES.items`, not from this file's own keys, so the
- * nav and the router cannot drift apart. `Workday AMS` is in `SERVICES.items`
- * and points at `/what-we-do#workday-ams` instead; the filter keeps it out.
+ * nav and the router cannot drift apart. The filter keeps out anything that
+ * points off `/services/`, and any service held back with `published: false`
+ * (`lib/home/services.ts`) — Reporting & Analytics, until its document
+ * arrives, so its URL is a 404 rather than a scaffold nothing links to.
  */
 
-const ROUTED = SERVICES.items.filter((s) => s.href.startsWith("/services/"));
+const ROUTED = SERVICES.items.filter(
+  (s) => s.href.startsWith("/services/") && isPublishedHref(s.href),
+);
 
 const slugOf = (href: string) => href.replace("/services/", "");
 
@@ -91,6 +106,10 @@ function Feature({ data }: { data: ServiceFeature }) {
       return <PayrollModels data={data} />;
     case "flows":
       return <FlowHub data={data} />;
+    case "support":
+      return <SupportModels data={data} />;
+    case "uses":
+      return <ExtendUses data={data} />;
   }
 }
 

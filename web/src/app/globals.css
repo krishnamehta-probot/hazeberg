@@ -1226,6 +1226,117 @@
     }
   }
 
+  /* ---- Services: AMS support models (`services/support-models.tsx`) ---- */
+  /* @@css:services-support */
+
+  /* The stage's field: the flow hub's dot grid, strongest under the drawing
+     and gone by the frame, over the faintest pool of the brand blue — so the
+     five figures stand on a plotted map, not on paper. Both stops on tokens. */
+  .sm-field {
+    background-image:
+      radial-gradient(circle, color-mix(in srgb, var(--ink) 10%, transparent) 1px, transparent 1.6px),
+      radial-gradient(55% 50% at 50% 50%, color-mix(in srgb, var(--primary) 7%, transparent), transparent 72%);
+    background-size:
+      20px 20px,
+      100% 100%;
+    background-position: center;
+    mask-image: radial-gradient(closest-side, #000 30%, transparent 100%);
+    -webkit-mask-image: radial-gradient(closest-side, #000 30%, transparent 100%);
+  }
+
+  /* Managed's run of light round the ring of service levels. The drawing is a
+     400 x 360 box with the ring on 200,180. Written paused; it turns only
+     while the stage is near the screen (`data-run`, from an observer) AND the
+     ring is the arrangement showing (`data-mode`) and drawn shut
+     (`data-shut`) — before that the run is at zero opacity — so it never
+     turns unseen. */
+  .sm-orbit {
+    transform-origin: 200px 180px;
+    animation: sm-orbit 16s linear infinite;
+    animation-play-state: paused;
+  }
+  .sm-stage[data-run][data-mode="managed"] .sm-orbit[data-shut] {
+    animation-play-state: running;
+  }
+  @keyframes sm-orbit {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* The auto-advance's timer: a line filling from the left over the dwell
+     (set inline). Paused unless the explorer says it may run — on screen, not
+     held by a pointer or focus, tab visible. The stage's copy ends the dwell
+     (`animationend`); the lit card's edge is the same line, in step. */
+  .sm-timer {
+    transform-origin: left;
+    animation: sm-timer 7s linear forwards;
+    animation-play-state: paused;
+  }
+  .sm-timer[data-run] {
+    animation-play-state: running;
+  }
+  @keyframes sm-timer {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  /* Reduced motion: no light round the ring, and no timer. The explorer never
+     renders a timer then; this is the second guard, because the global rule
+     would otherwise run one out in 0.01ms and advance the drawing at once. */
+  @media (prefers-reduced-motion: reduce) {
+    .sm-orbit,
+    .sm-timer {
+      display: none;
+      animation: none;
+    }
+  }
+
+  /* ---- Services: where Extend fits (`services/extend-uses.tsx`) ---- */
+  /* @@css:services-uses */
+  /* The cards are the industries' cards — `.ind-card`, `.ind-grid`,
+     `.ind-glow` above, reused rather than copied, so the two module pages
+     cannot drift apart. What is Extend's own is the relay (`uses-grid.tsx`):
+     the hairline by the index is the turn's timer, a 2px run of the brand
+     gradient filled by a Web Animation, and it rests empty. Held (pointer or
+     focus on the grid) it dims where it stopped; stopped (a click) it goes. */
+  .use-clock {
+    transform: scaleX(0);
+  }
+  .use-rule {
+    transition: opacity 300ms var(--ease-brand);
+  }
+  .use-grid[data-held] [data-turn] .use-rule {
+    opacity: 0.45;
+  }
+  .use-grid[data-stopped] .use-clock {
+    display: none;
+  }
+  /* The card with the turn: its index darkens to ink and its well's glow
+     comes up to the full strength hover gives it. */
+  .use-idx {
+    transition: color 300ms var(--ease-brand);
+  }
+  .use-card[data-turn] .use-idx {
+    color: var(--ink);
+  }
+  .use-card .ind-glow {
+    transition: opacity 600ms var(--ease-brand);
+  }
+  .use-card[data-turn] .ind-glow {
+    opacity: 1;
+  }
+  /* Never started under reduced motion; this only makes sure. */
+  @media (prefers-reduced-motion: reduce) {
+    .use-clock {
+      display: none;
+    }
+  }
+
   /* ---- About: delivery map, story, commitments ---- */
   /* @@css:about-a */
 

@@ -18,7 +18,7 @@ export const LINK_OPTIONS = [
   { title: "What we do", value: "/what-we-do" },
   { title: "Berg", value: "/berg" },
   { title: "Careers", value: "/careers" },
-  ...SERVICE_OPTIONS.map((s) => ({ title: s.title, value: s.href })),
+  ...SERVICE_OPTIONS.filter((s) => s.published).map((s) => ({ title: s.title, value: s.href })),
 ] as const;
 
 const ALLOWED = new Set<string>(LINK_OPTIONS.map((o) => o.value));

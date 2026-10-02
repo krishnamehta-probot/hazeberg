@@ -42,8 +42,8 @@ import { useId, type ComponentType, type ReactNode } from "react";
 
 type Prop = "transform" | "opacity" | "strokeDashoffset";
 /** [offset 0-1, value, the easing from this frame to the next] */
-type Frame = readonly [offset: number, value: string | number, easing?: string];
-type Track = { readonly prop: Prop; readonly frames: readonly Frame[]; readonly period?: number };
+export type Frame = readonly [offset: number, value: string | number, easing?: string];
+export type Track = { readonly prop: Prop; readonly frames: readonly Frame[]; readonly period?: number };
 export type Loop = {
   /** One cycle, in milliseconds. A track may run on its own `period`. */
   readonly period: number;
@@ -51,22 +51,22 @@ export type Loop = {
   readonly tracks: Readonly<Record<string, readonly Track[]>>;
 };
 
-const IO = "cubic-bezier(0.65, 0, 0.35, 1)";
-const OUT = "cubic-bezier(0.22, 1, 0.36, 1)";
-const IN = "cubic-bezier(0.55, 0, 0.75, 0.2)";
+export const IO = "cubic-bezier(0.65, 0, 0.35, 1)";
+export const OUT = "cubic-bezier(0.22, 1, 0.36, 1)";
+export const IN = "cubic-bezier(0.55, 0, 0.75, 0.2)";
 /** A small overshoot — what makes a pop read as arriving rather than scaling. */
-const BACK = "cubic-bezier(0.34, 1.56, 0.64, 1)";
-const LIN = "linear";
+export const BACK = "cubic-bezier(0.34, 1.56, 0.64, 1)";
+export const LIN = "linear";
 
 /* Strokes that draw are `pathLength={1}` with a dash of 1 and a gap of 1.2.
    An offset of 1.1 puts the whole dash before the path's start and the next
    one after its end, so a hidden stroke leaves no round cap behind; 1.02 is
    "just about to appear", which is where a draw starts so it starts at once. */
-const DASH = "1 1.2";
-const HIDDEN = 1.1;
-const EDGE = 1.02;
+export const DASH = "1 1.2";
+export const HIDDEN = 1.1;
+export const EDGE = 1.02;
 
-const at = (prop: Prop, ...frames: Frame[]): Track => ({ prop, frames });
+export const at = (prop: Prop, ...frames: Frame[]): Track => ({ prop, frames });
 
 /** One track list per item of a list, keyed by whatever `key` names it. */
 function keyed<T>(list: readonly T[], key: (item: T, i: number) => string, tracks: (item: T, i: number) => Track[]) {
@@ -77,8 +77,8 @@ function keyed<T>(list: readonly T[], key: (item: T, i: number) => string, track
   return out;
 }
 
-const tr = (x: number, y: number) => `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px)`;
-const sc = (s: number) => `scale(${s})`;
+export const tr = (x: number, y: number) => `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px)`;
+export const sc = (s: number) => `scale(${s})`;
 
 /** Gone at `out`, back at `back` with a little overshoot. */
 const pop = (out: number, back: number): Track =>
@@ -118,16 +118,16 @@ export function startLoop(root: Element, loop: Loop, rate: number): Animation[] 
 /* the frame every drawing shares                                            */
 
 /** Scales and turns about the element's own center (or foot), not the box's. */
-const FB = "[transform-box:fill-box] origin-center";
+export const FB = "[transform-box:fill-box] origin-center";
 const FB_FOOT = "[transform-box:fill-box] origin-bottom";
 
 /** Gradient ids have to be unique on the page; React's are, once the colons
     a CSS `url()` would choke on are gone. */
-function useSvgId() {
+export function useSvgId() {
   return useId().replace(/[^a-zA-Z0-9_-]/g, "");
 }
 
-function Plate({ children }: { children: ReactNode }) {
+export function Plate({ children }: { children: ReactNode }) {
   return (
     <svg
       aria-hidden
@@ -152,7 +152,7 @@ function Bright({ id, x2 = 1, y2 = 1 }: { id: string; x2?: number; y2?: number }
 }
 
 /** `.disc-blue`'s stops, for a disc drawn inside an SVG. */
-function Disc({ id }: { id: string }) {
+export function Disc({ id }: { id: string }) {
   return (
     <radialGradient id={id} cx="32%" cy="24%" r="85%">
       <stop offset="0" stopColor="#1f8ce8" />
@@ -164,7 +164,7 @@ function Disc({ id }: { id: string }) {
 }
 
 /** A soft pool of blue light. */
-function Pool({ id, strength = 0.16 }: { id: string; strength?: number }) {
+export function Pool({ id, strength = 0.16 }: { id: string; strength?: number }) {
   return (
     <radialGradient id={id}>
       <stop offset="0" stopColor="#008eff" stopOpacity={strength} />
@@ -173,8 +173,8 @@ function Pool({ id, strength = 0.16 }: { id: string; strength?: number }) {
   );
 }
 
-const rad = (deg: number) => (deg * Math.PI) / 180;
-const px = (v: number) => v.toFixed(2);
+export const rad = (deg: number) => (deg * Math.PI) / 180;
+export const px = (v: number) => v.toFixed(2);
 
 /* ------------------------------------------------------------------------ */
 /* Higher education — "faculty, staff and student workers on one system"     */
@@ -779,7 +779,7 @@ function along(t: number) {
   const y = u * u * SEAT_R.y + 2 * u * t * BEND.y + t * t * SEAT_L.y;
   return tr(x - SEAT_R.x, y - SEAT_R.y);
 }
-const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+export const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 /** A journey, sampled: eight even steps in time, eased along the arc. */
 function journey(start: number, span: number, back: boolean): Frame[] {
   return Array.from({ length: 8 }, (_, k) => {
