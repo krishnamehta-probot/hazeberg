@@ -265,6 +265,7 @@ export default function Page() {
         lead={lead}
         leadSecond={CONTACT_PAGE.leadSecond}
         meta={[...meta]}
+        fit
       />
 
       <Section ground="surface" id="enquiry">

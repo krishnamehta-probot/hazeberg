@@ -251,6 +251,7 @@ export default function Page() {
         leadSecond={leadSecond}
         meta={[...meta]}
         cta={cta}
+        fit
       />
 
       <Why />

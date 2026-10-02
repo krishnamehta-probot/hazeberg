@@ -1,252 +1,299 @@
 /**
- * About page copy.
+ * About — the client's copy, in full.
  *
- * **THIS IS A DRAFT AND IT IS PART PLACEHOLDER.** Read this header before
- * sending the page anywhere.
+ * Source: "About Page" (Google Doc), supplied 2026-10-02. It replaces the draft
+ * this file used to carry — the founding-story placeholders, Life at Hazeberg,
+ * the team roster note and the empty Rewards slots are all gone, because the
+ * document does not have them. Six sections, in the document's order:
  *
- * The six sections are the ones `SITEMAP.md` specifies, and the anchors are the
- * ones `navigation.ts` ALREADY LINKS TO — `#our-story`, `#leadership`,
- * `#our-team`, `#life-at-hazeberg`, `#certifications`, `#rewards`. The sitemap
- * writes four of those six shorter (`#story`, `#life`, `#team`); the nav is the
- * live contract because those links ship in the header today, so the nav wins
- * and the sitemap is corrected to match rather than the other way round.
+ *   Hero · Our story · How we're built · Meet the team · Recognition ·
+ *   Start a conversation
  *
- * Provenance, per entry, marked inline:
+ * Marking:
  *
- *   [live]   the client's own words, already published on this site or supplied
- *            in one of their documents. Moved here, not rewritten.
- *   [fact]   verifiable from the client's own material — an address, a name in
- *            `navigation.ts`, a certificate file in the repo.
- *   [DRAFT]  written here to give the section a shape. NOT the client's words.
- *            Every one of these has to be replaced or approved.
- *   [EMPTY]  no content exists at all. The page renders a marked slot rather
- *            than inventing something to fill it.
+ *   (unmarked)  the client's words, verbatim — except the spelling, which is US
+ *               English throughout (organizations, optimization, center), as on
+ *               every other page. The document mixed the two; the site does not
+ *   [derived]   structure the page needs that the document implies but does not
+ *               write: an eyebrow named after its own section, an anchor, a
+ *               figure lifted out of the document's own sentence, a time zone
+ *   [fact]      read off the client's own material in this repo — the DPIIT
+ *               certificate (`design/certificates/dpiit-recognition.png`)
  *
- * What is genuinely missing and cannot be written from anything in the repo:
+ * Two things the document does that are worth knowing:
  *
- *   1. **the founding story** — when Hazeberg started, and why. The "Our story"
- *      section currently runs on the retired "Why choose Hazeberg" copy, which
- *      is about the practice rather than about its origin.
- *   2. **the founder's biography and portrait.** The name is in the nav; nothing
- *      else about him is anywhere in this repo. A founder portrait must be a
- *      photograph of the actual person — it is the one image on this site that
- *      cannot be sourced, only taken.
- *   3. **Life at Hazeberg.** The Careers page carries the client's culture copy;
- *      repeating it here would put the same three paragraphs on two pages. This
- *      section needs its own.
- *   4. **Rewards.** No award, recognition or ranking has been supplied. The
- *      section renders empty slots on purpose.
- *   5. **certificate details** — issuing body, certificate number, valid-to
- *      date. The ISO mark and the DPIIT certificate are both in the repo; the
- *      paperwork behind them is not.
+ *   1. **It drops the stray "Untitled" chips** the Google Doc carried after
+ *      each Story paragraph. Those are empty smart-chips, not copy.
+ *   2. **The Coimbatore address is the live site's old one** — Annamalai
+ *      Industrial Park, Kalapatti — where `navigation.ts` `OFFICES` (supplied
+ *      2026-09-30) has Ksquare Complex, Vinayagapuram. The document is followed
+ *      here as written; which address is current is a question for the client.
  *
- * ONE DELIBERATE EDIT TO CLIENT COPY, flagged as the American-spelling pass was:
- * the retired "Why choose Hazeberg" block says "11+ years" twice. Every other
- * page now says 12+, because the client revised that figure on 2026-09-25. The
- * number is changed here and nothing else is. Two different figures for the same
- * fact on one site is worse than an edit somebody can veto.
+ * Anchors: `#our-story`, `#how-were-built`, `#leadership`, `#recognition`,
+ * `#start-a-conversation`. `#our-story` and `#leadership` keep the ids the old
+ * page had; nothing else on the site links into this page by hash.
  */
 
-export const ABOUT_PAGE = {
-  /* -- hero ------------------------------------------------------------ */
-  eyebrow: "About Hazeberg",
-  /** [live] The nav's own lede title for this menu — their phrase, not ours. */
-  titleLead: "The people behind ",
-  titleAccent: "the tenant.",
-  /** [live] `ABOUT.title` in `home-content.ts`: written by the client and never
-      rendered on the home page, because their layout leads with the body
-      paragraph alone. This is the page it was waiting for. */
-  lead: "Workday expertise, led by people who know the platform and understand the business behind it.",
-  /** [live] The nav's lede body. */
-  leadSecond:
-    "Recognized by the Government of India and ISO certified, with offices in Erode, Coimbatore and Penang.",
-  meta: [
-    { label: "Workday experience", value: "12+ years" },
-    { label: "Consolidated experience", value: "200+ years" },
-    { label: "Offices", value: "Erode & Coimbatore, India · Penang, Malaysia" },
-  ],
+export type AboutStat = { value: number; suffix?: string; label: string };
 
-  /* -- 01 — our story --------------------------------------------------- */
+export type AboutCommitment = {
+  /** [derived] */
+  key: "only-workday" | "same-people" | "working-day" | "straight-about-risk";
+  n: string;
+  claim: string;
+  line: string;
+  proof: string;
+};
+
+export type AboutPerson = {
+  /** [derived] */
+  key: string;
+  name: string;
+  role: string;
+  /** The bold opening of the bio — the person's specialism in one line. */
+  focus: string;
+  bio: string;
+  /** The bold closing line, verbatim. */
+  credentials: string;
+  /** [derived] Lifted out of `credentials` so they can be drawn. */
+  years: { value: number; plus: boolean; scope: string };
+  certs: readonly string[];
+  /** No portrait has been supplied for anyone. The component draws the
+      person's initials until one is; set a path here and it takes over. */
+  portrait: string | null;
+};
+
+export const ABOUT = {
+  hero: {
+    eyebrow: "About Hazeberg",
+    titleLead: "We saw what Workday was missing. ",
+    titleAccent: "So we built it differently.",
+    lead: "Built by Workday practitioners, Hazeberg brings hands-on expertise to every stage of the Workday lifecycle.",
+    /* The document's order: Meet the team first, then Contact us. The first is
+       the pill and goes down the page; the second is the quiet link. */
+    cta: { label: "Meet the team", href: "#leadership" },
+    secondary: { label: "Contact us", href: "/contact" },
+    statsLabel: "The scale behind Hazeberg",
+    stats: [
+      { value: 200, suffix: "+", label: "Combined years of Workday experience" },
+      { value: 20, suffix: "+", label: "Workday projects delivered" },
+      { value: 40, suffix: "+", label: "Countries supported" },
+      { value: 100, suffix: "%", label: "Customer retention" },
+    ] satisfies AboutStat[],
+  },
+
   story: {
+    id: "our-story",
     eyebrow: "Our story",
-    /** [live] `WHY.title`, retired from the home page on 2026-09-23 and parked
-        for exactly this section. */
-    title: "The Right Workday Expertise Changes Everything.",
-    /** [live] `WHY.body`. */
-    body: "Hazeberg brings experienced consultants, direct involvement, and a focused Workday practice to enterprise teams looking for better delivery and dependable support.",
-    /**
-     * [DRAFT] The origin paragraph. This is the one thing a story section exists
-     * for and the one thing nothing in this repo knows: the year, the reason,
-     * the first client. Replace it.
-     */
-    origin:
-      "[DRAFT — needs the client] Hazeberg was founded to do one thing properly: Workday. The founding year, the reason the practice was started, and what the first engagement was are not recorded anywhere in the material supplied so far, and are deliberately not invented here.",
-    /** [live] `WHY.points`, all three, verbatim except the 11+ → 12+ figure. */
-    points: [
-      {
-        n: "01",
-        kicker: "Experience that matters",
-        title: "Work with people who know Workday.",
-        body: "Our consultants bring 12+ years of Workday experience to the requirements, decisions, and challenges that shape your engagement.",
-      },
-      {
-        n: "02",
-        kicker: "Focused on Workday",
-        title: "One platform. Deep expertise.",
-        body: "We focus exclusively on Workday, building the knowledge and experience needed to support complex enterprise environments.",
-      },
-      {
-        n: "03",
-        kicker: "Beyond go-live",
-        title: "The relationship doesn't end at implementation.",
-        body: "From ongoing support to optimization, we stay involved as your business evolves and your Workday environment needs to keep pace.",
-      },
+    title: "The problems we saw became the standards we built around.",
+    body: [
+      "Hazeberg was shaped by years of hands-on Workday experience across implementations, data conversions, integrations, and application support. We saw the same challenges repeat, from solutions that did not fit the business to customers left without enough support after go-live.",
+      "That experience led us to build a specialist Workday practice where expertise stays focused, delivery stays accountable, and the relationship continues beyond implementation.",
     ],
-    /** [live] `WHY.overlay`. The attribution is the client's own — a program
-        lead at a Fortune 500 client, unnamed by them. */
-    quote: {
-      text: "Hazeberg has been outstanding and thorough in everything they deliver.",
-      name: "Program Lead",
-      role: "Fortune 500 Client",
-      stat: "12+ years",
-      statLabel: "Workday-focused experience",
+    mission: {
+      eyebrow: "Our mission",
+      title: "Make Workday work better for the organizations that rely on it.",
+      body: "Bring focused Workday expertise to every engagement, from implementation through ongoing support and optimization.",
+    },
+    vision: {
+      eyebrow: "Our vision",
+      title: "Raise the standard for Workday partnership.",
+      body: "Build a specialist practice known for deep expertise, accountable delivery, and long-term customer relationships.",
+    },
+    /** The document's closing statement, split where its full stop falls so
+        the second sentence can carry the accent. */
+    closing: {
+      lead: "Specialists in Workday.",
+      accent: "Invested in what comes next.",
     },
   },
 
-  /* -- 02 — leadership -------------------------------------------------- */
-  leadership: {
-    eyebrow: "Leadership",
-    /** [DRAFT] */
-    title: "Led by someone who is in the work.",
-    /** [DRAFT] */
-    body: "[DRAFT — needs the client] One paragraph on how the practice is led, and what that means for an engagement.",
+  built: {
+    id: "how-were-built",
+    /** [derived] the document's section name. */
+    eyebrow: "How we're built",
+    title: "Four commitments, and what keeps them true.",
+    body: "Most firms make similar claims. Each of ours is tied to something about how Hazeberg is set up, so you can check it rather than take it on trust.",
+    proofLabel: "What keeps it true",
+    items: [
+      {
+        key: "only-workday",
+        n: "01",
+        claim: "Workday, and only Workday",
+        line: "Our consultants work in Workday every day, on nothing else.",
+        proof:
+          "A significant share of the team is Workday-certified, with 200+ consolidated years of Workday experience.",
+      },
+      {
+        key: "same-people",
+        n: "02",
+        claim: "The people you meet do the work",
+        line: "The consultants in the first conversation are the ones on your tenant, with no hand-off to a team you have never met.",
+        proof:
+          "Delivery is led by practitioners with 11 to 15+ years each in Workday and enterprise systems.",
+      },
+      {
+        key: "working-day",
+        n: "03",
+        claim: "Close to your working day",
+        line: "Coverage across time zones, at a price that reflects where the work is done.",
+        proof:
+          "Two delivery entities. In Penang, Malaysia, in-country consultants run onshore workshops and same-time-zone hypercare. In Coimbatore, India, our center for scale provides 24/7 coverage. Together they support customers in 40+ countries across the Americas, EMEA and APAC.",
+      },
+      {
+        key: "straight-about-risk",
+        n: "04",
+        claim: "Straight about risk, here for the long run",
+        line: "We name what could go wrong before it does, present targets as ranges rather than guarantees, and stay on through support, releases and new modules.",
+        proof: "100% customer retention.",
+      },
+    ] satisfies AboutCommitment[],
+    /** [derived] Commitment 03's two entities, lifted out of its proof so they
+        can be drawn. Time zones are IANA names, for a live local clock. */
+    entities: [
+      {
+        key: "penang",
+        city: "Penang",
+        country: "Malaysia",
+        role: "In-country consultants run onshore workshops and same-time-zone hypercare.",
+        tz: "Asia/Kuala_Lumpur",
+        tzLabel: "MYT · UTC+8",
+      },
+      {
+        key: "coimbatore",
+        city: "Coimbatore",
+        country: "India",
+        role: "Our center for scale provides 24/7 coverage.",
+        tz: "Asia/Kolkata",
+        tzLabel: "IST · UTC+5:30",
+      },
+    ],
+    /** [derived] the regions named in commitment 03. */
+    regions: ["Americas", "EMEA", "APAC"],
+  },
+
+  team: {
+    id: "leadership",
+    eyebrow: "Our leadership",
+    title: "Senior practitioners who still do the work.",
+    body: "Hazeberg is led by consultants with decades of Workday delivery between them, and they stay close to customer work.",
     people: [
       {
-        /** [fact] From `navigation.ts`: "Founded and led by Sakthi Vignesh." */
+        key: "sakthi-vignesh",
         name: "Sakthi Vignesh",
-        /** [fact] Derived from the same line. */
-        role: "Founder",
-        /** [EMPTY] */
-        bio: "[EMPTY — needs the client] Two or three sentences: background before Hazeberg, what he works on now, and the kind of engagement he is personally involved in.",
-        /**
-         * [EMPTY] No portrait, and this is the one image on the site that cannot
-         * be sourced from a library or generated — it is a photograph of a real
-         * person and it has to be taken. The page renders a marked slot.
-         */
+        role: "CEO & Co-founder",
+        focus: "Payroll, Benefits and HCM integrations across EMEA and APAC.",
+        bio: "Brings experience across 15+ implementations and AMS engagements, with hands-on expertise in Core Integration, Cloud Connect for Benefits, Third-Party Payroll and Workday Studio.",
+        credentials: "11 years in Workday. Certified in Core Integration and Workday Studio.",
+        years: { value: 11, plus: false, scope: "in Workday" },
+        certs: ["Core Integration", "Workday Studio"],
         portrait: null,
       },
-    ],
-  },
-
-  /* -- 03 — our team ---------------------------------------------------- */
-  team: {
-    eyebrow: "Our team",
-    /** [DRAFT] */
-    title: "The consultants who do the actual work.",
-    /** [DRAFT] — the sentence is new; every FIGURE under it is [fact], taken
-        from the home page's own numbers. */
-    body: "[DRAFT — needs the client] A paragraph on how the team is built: certifications, how people are brought onto engagements, and what stays constant across them.",
-    /** [fact] All four already published on this site. */
-    facts: [
-      { value: 200, suffix: "+", label: "Consolidated years of consultant experience" },
-      { value: 20, suffix: "+", label: "Workday projects delivered" },
-      { value: 200, suffix: "+", label: "Integrations built" },
-      { value: 40, suffix: "+", label: "Countries supported" },
-    ],
-    /** [EMPTY] No names, roles or photographs have been supplied. */
-    roster: null,
-    rosterNote:
-      "[EMPTY] Named consultants and photographs, if the team wants them here. A team section works without faces; it does not work with invented ones.",
-  },
-
-  /* -- 04 — life at hazeberg -------------------------------------------- */
-  life: {
-    eyebrow: "Life at Hazeberg",
-    /** [DRAFT] */
-    title: "How we work, and what it is like to work here.",
-    /**
-     * [DRAFT] The Careers page already carries the client's culture copy, from
-     * their own careers draft. Repeating it here would put the same paragraphs
-     * on two pages, so this section is left to be written separately and points
-     * at Careers in the meantime.
-     */
-    body: "[DRAFT — needs the client] This section needs its own copy. The Careers page carries the culture writing the client supplied; running it again here would print the same three paragraphs twice on one site.",
-    /** [DRAFT] Three shapes, so the section has a structure to fill. */
-    points: [
       {
-        n: "01",
-        title: "[DRAFT] How a day actually runs",
-        body: "Hours, overlap with client time zones, and how the two delivery centers work together.",
+        key: "vignesh-ravishankar",
+        name: "Vignesh Ravishankar",
+        role: "Director",
+        focus:
+          "Enterprise Workday delivery across Financials, HCM integrations, APIs and Workday Studio.",
+        bio: "Experience spans complex implementations, data conversions and application support, backed by a broader enterprise-systems background including PeopleSoft.",
+        credentials: "15+ years in enterprise systems.",
+        years: { value: 15, plus: true, scope: "in enterprise systems" },
+        certs: [],
+        portrait: null,
       },
       {
-        n: "02",
-        title: "[DRAFT] How people grow here",
-        body: "Certification, the move from support into delivery, and who decides what somebody works on next.",
+        key: "rajesh-venkatesan",
+        name: "Rajesh Venkatesan",
+        role: "Consultant, Workday HCM & PATT",
+        focus: "Deep expertise across HCM, Recruiting, Time Tracking and Absence.",
+        bio: "Particularly experienced in complex payroll, absence and time configurations, with additional expertise in Workday's calculation engine and Workday Docs.",
+        credentials: "12+ years in Workday. Certified in HCM and Payroll.",
+        years: { value: 12, plus: true, scope: "in Workday" },
+        certs: ["HCM", "Payroll"],
+        portrait: null,
       },
       {
-        n: "03",
-        title: "[DRAFT] What the offices are like",
-        body: "Erode, Coimbatore and Penang, and what is true of all three.",
+        key: "namitha-lunawat",
+        name: "Namitha Lunawat",
+        role: "Manager, Workday Practice",
+        focus: "Recruiting expertise from configuration through end-to-end delivery.",
+        bio: "Experience spans 30+ AMS engagements across industries, alongside custom reports, dashboards, analytics, HCM Recruiting and People Experience.",
+        credentials: "13+ years in Workday. Certified in HCM, Recruiting and People Experience.",
+        years: { value: 13, plus: true, scope: "in Workday" },
+        certs: ["HCM", "Recruiting", "People Experience"],
+        portrait: null,
       },
-    ],
-    cta: { label: "See open roles", href: "/careers" },
+    ] satisfies AboutPerson[],
   },
 
-  /* -- 05 — certifications ---------------------------------------------- */
-  certifications: {
-    eyebrow: "Certifications",
-    /** [DRAFT] */
-    title: "Certified, and recognized.",
-    /** [DRAFT] */
-    body: "[DRAFT — needs the client] One line on what these mean in practice for a client's data and a client's contract.",
+  recognition: {
+    id: "recognition",
+    /** [derived] The document gives this section a name and no heading of its
+        own, so the name is the heading. */
+    eyebrow: "Recognition",
+    title: "Recognition",
     items: [
       {
         key: "iso",
-        /** [fact] The client's own mark, downloaded from their site. The
-            standard number comes from the file's own alt text in the footer. */
-        name: "ISO 27001",
-        headline: "Information security management",
-        /** [DRAFT] */
-        body: "[DRAFT] What the certification covers, and which parts of the business are in scope.",
-        image: "/certs/iso-27001.jpg",
-        /** [EMPTY] Certificate number, issuing body and valid-to date. */
-        detail: "[EMPTY] Certificate number · issuing body · valid until",
+        name: "ISO 27001:2022 Certified",
+        body: "Our information security management system is certified to ISO 27001:2022, providing an audited framework for information security, integrity, and confidentiality.",
+        logo: { src: "/certs/iso-27001.jpg", width: 346, height: 145, alt: "ISO 27001 certified" },
+        detail: null,
       },
       {
         key: "dpiit",
-        /** [fact] The certificate is in the repo at
-            `design/certificates/dpiit-recognition.png`. It is a full A4 document
-            and is deliberately NOT in `public/` — a recognition certificate is
-            not a logo, and shrinking one to a card is how it becomes unreadable
-            and reproducible at the same time. */
         name: "Recognized by the Government of India",
-        headline: "DPIIT recognition",
-        /** [DRAFT] */
-        body: "[DRAFT] What the recognition is, and what it recognizes.",
-        image: null,
-        /** [EMPTY] */
-        detail: "[EMPTY] Recognition number · date of issue",
+        body: "Hazeberg Consulting is recognized as a startup by the Department for Promotion of Industry and Internal Trade (DPIIT), Ministry of Commerce and Industry, in the IT services and consulting sector.",
+        /** [fact] The #startupindia mark, cut from the client's own certificate
+            with its paper knocked out. The certificate itself stays in
+            `design/`. The national emblem on it is deliberately NOT used — its
+            use is restricted by law. */
+        logo: { src: "/certs/startup-india.png", width: 195, height: 45, alt: "Startup India" },
+        /** [fact] From the certificate. */
+        detail: "Certificate DIPP166352 · valid to February 2034",
+      },
+      {
+        key: "workday",
+        name: "Workday-Certified Consultants",
+        body: "A significant share of our consulting team holds Workday certifications across HCM, Payroll, Recruiting, Integrations, and more.",
+        /** No logo: Workday's certification marks are licensed artwork and none
+            has been supplied. The component draws an icon until one is. */
+        logo: null,
+        detail: null,
       },
     ],
   },
 
-  /* -- 06 — rewards ----------------------------------------------------- */
-  rewards: {
-    eyebrow: "Rewards",
-    /** [DRAFT] */
-    title: "Recognition earned by the team and by the work.",
-    /** [DRAFT] The line is from the nav's own description of this section. */
-    body: "[DRAFT — needs the client] No award, ranking or recognition has been supplied. The slots below are the shape of the section, not its content.",
-    /** [EMPTY] Three empty slots rather than three invented awards. */
-    slots: 3,
-    slotNote: "Award or recognition",
-  },
-
-  /* -- the way out ------------------------------------------------------ */
-  cross: {
-    eyebrow: "Want to work here?",
-    title: "Careers at Hazeberg",
-    body: "Open roles, how we hire, and what to expect from the process.",
-    href: "/careers",
+  contact: {
+    id: "start-a-conversation",
+    eyebrow: "Start a conversation",
+    title: "Let's talk about your Workday journey.",
+    body: "Tell us where you are with Workday and what you need next. We'll connect you with the Hazeberg team best placed to understand your requirements.",
+    primary: { label: "Contact us", href: "/contact" },
+    secondary: { label: "See what we do", href: "/what-we-do" },
+    officesLabel: "Our offices",
+    offices: [
+      {
+        key: "coimbatore",
+        city: "Coimbatore",
+        country: "India",
+        line: "Annamalai Industrial Park, Kalapatti",
+        /** [derived] */
+        tz: "Asia/Kolkata",
+        tzLabel: "IST · UTC+5:30",
+      },
+      {
+        key: "penang",
+        city: "Penang",
+        country: "Malaysia",
+        line: "Bandar Cassia, Pulau Pinang",
+        /** [derived] */
+        tz: "Asia/Kuala_Lumpur",
+        tzLabel: "MYT · UTC+8",
+      },
+    ],
+    contactLabel: "Contact",
+    /* Phone and email are the same as `CONTACT` in `navigation.ts`; the
+       component reads them from there so there is one copy. */
   },
 } as const;

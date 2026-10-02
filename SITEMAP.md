@@ -32,22 +32,28 @@ truth. Routes, page types and section anchors are settled here before any page i
 Nav dropdown with no parent destination. Each child is its own page. All six share one
 template and one CMS document type - six documents, not six hand-built pages.
 
-1. Workday HCM - `/services/workday-hcm` - **written**
-2. Workday Payroll - `/services/workday-payroll` - scaffold
-3. Workday Financials - `/services/workday-financials` - scaffold
-4. Workday Integrations - `/services/workday-integrations` - scaffold
+1. Workday HCM - `/services/workday-hcm` - **written** (client doc, 2026-10-02)
+2. Workday Payroll - `/services/workday-payroll` - **written** (client doc, 2026-10-02)
+3. Workday Financials - `/services/workday-financials` - **written** (client doc, 2026-10-02)
+4. Workday Integrations - `/services/workday-integrations` - **written** (client doc, 2026-10-02)
 5. Workday Reporting & Analytics - `/services/workday-reporting-analytics` - scaffold
 6. Workday Extend - `/services/workday-extend` - scaffold
 
-Template built 2026-09-29: `app/services/[slug]/page.tsx` renders every one of the six
-from `lib/service-content.ts`, which is the CMS document type standing in for Sanity until
-Sanity exists. The seventh module, whenever it comes, is a content entry and not a build.
+Template built 2026-09-29, rebuilt 2026-10-02 on the client's four service documents:
+`app/services/[slug]/page.tsx` renders every one of the six from `lib/service-content.ts`,
+which is the CMS document type standing in for Sanity until Sanity exists. The seventh
+module, whenever it comes, is a content entry and not a build.
 
-**Only Workday HCM is written.** The other five render their live opener - the client's
-own copy, already on the home page - and then a clearly marked scaffold saying the rest is
-not written, with a link to the finished one and the list of what each page needs. Five
-copies of the HCM page with the nouns swapped is how a shared template turns into filler,
-and a 404 would break six links that ship in the header.
+All four documents share one structure, so the template does too - hero (with an outcome
+strip and the module's six-stage cycle drawn as a ring), capabilities (`#capabilities`, each
+stage on `#stage-<key>`), who it's built for (`#who-its-for`), how we engage
+(`#how-we-engage`), one section of the module's own, a call to action with related
+modules, and questions (`#questions`). The module's own section: Industries on HCM
+(`#industries`), the two payroll models on Payroll (`#payroll-model`), connected finance on
+Financials (`#connected-finance`), and what we connect on Integrations (`#what-we-connect`).
+
+Reporting & Analytics and Extend have no document yet. They render their live opener and
+a clearly marked scaffold, rather than borrowed copy or a 404 that would break the header.
 
 Note the slug: the nav and `SERVICES.items` both use `workday-reporting-analytics`, not
 `workday-reporting-and-analytics` as an earlier revision of this file had it. The routes
@@ -99,36 +105,24 @@ it stays on the legal pages.
 
 ## About - one page, six sections
 
-Built 2026-09-29. **The page is a DRAFT and roughly half of it is placeholder** - see
-the header of `web/src/lib/about-content.ts`, where every entry is marked `[live]`,
-`[fact]`, `[DRAFT]` or `[EMPTY]` with what is missing and why it was not invented.
-
-Four of the six anchors below were written short in an earlier revision of this file
-(`#story`, `#life`, `#team`). **`navigation.ts` has always linked the long forms**, and
-those links ship in the header today, so the nav is the contract and the table is
-corrected to match it. Section order follows the nav's own reading order.
+Rebuilt 2026-10-02 on the client's "About Page" document, every line of it - see
+`web/src/lib/about-content.ts`. The draft it replaces (Life at Hazeberg, Our team, Rewards,
+the placeholder founding story) is gone, because the document does not have those sections.
+No nav link points into this page by hash, so the old anchors were free to go.
 
 | Section | Anchor |
 |---|---|
-| Our story | `#our-story` |
-| Leadership | `#leadership` |
-| Our team | `#our-team` |
-| Life at Hazeberg | `#life-at-hazeberg` |
-| Certifications | `#certifications` |
-| Rewards | `#rewards` |
+| Hero | - |
+| Our story (with mission, vision, closing line) | `#our-story` |
+| How we're built | `#how-were-built` |
+| Meet the team | `#leadership` |
+| Recognition | `#recognition` |
+| Start a conversation | `#start-a-conversation` |
 
-**Real on the page**: the retired "Why choose Hazeberg" block (the client's own copy,
-parked for this page when it came off the home page on 2026-09-23), the client quote that
-came with it, the founder's name, the four delivery figures, and both certifications.
-
-**Still needed**: the founding story (year, reason, first engagement); the founder's
-biography and a real portrait photograph; Life-at-Hazeberg copy of its own - the Careers
-page holds the culture writing and it must not be printed twice; every award for Rewards;
-and the certificate paperwork (issuing body, number, valid-to date) for both marks.
-
-One client figure was edited: the retired Why block says "11+ years" twice and every other
-page now says 12+, revised by the client on 2026-09-25. The number is changed and nothing
-else is.
+**Still needed**: portraits of the four leaders (the page draws their initials until they
+arrive), and Workday's certification mark if the client wants it shown. **To confirm**: the
+document's Coimbatore address (Annamalai Industrial Park, Kalapatti) differs from the one in
+`navigation.ts` `OFFICES` (Ksquare Complex, Vinayagapuram); the page follows the document.
 
 ---
 
