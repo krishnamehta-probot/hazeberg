@@ -7,6 +7,12 @@
 > The defaults below were used for every open decision.
 >
 > **Still open, for Krishna:**
+> - Run `web/scripts/patch-home-figures.ts -- --write` (added 2026-10-03,
+>   afternoon): it moves the live Results line from "20+ Projects. 200+
+>   Integrations…" to "50+ Projects Delivered. 35+ Global Clients Served." on the
+>   published page and the open draft, so the Studio matches the site. The site
+>   already shows the new line (`normalize.ts` swaps the retired one at read
+>   time). The session's own write was blocked by the permission check.
 > - Run `web/scripts/patch-home-credentials.ts -- --write`: a live Sanity
 >   `setIfMissing`, needed so editors can edit the home credentials. The dry run
 >   is clean (published document plus one open draft).

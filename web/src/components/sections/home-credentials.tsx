@@ -9,8 +9,8 @@ import { RevealGroup, RevealItem } from "@/components/motion/reveal";
  * feature; set as a figure it reads as a distinction, which is what it is.
  *
  * They sit in Results, between the heading's figures and the four cards. That
- * is where the page keeps its proof — "20+ Projects. 200+ Integrations. 100%
- * Customer Retention." — and the first card under them, "Pure-Play Workday
+ * is where the page keeps its proof — "50+ Projects Delivered. 35+ Global
+ * Clients Served." — and the first card under them, "Pure-Play Workday
  * Expertise", is the very thing they rank. The hero was not an option: it is
  * the first screen at 1280x650 with nothing to spare, and About is a pinned
  * pane whose paragraph is already at the length its label clears the menu bar.

@@ -339,8 +339,14 @@ export const RESULTS = {
   eyebrow: "Our Global Workday Capability",
   /* Two lines, not one wrapped sentence: the figures take the first and carry
      the brand blue, the claim they support takes the second in ink. The head
-     puts a hard break between them, so neither string carries a joining space. */
-  titleLead: "20+ Projects. 200+ Integrations. 100% Customer Retention.",
+     puts a hard break between them, so neither string carries a joining space.
+     Krishna, 2026-10-03: the line is now "50+ Projects Delivered. 35+ Global
+     Client Served", in place of "20+ Projects. 200+ Integrations. 100%
+     Customer Retention." — "Clients" in the plural. The live document still
+     holds the old line until it is updated (`scripts/patch-home-figures.ts`,
+     or by hand in the Studio); `normalize.ts` shows this one in its place
+     meanwhile. */
+  titleLead: "50+ Projects Delivered. 35+ Global Clients Served.",
   titleRest: "Trusted delivery across the Workday lifecycle.",
   body: "From Go-Live and Zero-Disruption Testing to Workday Health Checks and Always-On Support, we help enterprises achieve long-term success.",
   /**

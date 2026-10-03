@@ -22,6 +22,11 @@ import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } f
  *
  * `prefers-reduced-motion` renders the finished paragraph and never subscribes
  * to the scroll.
+ *
+ * `emphasis` sets every run of the text it matches in semibold, inside the same
+ * fill — a pattern rather than a list of phrases, so the run stays bold when an
+ * editor rewords the sentence around it in the CMS. A word is bold when it lies
+ * inside a match; the colour fill is untouched.
  */
 
 /** `--ink-subtle` — 4.75:1 on `--surface`, safe as body text on its own. */
@@ -33,23 +38,46 @@ function Word({
   children,
   progress,
   range,
+  strong,
 }: {
   children: string;
   progress: MotionValue<number>;
   range: [number, number];
+  strong: boolean;
 }) {
   const color = useTransform(progress, range, [REST, READ]);
-  return (
+  const word = (
     <motion.span style={{ color }} className="inline-block">
       {children}
     </motion.span>
   );
+  return strong ? <strong className="font-semibold">{word}</strong> : word;
+}
+
+/** For each word of `text.split(" ")`, whether it lies inside a match of
+    `pattern`. Done on character offsets, so a match may span several words. */
+function emphasized(text: string, pattern?: RegExp): boolean[] {
+  const words = text.split(" ");
+  if (!pattern) return words.map(() => false);
+  const flags = pattern.flags.includes("g") ? pattern.flags : `${pattern.flags}g`;
+  const runs = [...text.matchAll(new RegExp(pattern.source, flags))].map((m) => [
+    m.index,
+    m.index + m[0].length,
+  ]);
+  let at = 0;
+  return words.map((word) => {
+    const from = at;
+    const to = at + word.length;
+    at = to + 1;
+    return word.length > 0 && runs.some(([a, b]) => from >= a && to <= b);
+  });
 }
 
 export function ScrollText({
   text,
   className = "",
   progress,
+  emphasis,
 }: {
   text: string;
   className?: string;
@@ -57,6 +85,8 @@ export function ScrollText({
       own left to measure — the paragraph never moves on screen — so the scene
       hands its own progress in instead. */
   progress?: MotionValue<number>;
+  /** Runs of the text to set in semibold — see the doc above. */
+  emphasis?: RegExp;
 }) {
   const ref = useRef<HTMLParagraphElement>(null);
   const reduce = useReducedMotion();
@@ -68,11 +98,17 @@ export function ScrollText({
   const scrollYProgress = progress ?? own.scrollYProgress;
 
   const words = text.split(" ");
+  const strong = emphasized(text, emphasis);
 
   if (reduce) {
     return (
       <p data-scroll-text className={className} style={{ color: READ }}>
-        {text}
+        {words.map((word, i) => (
+          <span key={`${word}-${i}`}>
+            {strong[i] ? <strong className="font-semibold">{word}</strong> : word}
+            {i < words.length - 1 ? " " : null}
+          </span>
+        ))}
       </p>
     );
   }
@@ -86,7 +122,7 @@ export function ScrollText({
         const end = Math.min(1, start + 1.8 / words.length);
         return (
           <span key={`${word}-${i}`}>
-            <Word progress={scrollYProgress} range={[start, end]}>
+            <Word progress={scrollYProgress} range={[start, end]} strong={strong[i]}>
               {word}
             </Word>{" "}
           </span>

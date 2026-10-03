@@ -81,14 +81,17 @@ export const ABOUT = {
     /* The owner's set (change list, 2026-10-02): "200+ Integrations built"
        removed — it had already gone with the rebuild — and 160+ countries,
        35+ customers and 5M users served added. 100% retention is the About
-       document's own figure and stays beside them. */
+       document's own figure and stays beside them. Krishna, 2026-10-03:
+       "50+ Projects Delivered. 35+ Global Client Served" — the projects
+       figure up from 20+, and the customers named as global clients served
+       (plural here; the home page carries the same two). */
     stats: [
       { value: 200, suffix: "+", label: "Combined years of Workday experience" },
       /* A no-break space before "delivered": on the narrow rail at 1024-1132
          it would otherwise wrap to a line of its own. */
-      { value: 20, suffix: "+", label: "Workday projects delivered" },
+      { value: 50, suffix: "+", label: "Workday projects delivered" },
       { value: 160, suffix: "+", label: "Countries supported" },
-      { value: 35, suffix: "+", label: "Customers" },
+      { value: 35, suffix: "+", label: "Global clients served" },
       { value: 5, suffix: "M", label: "Users served" },
       { value: 100, suffix: "%", label: "Customer retention" },
     ] satisfies AboutStat[],
@@ -363,9 +366,19 @@ export const ABOUT = {
         key: "workday",
         name: "Workday-Certified Consultants",
         body: "A significant share of our consulting team holds Workday certifications across HCM, Payroll, Recruiting, Integrations, and more.",
-        /** No logo: Workday's certification marks are licensed artwork and none
-            has been supplied. The component draws an icon until one is. */
-        logo: null,
+        /** Workday's own "Pro Certified" badge, as Credly issues it for the
+            Workday Pro Learning Certification (supplied by Krishna,
+            2026-10-03: credly.com/org/workday/badge/workday-pro-learning-certification).
+            A 480px copy of Credly's 1600px PNG, never redrawn — a
+            certification mark is reproduced, not made. Square, so the card
+            sizes it by `shape`, not by the wide marks' height cap. */
+        logo: {
+          src: "/certs/workday-pro-certified.png",
+          width: 480,
+          height: 480,
+          alt: "Workday Pro Certified",
+          shape: "square",
+        },
         detail: null,
       },
     ],

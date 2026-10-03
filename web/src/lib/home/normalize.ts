@@ -233,6 +233,18 @@ function credentials(raw: NonNullable<Raw["results"]>["credentials"], fb: string
   return raw.map((c) => text(c?.line)).filter((line) => clean(line).trim() !== "");
 }
 
+/**
+ * Results' figures line as the live document was seeded — retired by Krishna
+ * on 2026-10-03 for "50+ Projects Delivered. 35+ Global Clients Served."
+ *
+ * Until the document itself is updated (`scripts/patch-home-figures.ts`, or
+ * by hand in the Studio), a field that still holds exactly this line renders
+ * the shipped one instead. Anything an editor has written is theirs and
+ * renders as written; only the retired figures are replaced. Once the
+ * document is updated this never matches, and it can go.
+ */
+const RETIRED_TITLE_LEAD = "20+ Projects. 200+ Integrations. 100% Customer Retention.";
+
 function results(raw: Raw["results"], fb: HomeResults): HomeResults {
   const items = raw?.items ?? [];
   if (items.length !== fb.items.length) {
@@ -241,7 +253,7 @@ function results(raw: Raw["results"], fb: HomeResults): HomeResults {
   }
   return {
     eyebrow: text(raw?.eyebrow),
-    titleLead: text(raw?.titleLead),
+    titleLead: clean(raw?.titleLead) === RETIRED_TITLE_LEAD ? fb.titleLead : text(raw?.titleLead),
     titleRest: text(raw?.titleRest),
     body: text(raw?.body),
     credentials: credentials(raw?.credentials, fb.credentials),

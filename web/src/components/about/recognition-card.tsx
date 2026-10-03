@@ -33,7 +33,8 @@ const EASE = [0.22, 1, 0.36, 1] as const;
  * The mark sits on a white plate the way a certificate's seal sits on paper —
  * ISO's own tile (a JPEG on white, so a white plate is the one ground it sits
  * on without a box round it), the #startupindia mark cut from the DPIIT
- * certificate, or, where no mark may be used, a blue disc with a lucide award.
+ * certificate, Workday's Pro Certified badge from Credly, or, where no mark
+ * may be used, a blue disc with a lucide award.
  * In the plate's corner a small seal draws itself on as the card arrives —
  * ring first, then the tick — which is the section's whole claim in one
  * gesture: checked.
@@ -54,6 +55,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 export function RecognitionCard({ item, index }: { item: Item; index: number }) {
   const reduce = useReducedMotion();
   const headingId = useId();
+  const square = !!item.logo && "shape" in item.logo && item.logo.shape === "square";
 
   const px = useMotionValue(0.5);
   const py = useMotionValue(0.5);
@@ -122,12 +124,17 @@ export function RecognitionCard({ item, index }: { item: Item; index: number }) 
             alt={item.logo.alt}
             width={item.logo.width}
             height={item.logo.height}
-            sizes="168px"
-            /* One box for every mark, sized so they read as equals rather than
-               measure as equals: ISO's solid tile hits the 56px height cap
-               first and lands 134px wide; the open lettering of #startupindia
-               takes the full 168px at 39px tall. */
-            className="h-auto max-h-14 w-full max-w-[10.5rem] object-contain"
+            sizes={square ? "88px" : "168px"}
+            /* One box for every wide mark, sized so they read as equals rather
+               than measure as equals: ISO's solid tile hits the 56px height
+               cap first and lands 134px wide; the open lettering of
+               #startupindia takes the full 168px at 39px tall. A square badge
+               (Workday Pro Certified) would stop at 56 x 56 under that cap,
+               half ISO's area, so it is set by area instead: 88 x 88 is
+               ISO's 134 x 56, square. */
+            className={
+              square ? "size-22 object-contain" : "h-auto max-h-14 w-full max-w-[10.5rem] object-contain"
+            }
           />
         ) : (
           <span

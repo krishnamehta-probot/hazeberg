@@ -226,6 +226,11 @@ export function AboutScene({ about }: { about: HomeAbout }) {
             <ScrollText
               text={about.body}
               progress={pinned ? readProgress : undefined}
+              /* The two figures bold — "12+ years" and "200+ consolidated
+                 years" (Krishna, 2026-10-03). A figure followed, within one
+                 word, by "years", so it holds when the sentence is reworded in
+                 the CMS. */
+              emphasis={/\d+\+?\s+(?:[A-Za-z]+\s+)?years?\b/}
               /* One step down the scale at every breakpoint. The revised copy is
                  four times the length of what this held before, and at 20px the
                  paragraph ran to eleven lines and took the column on its own —

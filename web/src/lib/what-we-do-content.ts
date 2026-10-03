@@ -243,7 +243,7 @@ export const WHAT_WE_DO = {
     proof: {
       confirmed: false,
       items: [
-        { value: 20, suffix: "+", label: "Workday projects delivered" },
+        { value: 50, suffix: "+", label: "Workday projects delivered" },
         { value: 200, suffix: "+", label: "Years of combined Workday experience" },
         { value: 40, suffix: "+", label: "Countries supported" },
         { value: 100, suffix: "%", label: "Customer retention" },

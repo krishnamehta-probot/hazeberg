@@ -86,7 +86,12 @@ export function SiteFooter() {
                 Sized to the wordmark rather than to itself. The ISO tile is a
                 solid blue rectangle and the wordmark is open letterforms, so
                 matching their pixel heights makes the tile look bigger — it is
-                held one notch under, which reads as equal. */}
+                held one notch under, which reads as equal.
+
+                Workday's Pro Certified badge (Credly, supplied 2026-10-03)
+                sits beside it. It is square, so it is matched to the ISO tile
+                by area, not height: 18px x 43px is a 28px square, 20px x 48px
+                a 31px one. The same height would make it half the tile. */}
             <div className="flex items-center gap-4">
               <HazebergWordmark className="h-4 w-auto text-on-panel md:h-5" />
               <span aria-hidden className="h-6 w-px shrink-0 bg-white/15" />
@@ -97,6 +102,14 @@ export function SiteFooter() {
                 height={145}
                 sizes="64px"
                 className="h-[1.125rem] w-auto rounded-xs md:h-5"
+              />
+              <Image
+                src="/certs/workday-pro-certified.png"
+                alt="Workday Pro Certified"
+                width={480}
+                height={480}
+                sizes="32px"
+                className="size-7 md:size-[1.9375rem]"
               />
             </div>
             <p className="mt-6 max-w-[16ch] text-2xl leading-[1.15] font-light tracking-[-0.02em] text-balance text-on-panel md:text-3xl">

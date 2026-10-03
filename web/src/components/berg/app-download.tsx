@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 
 import { QR_CODES, type QrCode } from "@/components/berg/qr-codes";
+import { AppleMark, GooglePlayMark } from "@/components/brand/store-marks";
 import { BERG } from "@/lib/berg-content";
 
 /**
@@ -46,6 +47,10 @@ import { BERG } from "@/lib/berg-content";
  * link's hit area is stretched over the whole column with a pseudo-element, so
  * clicking the code opens the store too, which is what people try first.
  *
+ * Each store link opens on that store's own mark (`store-marks.tsx`, added
+ * 2026-10-03): Google Play's and Apple's, white at the link's own strength,
+ * 20px, so the caption reads as the store before a word of it is read.
+ *
  * The web app is a quiet text link rather than the white pill: the owner's
  * list ranks it third ("can be added too"), and two white QR tiles are already
  * the brightest things on this ground. Mono caps, the arrow leaving on hover,
@@ -70,6 +75,7 @@ export function AppDownload() {
       <ul className="grid max-w-[22rem] gap-3 pointer-fine:md:mt-5 pointer-fine:md:flex pointer-fine:md:max-w-none pointer-fine:md:flex-wrap pointer-fine:md:gap-x-10 pointer-fine:md:gap-y-8">
         {app.stores.map((store) => {
           const code = QR_CODES[store.key];
+          const Mark = store.key === "ios" ? AppleMark : GooglePlayMark;
           return (
             <li key={store.key} className="group/s relative">
               <div className="hidden w-fit rounded-lg bg-canvas p-2 text-ink shadow-xl shadow-void/40 transition-transform dur-base ease-brand forced-color-adjust-none group-hover/s:-translate-y-1 pointer-fine:md:block">
@@ -86,8 +92,9 @@ export function AppDownload() {
                 href={code.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex min-h-14 items-center gap-4 rounded-pill border border-white/15 bg-white/[0.06] py-2 pr-2.5 pl-6 transition-colors dur-base ease-brand hover:border-white/30 hover:bg-white/10 pointer-fine:md:mt-4 pointer-fine:md:min-h-11 pointer-fine:md:rounded-xs pointer-fine:md:border-0 pointer-fine:md:bg-transparent pointer-fine:md:p-0 pointer-fine:md:after:absolute pointer-fine:md:after:inset-0 pointer-fine:md:hover:bg-transparent"
+                className="flex min-h-14 items-center gap-3.5 rounded-pill border border-white/15 bg-white/[0.06] py-2 pr-2.5 pl-5 transition-colors dur-base ease-brand hover:border-white/30 hover:bg-white/10 pointer-fine:md:mt-4 pointer-fine:md:min-h-11 pointer-fine:md:rounded-xs pointer-fine:md:border-0 pointer-fine:md:bg-transparent pointer-fine:md:p-0 pointer-fine:md:after:absolute pointer-fine:md:after:inset-0 pointer-fine:md:hover:bg-transparent"
               >
+                <Mark className="size-5 shrink-0 text-on-panel" />
                 <span className="flex min-w-0 flex-1 flex-col">
                   <span className="text-xs text-on-panel/60">{store.platform}</span>{" "}
                   <span className="inline-flex items-center gap-1.5 text-sm font-medium text-on-panel">
