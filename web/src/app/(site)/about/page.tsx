@@ -1,6 +1,8 @@
 import { Commitments } from "@/components/about/commitments";
 import { DeliveryMap } from "@/components/about/delivery-map";
+import { FounderNote } from "@/components/about/founder-note";
 import { Leadership } from "@/components/about/leadership";
+import { LifeAtHazeberg } from "@/components/about/life-at-hazeberg";
 import { Recognition } from "@/components/about/recognition";
 import { StartConversation } from "@/components/about/start-conversation";
 import { Story } from "@/components/about/story";
@@ -14,7 +16,8 @@ export const metadata = {
 
 /**
  * About — the client's copy, all six sections of it (supplied 2026-10-02; see
- * `lib/about-content.ts`).
+ * `lib/about-content.ts`), and the two the owner's change list added the same
+ * day: the Founder's note and Life at Hazeberg.
  *
  * **The page's one idea: every claim comes with the thing that keeps it true.**
  * The document says it outright in How we're built — "so you can check it
@@ -31,12 +34,15 @@ export const metadata = {
  *                         each on its own clock, with arcs out to the regions
  *   Our story             the story lights word by word as it is read; mission
  *                         and vision as a pair; the closing line set large
+ *   Founder's note        Sakthi Vignesh, in his own photographs
  *   How we're built       four claims, each verified in front of the reader
  *   Meet the team         four people, one open at a time
+ *   Life at Hazeberg      the offsites and the team's own awards
  *   Recognition           three marks, each with its paperwork
  *   Start a conversation  the close, with both offices on their own clocks
  *
- * Grounds: void (hero), surface, ink, canvas, surface, ink.
+ * Grounds: void (hero), surface, canvas (founder), ink, canvas, ink (life),
+ * surface, ink.
  */
 export default function Page() {
   const { hero } = ABOUT;
@@ -61,8 +67,10 @@ export default function Page() {
         fit
       />
       <Story data={ABOUT.story} />
+      <FounderNote data={ABOUT.founder} />
       <Commitments data={ABOUT.built} />
       <Leadership data={ABOUT.team} />
+      <LifeAtHazeberg data={ABOUT.life} />
       <Recognition data={ABOUT.recognition} />
       <StartConversation data={ABOUT.contact} />
     </>

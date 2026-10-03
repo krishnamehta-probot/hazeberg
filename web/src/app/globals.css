@@ -358,7 +358,8 @@
   }
 
   /* The `space` opener's light: one soft blue bloom on the right, where the
-     globe sits from xl, with a low amber rise under it — the sunrise the arc
+     globe (and the module pages' dial) sits from lg, with a low amber rise
+     under it — the sunrise the arc
      carries on the other pages, reduced to a hint. Wide and weak on purpose:
      the globe is the light; this is only the air around it. */
   .space-glow {
@@ -1344,8 +1345,10 @@
      hero's band — header to stats rail, less the hero's two margins — and a
      size container, so every length below is solved from the room the map
      actually has:
-       --dm-copy  the copy column's right edge: the shell's content edge plus
-                  44rem (`82.5rem` is `--container-shell`)
+       --dm-copy  the copy column's right edge: PageHero's `--hero-copy`, the
+                  shell's content edge plus the column's measure — 44rem from
+                  xl, less at lg where the room is short. Its `100cqw` is
+                  resolved here, against this box, which is the frame's width
        --dm-west  where 128W, the Americas' west coast, is placed: 1.5rem
                   right of the column
        --dm-s     px per degree: the 284 degrees from 128W to 156E between
@@ -1353,10 +1356,10 @@
                   band's height if that is less
      The frame is the whole circle of longitude and 76N to 57S at that scale,
      centred on the band's middle — the line the copy centres on. Worked
-     through at 1280x650 to 1920x950 in the component's doc. */
+     through at 1024x768 to 1920x950 in the component's doc. */
   .dmap {
     container-type: size;
-    --dm-copy: calc(max(var(--gutter), (100cqw - 82.5rem) / 2 + var(--gutter)) + 44rem);
+    --dm-copy: var(--hero-copy);
     --dm-west: calc(var(--dm-copy) + 1.5rem);
     --dm-s: min(calc((100cqw - var(--gutter) - var(--dm-west)) / 284), calc(100cqh / 140));
   }
@@ -1420,6 +1423,16 @@
     }
     to {
       stroke-dashoffset: 0;
+    }
+  }
+  /* The arcs' fine line, in degrees: 0.6 is 1px at 1280's 1.72px a degree.
+     Below xl the map is as small as 1.27px a degree (a 1024 tablet), where
+     0.6 would be a 0.76px smear, so it is 0.8 there — 1.0px to 1.4px across
+     the lg range. `px` here is the drawing's own unit, a degree. The query
+     is Tailwind's `max-xl`, so it hands over at exactly the same width. */
+  @media (width < 80rem) {
+    .dmap-line {
+      stroke-width: 0.8px;
     }
   }
   /* Each centre's pulse: a ring out to four times the point and gone, slow
@@ -1647,6 +1660,265 @@
   @media (prefers-reduced-motion: reduce) {
     .talk-ping::after {
       display: none;
+    }
+  }
+
+  /* ---- About: life at Hazeberg ---- */
+  /* @@css:about-life */
+
+  /* Life at Hazeberg's own light (`about/life-at-hazeberg.tsx`): the page's
+     blue off the top left, where the head sits, and a low tungsten warmth
+     under the photographs — the party's light, reduced to air. */
+  .life-glow {
+    background-image:
+      radial-gradient(44% 34% at 10% 12%, rgb(25 114 185 / 0.18), transparent 72%),
+      radial-gradient(56% 40% at 66% 64%, rgb(254 192 15 / 0.07), transparent 70%);
+  }
+
+  /* The three sheets share one cell, so the box is the same whichever is
+     open. The track is `minmax(0, 1fr)` so a phone's strip, as wide as all
+     its prints, cannot widen it. A closed sheet lets go of the pointer at
+     once and goes `hidden` once its prints have cleared (the 0s visibility
+     step waits out the 240ms clear); `inert` has already taken it out of the
+     tab order and the accessibility tree. Until the reader reaches for the
+     chapters (`data-warm`) a closed sheet is not drawn at all, so its lazy
+     thumbnails are never fetched; every sheet is the same box, so the cell
+     does not change size when they arrive. */
+  .life-sheets {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .life-sheet {
+    grid-area: 1 / 1;
+    min-width: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: visibility 0s linear 240ms;
+  }
+  .life-sheet[data-on] {
+    visibility: visible;
+    pointer-events: auto;
+    transition: visibility 0s;
+  }
+  .life-sheets:not([data-warm]) .life-sheet:not([data-on]) {
+    display: none;
+  }
+
+  /* The tabs' entrance — the site's reveal (`motion/reveal.tsx`: 64px, 0.7s,
+     its curve, 80ms behind the head) in CSS, so the tabs are there without
+     script and the server and the client agree under reduced motion. Held
+     only when armed (`useArrival` in `about/life-chapters.tsx`). */
+  @media (prefers-reduced-motion: no-preference) {
+    .life-rise[data-armed]:not([data-on]) {
+      opacity: 0;
+      translate: 0 4rem;
+    }
+    .life-rise[data-on] {
+      transition:
+        opacity 700ms cubic-bezier(0.2, 0.7, 0.3, 1) 80ms,
+        translate 700ms cubic-bezier(0.2, 0.7, 0.3, 1) 80ms;
+    }
+  }
+
+  /* Below md, a strip: one row at a fixed height, each print at its own
+     ratio, snapping frame by frame and running out to the screen's edges —
+     the negative margin undoes the shell's gutter, so it reaches the edge
+     without widening the page. The block padding is room for the focus ring,
+     which the scroller would otherwise clip. */
+  .life-grid {
+    --strip-h: min(15rem, 56vw);
+    display: flex;
+    gap: 0.625rem;
+    margin-inline: calc(var(--gutter) * -1);
+    padding: 0.375rem var(--gutter);
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+  }
+  .life-tile {
+    flex: none;
+    height: var(--strip-h);
+    aspect-ratio: var(--ar);
+    scroll-snap-align: start;
+  }
+  /* From md, the sheet: 12 × 6 square units in a 2:1 box, each print in the
+     cell `life-at-hazeberg.tsx` gives it (`--c` / `--r`). */
+  @media (min-width: 768px) {
+    .life-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-rows: repeat(6, minmax(0, 1fr));
+      aspect-ratio: 2 / 1;
+      gap: 0.5rem;
+      margin-inline: 0;
+      padding: 0;
+      overflow: visible;
+    }
+    .life-tile {
+      height: auto;
+      aspect-ratio: auto;
+      grid-column: var(--c);
+      grid-row: var(--r);
+    }
+  }
+  @media (min-width: 1024px) {
+    .life-grid {
+      gap: 0.75rem;
+    }
+  }
+
+  /* The deal. A print's resting place is flat in its cell: that is what
+     shows without script, before hydration, under reduced motion, and to a
+     reader who was already looking when the page came to life. Motion opts
+     in, and only under `no-preference`:
+
+       waiting   a closed sheet's prints, and an armed open sheet's until it
+                 is reached — a little low, a degree or two off square
+                 (`--tilt`), a touch small
+       dealt     the open sheet's prints settle flat, in reading order
+                 (`--i`, 55ms apart)
+       cleared   a sheet that closes only fades, where it lies, and its prints
+                 go back to waiting under cover, after the fade, so the next
+                 deal has somewhere to land from
+
+     Arming (`useArrival`, before the first paint React makes) sends the open
+     sheet to waiting at once, with no transition, so nobody sees it go. */
+  @media (prefers-reduced-motion: no-preference) {
+    .life-tile {
+      transition:
+        opacity 200ms var(--ease-brand),
+        translate 0s linear 240ms,
+        rotate 0s linear 240ms,
+        scale 0s linear 240ms;
+    }
+    .life-sheet:not([data-on]) .life-tile,
+    .life-sheets[data-armed]:not([data-dealt]) .life-tile {
+      opacity: 0;
+      translate: 0 1.5rem;
+      rotate: var(--tilt, 0deg);
+      scale: 0.94;
+    }
+    .life-sheet[data-on] .life-tile {
+      opacity: 1;
+      translate: 0 0;
+      rotate: 0deg;
+      scale: 1;
+      transition:
+        opacity 460ms var(--ease-brand) calc(120ms + var(--i, 0) * 55ms),
+        translate 820ms var(--ease-brand) calc(120ms + var(--i, 0) * 55ms),
+        rotate 820ms var(--ease-brand) calc(120ms + var(--i, 0) * 55ms),
+        scale 820ms var(--ease-brand) calc(120ms + var(--i, 0) * 55ms);
+    }
+    .life-sheets[data-armed]:not([data-dealt]) .life-tile {
+      transition: none;
+    }
+  }
+  /* The global reduced-motion rule shortens durations but keeps delays,
+     which would leave a cleared sheet up for 240ms. Off, it simply cuts. */
+  @media (prefers-reduced-motion: reduce) {
+    .life-sheet,
+    .life-sheet[data-on] {
+      transition: none;
+    }
+  }
+
+  /* The motto's beats (`about/life-motto.tsx`). Each line is its own mask,
+     with the descender room built in (in em, so it scales with the beat).
+     At rest the lines are set and the capitals lit; armed, each line waits
+     under its mask, comes up a beat after the last, and its capital word
+     lights amber once the line has landed. */
+  .life-beat {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.25em;
+    margin-bottom: -0.25em;
+  }
+  .life-caps {
+    color: var(--accent);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .life-motto[data-armed]:not([data-on]) .life-beat > span {
+      translate: 0 115%;
+    }
+    .life-motto[data-armed]:not([data-on]) .life-caps {
+      color: inherit;
+    }
+    .life-motto[data-on] .life-beat > span {
+      transition: translate 900ms cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i, 0) * 280ms);
+    }
+    .life-motto[data-on] .life-caps {
+      transition: color 600ms var(--ease-brand) calc(var(--i, 0) * 280ms + 520ms);
+    }
+  }
+
+  /* The viewer (`about/life-lightbox.tsx`): a modal `<dialog>` stretched over
+     the whole window, so it is its own backdrop. No `display` here — the UA's
+     `dialog:not([open]) { display: none }` is what keeps it shut. While it is
+     open the root stops scrolling; the site hides every scrollbar, so that
+     shifts nothing. */
+  .life-box {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    color: var(--on-panel);
+    background-color: color-mix(in srgb, var(--void) 94%, transparent);
+    backdrop-filter: blur(10px);
+    overscroll-behavior: contain;
+  }
+  /* It takes focus only from a click on its own ground (`tabIndex={-1}`),
+     to keep the keys inside it; the controls carry the visible focus. */
+  .life-box:focus {
+    outline: none;
+  }
+  .life-box::backdrop {
+    background: transparent;
+  }
+  .life-box[open] {
+    animation: life-box-in 280ms var(--ease-brand);
+  }
+  @keyframes life-box-in {
+    from {
+      opacity: 0;
+    }
+  }
+  :root:has(.life-box[open]) {
+    overflow: hidden;
+  }
+  /* The stage is a size container, so the photograph can be drawn at the
+     largest box of its own ratio that fits — reserved before it loads.
+     `pinch-zoom` only: the browser keeps the zoom and leaves every swipe to
+     the viewer. */
+  .life-box-stage {
+    display: grid;
+    place-items: center;
+    container-type: size;
+    touch-action: pinch-zoom;
+  }
+  .life-box-photo {
+    width: min(100cqw, 100cqh * var(--ar));
+    height: auto;
+    aspect-ratio: var(--ar);
+    animation: life-photo-in 420ms var(--ease-brand);
+  }
+  @keyframes life-photo-in {
+    from {
+      opacity: 0.4;
+      scale: 0.985;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .life-box[open],
+    .life-box-photo {
+      animation: none;
     }
   }
 

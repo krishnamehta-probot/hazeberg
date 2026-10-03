@@ -29,6 +29,12 @@
  * Hazeberg's `--primary` and `--accent`.
  */
 
+/** The Berg web app. Every "Get Started", the enquiry button and the mobile
+    block's web link go here, so it is written once. The two STORE addresses
+    are not here: they live beside the QR codes drawn from them, in
+    `components/berg/qr-codes.ts`, so a code and its link cannot disagree. */
+const BERG_APP_URL = "https://berg.hazebergconsulting.com";
+
 export const BERG = {
   eyebrow: "Berg — a Hazeberg platform",
   /** [live] Split so the second half can carry the accent. */
@@ -36,7 +42,7 @@ export const BERG = {
   titleAccent: " World Comes Together",
   lead: "The marketplace built for the Workday ecosystem. Customers, consulting firms, and consultants connect through one platform to discover opportunities, collaborate faster, and build stronger Workday outcomes.",
   strapline: "One platform. Three groups. Infinite opportunities.",
-  cta: { label: "Get Started", href: "https://berg.hazebergconsulting.com" },
+  cta: { label: "Get Started", href: BERG_APP_URL },
 
   /* -- the three groups ------------------------------------------------ */
   /**
@@ -230,6 +236,19 @@ export const BERG = {
   },
 
   /* -- the app --------------------------------------------------------- */
+  /**
+   * The owner's change list, 2026-10-03: "QR Codes to be added for Android
+   * and iOS for Mobile application download. Web application link can be
+   * added too." So the document's single "Berg on mobile — download now"
+   * button, which pointed at the web app and downloaded nothing, became the
+   * two stores and the web app, each named for what it does.
+   *
+   * These labels are NOT from the client's document, unlike the rest of the
+   * file: "Get it on Google Play" and "Download on the App Store" are the
+   * stores' own wording for a link to them, and the platform names, the scan
+   * prompt, the web link and the two QR descriptions are mine. The store URLs
+   * are in `components/berg/qr-codes.ts`, keyed by `key`.
+   */
   app: {
     eyebrow: "On mobile",
     titleLead: "What if your entire Workday network fit",
@@ -237,7 +256,24 @@ export const BERG = {
     body: "From discovering new requirements to connecting with the right people, Berg brings the Workday ecosystem closer wherever you go.",
     bodySecond:
       "Stay updated on opportunities, manage conversations, and keep your Workday journey moving from anywhere.",
-    cta: { label: "Berg on mobile — download now", href: "https://berg.hazebergconsulting.com" },
+    /** Over the codes, which show only with a mouse or trackpad from `md`.
+        On a touch screen there are no codes to scan, and no label. */
+    scanLabel: "Scan with your phone's camera",
+    stores: [
+      {
+        key: "android",
+        platform: "Android",
+        label: "Get it on Google Play",
+        qrLabel: "QR code for Berg on Google Play",
+      },
+      {
+        key: "ios",
+        platform: "iOS",
+        label: "Download on the App Store",
+        qrLabel: "QR code for Berg on the App Store",
+      },
+    ],
+    web: { label: "Open the web app", href: BERG_APP_URL },
     panelLabel: "Powering operations for",
     tiles: ["Workday Customer", "Workday Consulting Firm", "Workday Job Seeker"],
     panelNote: "A unified platform that streamlines collaboration and opens new growth opportunities.",
@@ -399,7 +435,7 @@ export const BERG = {
       "19/A, Villankurichi Rd, Vinayagapuram",
       "Coimbatore, Tamil Nadu 641035",
     ],
-    cta: { label: "Send an enquiry", href: "https://berg.hazebergconsulting.com" },
+    cta: { label: "Send an enquiry", href: BERG_APP_URL },
   },
 
   cross: {

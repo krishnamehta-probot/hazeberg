@@ -70,6 +70,11 @@ export function homeDocumentText() {
       titleLead: h.results.titleLead,
       titleRest: h.results.titleRest,
       body: h.results.body,
+      credentials: h.results.credentials.map((line, i) => ({
+        _key: `credential-${i + 1}`,
+        _type: "credential",
+        line,
+      })),
       items: h.results.items.map((r, i) => ({
         _key: `card-${i + 1}`,
         _type: "capability",

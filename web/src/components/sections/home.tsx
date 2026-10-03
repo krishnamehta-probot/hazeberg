@@ -3,6 +3,8 @@ import { Reveal, RevealGroup } from "@/components/motion/reveal";
 import { CtaPill } from "@/components/ui/cta-pill";
 import { HorizonGlow } from "@/components/motion/horizon-glow";
 import { AboutScene } from "@/components/sections/about-scene";
+import { Credentials } from "@/components/sections/home-credentials";
+import { HeroGlow } from "@/components/sections/home-hero-glow";
 import { ImpactScene } from "@/components/sections/impact-scene";
 import { ModelsJourney } from "@/components/sections/models-journey";
 import { ServicesSection } from "@/components/sections/services-section";
@@ -65,47 +67,61 @@ import type {
  * desktop frame puts type over the walking figure's black coat, which measures
  * 1.14:1 — unreadable. The band sidesteps it and keeps ink type in both layouts.
  */
-/**
- * The proof line that closes the hero. Five marks, not seventeen: this is a
- * glance, and the full roster is the section directly below it.
- *
- * `brightness-0 invert` flattens each mark to solid white. The files are already
- * knocked out — the opaque canvas around them was flood-filled away — but they
- * still carry their own brand colours, and five different coloured logos on a
- * near-black ground is a fruit salad. Flattening them is what every reference
- * does, and it is also the only treatment that survives a dark ground without
- * measuring each mark individually.
- */
-/** One pass of the rail. Rendered more than once so the loop has something to
-    run into; `aria-hidden` on the copies keeps it to one announcement.
+/** The band's two groups, split once by `channel`. Each keeps the array's
+    order, so the direct five stand in the owner's order. */
+const DIRECT = LOGOS.items.filter((logo) => logo.channel === "direct");
+const PARTNERS = LOGOS.items.filter((logo) => logo.channel === "partner");
+
+type Logo = (typeof LOGOS.items)[number];
+
+/** One mark, for both groups — a direct client and a client via partners are
+    sized by exactly the same rule, so the split is in the grouping and never in
+    the marks.
 
     The marks are the one piece of the home page that is NOT in the CMS. Each
     file is pre-processed (fills forced white, knockouts forced to `--void`) and
     its size is measured by `scripts/inkscale.mjs`; an upload field would accept
-    a logo that is invisible on this band, at a size nobody measured. */
+    a logo that is invisible on this band, at a size nobody measured.
+
+    A plain img, not next/image: these are vectors, so there is nothing for the
+    optimiser to do and `fill` would only force a wrapper with a fixed box
+    around sixteen very different aspect ratios.
+
+    Height, not `transform: scale`. A transform leaves the layout box at its
+    unscaled size, so a mark pulled back to half size still reserved full-size
+    space and the rail's rhythm fell apart.
+
+    `width`/`height` are the file's own, and only give the box its SHAPE before
+    the file arrives — the style's height wins and `w-auto` follows the ratio.
+    Without them every mark is 0px wide until it loads, and the band's layout
+    (and so the arc's clearance) changes after first paint. */
+function LogoMark({ logo, hidden = false }: { logo: Logo; hidden?: boolean }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`/clients/${logo.file}`}
+      alt={hidden ? "" : logo.name}
+      width={logo.w}
+      height={logo.h}
+      className="w-auto opacity-60 transition-opacity dur-base ease-brand hover:opacity-100"
+      style={{ height: `calc(var(--rail-h) * ${logo.scale})` }}
+    />
+  );
+}
+
+/** One pass of the rolling rail — the clients via partners. Rendered more than
+    once so the loop has something to run into; `aria-hidden` on the copies
+    keeps it to one announcement. */
 function LogoRail({ hidden = false }: { hidden?: boolean }) {
   return (
     /* Fixed height, centred. Some of these viewBoxes are far taller than the
        mark inside them, and a row sized by its tallest CHILD is a row sized by
        whichever file happened to have the most padding. The boxes overflow this
        and the clip takes the empty space, not the logo. */
-    <ul aria-hidden={hidden || undefined} className="flex h-11 shrink-0 items-center">
-      {LOGOS.items.map((logo) => (
-        <li key={logo.file} className="shrink-0 px-7 sm:px-10">
-          {/* A plain img, not next/image: these are vectors, so there is nothing
-              for the optimiser to do and `fill` would only force a wrapper with
-              a fixed box around thirteen very different aspect ratios.
-
-              Height, not `transform: scale`. A transform leaves the layout box
-              at its unscaled size, so a mark pulled back to half size still
-              reserved full-size space and the rail's rhythm fell apart. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={`/clients/${logo.file}`}
-            alt={hidden ? "" : logo.name}
-            className="w-auto opacity-60 transition-opacity dur-base ease-brand hover:opacity-100"
-            style={{ height: `calc(var(--rail-h) * ${logo.scale})` }}
-          />
+    <ul aria-hidden={hidden || undefined} className="flex h-9 shrink-0 items-center sm:h-11 lg:h-9 xl:h-11">
+      {PARTNERS.map((logo) => (
+        <li key={logo.file} className="shrink-0 px-7 sm:px-10 lg:px-7 xl:px-10">
+          <LogoMark logo={logo} hidden={hidden} />
         </li>
       ))}
     </ul>
@@ -113,45 +129,109 @@ function LogoRail({ hidden = false }: { hidden?: boolean }) {
 }
 
 /**
- * The proof that closes the hero — a rolling rail, and the only place client
- * marks appear on the page now.
+ * The proof that closes the hero, and the only place client marks appear on
+ * the page: the five direct clients standing still under the trust label, then
+ * a rolling rail of the clients reached through partners, under its own label.
+ *
+ * Two groups because the owner drew the line (2026-10-03): five are Hazeberg's
+ * own clients and the rest came "via partners". Still and moving is what makes
+ * that line legible at a glance — the direct five are the marks that hold still
+ * long enough to be read — and it keeps every label OUT of the moving row. A
+ * label inside a marquee scrolls away with the marks it was naming.
+ *
+ * Labels sit OVER their group rather than beside it. Beside, as the trust label
+ * used to, each would cost its own column: at 1024px the trust label, the five
+ * direct marks and a "Via Partners" label already fill the width with nothing
+ * left to roll. Over, they cost one 11px line, so the band is one row of marks
+ * from lg — 86px from xl, against the 85px it was.
+ *
+ * **From lg to xl the whole band is set at the phone's size**: `--rail-h` 1.75rem
+ * rather than 2.25rem, 36px rows, tighter gaps. At full size the direct five
+ * and their padding take 723px of the row, leaving the partners 268px at 1024
+ * — two marks at a time. Stacking the groups instead gave the rail the width
+ * but made the band 181px, and on an iPad in Safari's landscape (1024x690,
+ * 1133x674) that put the rail's foot 37px and 60px below the fold. At the
+ * smaller size the direct five take 551px, the partners' window is 440px at
+ * 1024 and 549 at 1133, and the band is 78px, so the first screen holds it at
+ * every iPad landscape size. Both groups shrink together: direct clients set
+ * smaller than the partners would read as the lesser of the two.
+ *
+ * Below lg the groups stack, centred, and the direct five wrap on a phone
+ * (three and two). The band is taller there, which is what `HeroGlow` measures
+ * it for.
  *
  * A solid band, not a transparent overlay. The light behind it moves, so
  * anything see-through here is a contrast bug waiting for the arc to drift under
  * it; the reference ends its glow above the strip for the same reason.
  *
  * The rail is rendered twice per half. A -50% loop only reads as continuous
- * while one half is at least as wide as the screen; two passes of thirteen marks
- * is 4394px, which clears an ultrawide with room over. Three passes worked too
- * and cost twenty-six more elements for nothing.
+ * while one half is at least as wide as the screen. Two passes of the eleven
+ * measure 3566px at the laptop size and 2637px on a phone, both past an
+ * ultrawide 2560 — and the rail never gets the whole screen anyway: at 2560 its
+ * window measures 1804px, the rest being the direct five. Three passes would
+ * cost twenty-two more elements for nothing.
  *
  * Both edges are masked rather than boxed: the marks fade into the band instead
- * of being clipped by a visible container.
+ * of being clipped by a visible container. From lg the left fade starts at the
+ * hairline, so the partners roll out from behind it.
  */
 const RAIL_PASSES = 2;
 
+/** The rail's speed is a rate, not a duration: `.marquee-track`'s 80s was set
+    for a 4370px half, about 55px a second. A half of the eleven is 3566px, and
+    80s over that is 45px a second — a rail that visibly slowed down when three
+    marks left it. 65s puts it back at 55. */
+const RAIL_SECONDS = 65;
+
+/** Space Mono caps, set solid so a label costs the band exactly its own 11px.
+    55% white on `--void` — the trust label's existing treatment. */
+const CAPTION = "font-mono text-[0.6875rem] leading-none tracking-caps text-on-panel/55 uppercase";
+
 function HeroTrust({ trust }: { trust: string }) {
   return (
-    <div className="relative border-t border-white/10 bg-void pt-6 pb-6 lg:flex lg:items-center lg:gap-9 lg:py-5 lg:pl-[var(--gutter)]">
-      {/* The divider lives on the label, not on the rail beside it: the rail
+    /* `data-hero-band` and `--arc-gap` are read by `HeroGlow`: the band's
+       height plus this gap is how far the arc is kept above it.
+       In one row (lg) the padding is uneven on purpose, 16 over and 8 under: the
+       44px row holds marks whose ink is about 17px tall, so the row carries
+       its own space under them. Measured, that leaves even air between the
+       band's edge, the label, the marks and the foot of the band. */
+    <div
+      data-hero-band
+      className="relative border-t border-white/10 bg-void pt-3.5 pb-3.5 [--arc-gap:35] [--rail-h:1.75rem] sm:pt-4 sm:pb-4 sm:[--rail-h:2.25rem] lg:flex lg:items-stretch lg:pt-4 lg:pb-2 lg:pl-[var(--gutter)] lg:[--arc-gap:80] lg:[--rail-h:1.75rem] xl:[--rail-h:2.25rem]"
+    >
+      <div className="px-5 text-center lg:shrink-0 lg:px-0 lg:pr-8 lg:text-left xl:pr-10">
+        <p className={CAPTION}>{trust}</p>
+        <ul className="mt-2.5 flex flex-wrap items-center justify-center gap-x-6 gap-y-1 sm:mt-3 sm:gap-x-9 lg:mt-1.5 lg:flex-nowrap lg:justify-start lg:gap-x-7 xl:gap-x-10">
+          {DIRECT.map((logo) => (
+            <li key={logo.file} className="flex h-7 shrink-0 items-center sm:h-11 lg:h-9 xl:h-11">
+              <LogoMark logo={logo} />
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* The hairline lives on this group, not on the rail inside it: the rail
           carries the edge mask, and a mask fades an element's border along with
           everything else in it. */}
-      <p className="text-center font-mono text-[0.6875rem] tracking-caps text-on-panel/55 uppercase lg:max-w-[11.5rem] lg:shrink-0 lg:border-r lg:border-white/12 lg:py-1 lg:pr-9 lg:text-left">
-        {trust}
-      </p>
-      <div
-        className="mt-5 overflow-hidden lg:mt-0 lg:min-w-0 lg:flex-1"
-        style={{
-          maskImage:
-            "linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%)",
-          WebkitMaskImage:
-            "linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%)",
-        }}
-      >
-        <div className="marquee-track flex w-max [--rail-h:1.75rem] motion-reduce:animate-none sm:[--rail-h:2.25rem]">
-          {Array.from({ length: RAIL_PASSES * 2 }).map((_, i) => (
-            <LogoRail key={i} hidden={i > 0} />
-          ))}
+      <div className="mt-3.5 sm:mt-4 lg:mt-0 lg:min-w-0 lg:flex-1 lg:border-l lg:border-white/12">
+        <p className={`${CAPTION} px-5 text-center lg:pr-0 lg:pl-8 lg:text-left xl:pl-10`}>{LOGOS.viaPartners}</p>
+        <div
+          className="mt-2 overflow-hidden sm:mt-2.5 lg:mt-1.5"
+          style={{
+            maskImage:
+              "linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%)",
+          }}
+        >
+          <div
+            className="marquee-track flex w-max motion-reduce:animate-none"
+            style={{ animationDuration: `${RAIL_SECONDS}s` }}
+          >
+            {Array.from({ length: RAIL_PASSES * 2 }).map((_, i) => (
+              <LogoRail key={i} hidden={i > 0} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -170,7 +250,8 @@ export function Hero({ hero }: { hero: HomeHero }) {
       {/* No scroll-driven frame any more. Insetting the hero as you scrolled
           resized the canvas on every single frame, and re-allocating a WebGL
           drawing buffer sixty times a second is what made the arc flicker. */}
-      <HorizonGlow clearance={165} className="absolute inset-0 block h-full w-full" />
+      {/* The clearance is measured off the logo band — see `home-hero-glow.tsx`. */}
+      <HeroGlow className="absolute inset-0 block h-full w-full" />
 
       <div className="relative flex flex-1 flex-col pt-[calc(var(--header-h)+2rem)]">
         {/* Padding lives on this block, not on the column, so the band below can
@@ -179,7 +260,15 @@ export function Hero({ hero }: { hero: HomeHero }) {
             the arc's bloom on shorter laptops — measured at 3px of clear ground
             at 1280x800 — and the fix belongs in the layout rather than in the
             shader, which has a band of its own to clear below it. */}
-        <div className="flex flex-1 items-center justify-center px-5 pt-10 pb-16 lg:pb-28">
+        {/* The top padding gives way on SHORT screens, and only there. At
+            1280x650 the header, this copy, the bias below and the band added up
+            to 683px, so the first screen ended 33px into the band and the marks
+            were cut through. `100svh - 40.5rem` is the room that is left once
+            those are paid for; it reaches the full 2.5rem at 688px tall, so
+            every screen at least that tall is exactly as it was. Taken from the
+            top, not the bias: what keeps the button out of the arc's bloom is
+            the space BELOW it, and that is untouched. */}
+        <div className="flex flex-1 items-center justify-center px-5 pt-[clamp(0rem,calc(100svh-40.5rem),2.5rem)] pb-16 lg:pb-28">
           <div className="shell flex flex-col items-center text-center">
             <Reveal immediate>
               {/* The second half carries the amber. The span goes to `block` at
@@ -378,6 +467,10 @@ export function Results({ results }: { results: HomeResults }) {
         titleMax="max-w-[70rem]"
         body={results.body}
       />
+
+      {/* The owner's two distinctions, between the figures and the cards —
+          see `home-credentials.tsx`. */}
+      <Credentials items={results.credentials} />
 
       <div className="mt-12">
         <ResultsSplit

@@ -1,5 +1,27 @@
 # Next session: the owner's changes (written 2026-10-02)
 
+> **Done and pushed 2026-10-03.** Everything under "The work, in order" is
+> built and reviewed. So is Krishna's extra request from that morning: the hero
+> visuals (About's map, What we do's globe, the service pages' dial) now show on
+> landscape tablets from 1024px, measured at the real iPad Safari first screens.
+> The defaults below were used for every open decision.
+>
+> **Still open, for Krishna:**
+> - Run `web/scripts/patch-home-credentials.ts -- --write`: a live Sanity
+>   `setIfMissing`, needed so editors can edit the home credentials. The dry run
+>   is clean (published document plus one open draft).
+> - Ask the owner to confirm the three web-sourced logos: ScribeAmerica (a PNG
+>   from their site), Ramsay Health Care (an SVG from ramsayhealth.com.au) and
+>   JMAN Group (an SVG from jmangroup.com).
+> - "40+ countries" still stands outside About: contact (2), home (Why copy, FAQ),
+>   legal ("forty"), navigation (2) and the service FAQ.
+> - The App Store link is the India storefront (`/in/`), as in the owner's QR.
+> - The reduced-motion / no-JS fault in the shared `Reveal`, `SoftRise`,
+>   `MaskReveal` and `Counter` components. Krishna's machine reports reduced
+>   motion, so he may see it himself.
+> - Container query units need Safari 16+ (iPadOS 15 tablets lose the asides'
+>   layout).
+
 When Krishna types **"lets go"**, do exactly the changes below, in this order, and
 nothing else. Source: the owner's PDF,
 `C:\Users\krish\Downloads\Hazeberg Website changes points.docx.pdf` (3 pages), whose

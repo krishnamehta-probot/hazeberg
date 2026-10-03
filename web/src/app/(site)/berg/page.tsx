@@ -12,6 +12,7 @@ import {
   Wallet,
 } from "lucide-react";
 
+import { AppDownload } from "@/components/berg/app-download";
 import { BergHero } from "@/components/berg/berg-hero";
 import { RoleCards } from "@/components/berg/role-cards";
 import { Workflow } from "@/components/berg/workflow";
@@ -176,63 +177,75 @@ function Platform() {
  * presenting a mock-up as the product — so the device is built out of the app's
  * OWN words: "Powering operations for…" and its three tiles, as real markup in a
  * real device-shaped frame. Honest, sharp at any resolution, nothing to ship.
+ *
+ * Under the copy, since the owner's change list of 2026-10-03, the way to
+ * actually get it: the Google Play and App Store QR codes on a computer (a fine
+ * pointer, from `md`), the same two links as store buttons on every touch
+ * screen and a narrow window, and the web app — `AppDownload`, in
+ * `components/berg/app-download.tsx`. It replaces the single "download now"
+ * pill, which went to the web app.
+ *
+ * The ground is ink, so the band carries `data-nav-dark` on a wrapper, the
+ * same way About's commitments do: `Section` takes no attributes of its own.
+ * Until 2026-10-03 it carried none, and the header kept its near-black type
+ * across the navy.
  */
 function App() {
   const { app } = BERG;
   return (
-    <Section ground="ink">
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] lg:items-center lg:gap-20">
-        <div>
-          <Eyebrow tone="panel">{app.eyebrow}</Eyebrow>
-          <Reveal>
-            <h2 className="mt-5 max-w-[18ch] text-3xl leading-[1.08] font-light tracking-[-0.03em] text-balance text-on-panel">
-              {app.titleLead}
-              <span className="text-accent">{app.titleAccent}</span>
-            </h2>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <p className="mt-5 max-w-[52ch] text-base text-on-panel/70">{app.body}</p>
-          </Reveal>
+    <div data-nav-dark>
+      <Section ground="ink">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] lg:items-center lg:gap-20">
+          <div>
+            <Eyebrow tone="panel">{app.eyebrow}</Eyebrow>
+            <Reveal>
+              <h2 className="mt-5 max-w-[18ch] text-3xl leading-[1.08] font-light tracking-[-0.03em] text-balance text-on-panel">
+                {app.titleLead}
+                <span className="text-accent">{app.titleAccent}</span>
+              </h2>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <p className="mt-5 max-w-[52ch] text-base text-on-panel/70">{app.body}</p>
+            </Reveal>
+            <Reveal delay={0.12}>
+              <p className="mt-4 max-w-[52ch] text-base text-on-panel/70">{app.bodySecond}</p>
+            </Reveal>
+            <Reveal delay={0.18}>
+              <div className="mt-9 pointer-fine:md:mt-10">
+                <AppDownload />
+              </div>
+            </Reveal>
+          </div>
+
           <Reveal delay={0.12}>
-            <p className="mt-4 max-w-[52ch] text-base text-on-panel/70">{app.bodySecond}</p>
-          </Reveal>
-          <Reveal delay={0.18}>
-            <div className="mt-9">
-              <CtaPill href={app.cta.href} tone="light" external>
-                {app.cta.label}
-              </CtaPill>
+            <div className="group/d mx-auto w-full max-w-[17rem] rounded-[2rem] bg-white/8 p-2.5 ring-1 ring-white/15 transition-transform duration-700 ease-brand hover:-translate-y-2">
+              <div className="rounded-[1.6rem] bg-canvas p-5">
+                <span aria-hidden className="mx-auto block h-1 w-10 rounded-pill bg-surface-3" />
+                <p className="mt-5 flex items-center gap-2 font-mono text-[0.625rem] tracking-caps text-ink-subtle uppercase">
+                  <Smartphone aria-hidden className="size-3.5" strokeWidth={1.8} />
+                  {app.panelLabel}
+                </p>
+                <ul className="mt-4 space-y-2.5">
+                  {app.tiles.map((tile, i) => (
+                    <li
+                      key={tile}
+                      className="flex items-center gap-3 rounded-md bg-surface px-3.5 py-3 text-sm font-medium text-ink transition-colors duration-500 ease-brand group-hover/d:bg-surface-2"
+                    >
+                      <span
+                        aria-hidden
+                        className={`size-2 shrink-0 rounded-pill ${i === 1 ? "bg-accent" : "bg-primary"}`}
+                      />
+                      {tile}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-5 text-xs text-ink-muted">{app.panelNote}</p>
+              </div>
             </div>
           </Reveal>
         </div>
-
-        <Reveal delay={0.12}>
-          <div className="group/d mx-auto w-full max-w-[17rem] rounded-[2rem] bg-white/8 p-2.5 ring-1 ring-white/15 transition-transform duration-700 ease-brand hover:-translate-y-2">
-            <div className="rounded-[1.6rem] bg-canvas p-5">
-              <span aria-hidden className="mx-auto block h-1 w-10 rounded-pill bg-surface-3" />
-              <p className="mt-5 flex items-center gap-2 font-mono text-[0.625rem] tracking-caps text-ink-subtle uppercase">
-                <Smartphone aria-hidden className="size-3.5" strokeWidth={1.8} />
-                {app.panelLabel}
-              </p>
-              <ul className="mt-4 space-y-2.5">
-                {app.tiles.map((tile, i) => (
-                  <li
-                    key={tile}
-                    className="flex items-center gap-3 rounded-md bg-surface px-3.5 py-3 text-sm font-medium text-ink transition-colors duration-500 ease-brand group-hover/d:bg-surface-2"
-                  >
-                    <span
-                      aria-hidden
-                      className={`size-2 shrink-0 rounded-pill ${i === 1 ? "bg-accent" : "bg-primary"}`}
-                    />
-                    {tile}
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-5 text-xs text-ink-muted">{app.panelNote}</p>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </Section>
+      </Section>
+    </div>
   );
 }
 

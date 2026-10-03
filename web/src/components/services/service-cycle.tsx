@@ -78,16 +78,31 @@ import { SERVICE_ICON } from "./service-icons";
  * assistive technology. The readout under the dial repeats the area and is
  * hidden from it.
  *
- * Placement follows the globe: right of the copy's 44rem measure, from xl;
- * narrower, the copy takes the frame and the rail below carries the six
+ * Placement follows the globe: right of the copy's measure (PageHero's
+ * `--hero-copy-w`), from lg — a tablet held landscape, since 2026-10-03;
+ * under lg the copy takes the frame and the rail below carries the six
  * stages on every screen anyway. The box is the opener's band (header to
  * rail, less the hero's two margins), a size container, so the dial is
  * `min(28rem | 30rem, 100cqh - the readout, the width right of the copy)` —
  * solved, not tuned, at 1280x650, 1366x657, 1440x780, 1536x730 and 1920x950:
- * 355px to 480px across, 26px or more clear of the rail, 28px or more below
- * the header and 74px or more right of the copy. Even at the smallest dial
+ * 355px to 480px across, 26px or more below the header, the readout 27px or
+ * more clear of the rail, and the ring 74px or more right of the copy. Even at the smallest dial
  * the longest name, "05 ON THE CLOCK" at 11px, is 116px against a 139px
- * sixth of the ring: 9.9px clear of the beads either side.
+ * sixth of the ring: 9.9px clear of the beads either side. At the six
+ * landscape tablets (1024x768 to 1194x834, measured) the width binds instead:
+ * PageHero narrows the copy so the dial always has 360px — 360px from 1024
+ * to 1152 wide, 388px at 1180, 402px at 1194 — with the ring 26px right of
+ * the copy's column and the readout 47px or more, 69px or more below the
+ * header and 70px or more above the rail; in Safari's first screens, the
+ * tablets less its bars (1024x690 to 1194x764), still 360px or more, 35px or
+ * more below the header and 36px or more above the rail. 360px is the floor
+ * the bezel's 12.8 units need to stay 44px deep (46px here), and "05 ON THE
+ * CLOCK" is 118px against a 141px sixth.
+ *
+ * On a touch screen there is no resting pointer, so nothing here waits for
+ * one: a touch never turns or holds the dial, and a tap is a click — it opens
+ * the stage under the finger and stops the dial for good, and the core opens
+ * the capabilities (checked on a touch context at 1024x768 and 1180x820).
  */
 
 /* The dial, in the 0-100 box it is drawn in. */
@@ -452,16 +467,17 @@ export function ServiceCycle({
   return (
     /* The band the hero leaves beside its copy: below the header, above the
        rail. A size container, so the dial is measured against it. */
-    <div className="pointer-events-none absolute inset-x-0 top-[var(--hero-top)] bottom-[var(--hero-pad)] hidden [container-type:size] xl:block">
+    <div className="pointer-events-none absolute inset-x-0 top-[var(--hero-top)] bottom-[var(--hero-pad)] hidden [container-type:size] lg:block">
       <div className="absolute top-1/2 right-[max(var(--gutter),calc((100cqw_-_82.5rem)/2_+_var(--gutter)))] flex -translate-y-1/2 flex-col items-center">
         {/* The dial's size is the only number the layout sets. 3rem is the
             readout under it (mt-3 + h-6) and 6px more either side, so dial
             and readout stand 24px or more clear of the header and the rail;
-            `min(100cqw, 82.5rem) - 49.5rem` is the width right of the copy's
-            44rem, less 24px. */}
+            `min(100cqw, 82.5rem) - 2 gutters - --hero-copy-w - 1.5rem` is
+            the width right of the copy's measure (PageHero's), less 24px —
+            from xl the measure is 44rem and this is the old `- 49.5rem`. */}
         <div
           ref={dial}
-          className="dial dial-in pointer-events-auto relative size-[min(28rem,calc(100cqh_-_3rem),calc(min(100cqw,82.5rem)_-_49.5rem))] 2xl:size-[min(30rem,calc(100cqh_-_3rem),calc(min(100cqw,82.5rem)_-_49.5rem))]"
+          className="dial dial-in pointer-events-auto relative size-[min(28rem,calc(100cqh_-_3rem),calc(min(100cqw,82.5rem)_-_2_*_var(--gutter)_-_var(--hero-copy-w)_-_1.5rem))] 2xl:size-[min(30rem,calc(100cqh_-_3rem),calc(min(100cqw,82.5rem)_-_2_*_var(--gutter)_-_var(--hero-copy-w)_-_1.5rem))]"
         >
           <div aria-hidden className="dial-bloom pointer-events-none absolute -inset-[16%] rounded-full" />
 

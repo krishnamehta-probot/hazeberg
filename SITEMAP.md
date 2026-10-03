@@ -21,7 +21,7 @@ truth. Routes, page types and section anchors are settled here before any page i
 | Workday Extend | `/services/workday-extend` | Landing |
 | Workday AMS | `/services/workday-ams` | Landing (added 2026-10-02) |
 | What we do | `/what-we-do` | Consolidated landing, 8 sections; the 8 capabilities are an accordion, each on its own anchor. First in the nav, a plain link (2026-09-30) |
-| About | `/about` | Consolidated landing, 6 sections, anchor-linked from the page's own rail. A plain nav link (2026-09-30) |
+| About | `/about` | Consolidated landing, 8 sections, anchor-linked from the page's own rail. A plain nav link (2026-09-30) |
 | Berg | `/berg` | Single page. A Hazeberg solution, not a sub-brand - no separate visual identity |
 | Careers | `/careers` | Single page |
 | Contact | `/contact` | Single page |
@@ -120,19 +120,27 @@ it stays on the legal pages.
 
 ---
 
-## About - one page, six sections
+## About - one page, eight sections
 
 Rebuilt 2026-10-02 on the client's "About Page" document, every line of it - see
-`web/src/lib/about-content.ts`. The draft it replaces (Life at Hazeberg, Our team, Rewards,
-the placeholder founding story) is gone, because the document does not have those sections.
+`web/src/lib/about-content.ts`. The draft it replaced (Life at Hazeberg, Our team, Rewards,
+the placeholder founding story) went, because the document did not have those sections.
 No nav link points into this page by hash, so the old anchors were free to go.
+
+The owner's change list (2026-10-02, built 2026-10-03) added two sections, the Founder's
+note and Life at Hazeberg, with the owner's own photographs (`web/src/lib/about-photos.ts`,
+web copies in `web/public/about/`; the camera originals in `web/public/Hazeberg/` are
+git-ignored). It also changed the hero's figures (160+ countries, 35+ customers, 5M users
+served) and Sakthi's title (Founder & CEO).
 
 | Section | Anchor |
 |---|---|
 | Hero | - |
 | Our story (with mission, vision, closing line) | `#our-story` |
+| Founder's note | `#founder` |
 | How we're built | `#how-were-built` |
 | Meet the team | `#leadership` |
+| Life at Hazeberg (Offsite 2026, Offsite 2025, Team recognition) | `#life-at-hazeberg` |
 | Recognition | `#recognition` |
 | Start a conversation | `#start-a-conversation` |
 

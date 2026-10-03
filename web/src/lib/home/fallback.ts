@@ -113,6 +113,9 @@ export const FALLBACK_HOME: HomeContent = {
     titleLead: RESULTS.titleLead,
     titleRest: RESULTS.titleRest,
     body: RESULTS.body,
+    /* The owner's words exactly, and also what `normalize.ts` falls back to
+       while the live document predates the field. */
+    credentials: [...RESULTS.credentials],
     items: RESULTS.items.map((item, i, all) => ({
       n: indexLabel(i),
       title: item.title,

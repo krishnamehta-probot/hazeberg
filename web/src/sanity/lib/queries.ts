@@ -32,6 +32,7 @@ export const HOME_PAGE_QUERY = defineQuery(`*[_type == "homePage" && _id == "hom
   services{ eyebrow, title, items[]{ service, label, body, cta } },
   results{
     eyebrow, titleLead, titleRest, body,
+    credentials[]{ line },
     items[]{ title, body, highlight },
     media{ ${IMAGE} }
   },

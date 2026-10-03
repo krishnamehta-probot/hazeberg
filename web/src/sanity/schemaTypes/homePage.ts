@@ -23,9 +23,10 @@ import {
  * here is one the page actually renders (v1, `/`); copy that only /v2 or the
  * About page uses stays in code.
  *
- * Lists the design draws a fixed number of — four impact strands, four result
- * cards, seven wedges on the wheel, three engagement tabs — can be edited and
- * reordered but not grown or shrunk. See `FIXED_ARRAY`.
+ * Lists the design draws a fixed number of — four impact strands, two
+ * credentials and four result cards, seven wedges on the wheel, three
+ * engagement tabs — can be edited and reordered but not grown or shrunk. See
+ * `FIXED_ARRAY`.
  */
 
 const hero = defineField({
@@ -77,7 +78,7 @@ const hero = defineField({
       name: "trust",
       title: "Logo rail label",
       description:
-        "The label beside the rolling client logos. The logos themselves are managed in code: each file is prepared for the dark band and sized by measurement.",
+        "The label over the five direct clients at the foot of the hero. The logos themselves, and the 'Via Partners' label over the rolling ones, are managed in code: each file is prepared for the dark band and sized by measurement.",
       soft: 40,
       hard: 60,
     }),
@@ -342,6 +343,46 @@ const results = defineField({
       hard: 70,
     }),
     textField({ name: "body", title: "Paragraph", rows: 3, soft: 160, hard: 200 }),
+    defineField({
+      name: "credentials",
+      title: "Credentials",
+      description:
+        "Two distinctions, set side by side between the paragraph and the cards. Each is one sentence that starts with its ordinal; the page sets that first word large in blue and the rest of the sentence beside it. Drag to reorder.",
+      type: "array",
+      options: FIXED_ARRAY,
+      of: [
+        defineArrayMember({
+          name: "credential",
+          type: "object",
+          fields: [
+            textField({
+              name: "line",
+              title: "Credential",
+              description:
+                'Start with the ordinal and a space, e.g. "3rd Workday exclusive consulting firm from India".',
+              /* Measured at 390, 640, 768, 1024, 1280, 1440 and 1920: up to
+                 72 characters the words after the ordinal hold two lines at
+                 every width, like both of the owner's (67 and 48). From 80 to
+                 104 they take three, and at 112 a fourth, which stands taller
+                 than the figure beside it. */
+              soft: 72,
+              hard: 104,
+              warn: (value) =>
+                /^\d+[^\s\d]*\s+\S/.test(value)
+                  ? true
+                  : 'Start with an ordinal such as "1st", then a space. Without one the sentence is set as plain text, with no large figure.',
+            }),
+          ],
+          preview: { select: { title: "line" } },
+        }),
+      ],
+      /* Not required, on purpose: the published document predates this
+         field, and a required rule would block publishing any edit to it
+         until someone filled this in. Until it exists the page shows the
+         shipped pair (`lib/home/normalize.ts`). `length` only runs once the
+         field is there. */
+      validation: (rule) => [rule.length(2), rule.custom(uniqueBy("line", "credential")).error()],
+    }),
     defineField({
       name: "items",
       title: "Cards",

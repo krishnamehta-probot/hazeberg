@@ -177,6 +177,11 @@ export type HomePage = {
     titleLead: string;
     titleRest: string;
     body: string;
+    credentials?: Array<{
+      line: string;
+      _type: "credential";
+      _key: string;
+    }>;
     items: Array<{
       title: string;
       body: string;
@@ -404,7 +409,7 @@ export type AllSanitySchemaTypes =
 
 // Source: src/sanity/lib/queries.ts
 // Variable: HOME_PAGE_QUERY
-// Query: *[_type == "homePage" && _id == "homePage"][0]{  hero{ titleA, titleB, titleAccent, lead, cta{ label, href }, trust },  about{    eyebrow, stat, statSuffix, statTail, body, cta{ label, href },    points[]{ title, body }  },  impact{    eyebrow, titleLead, titleAccent, body, cta{ label, href },    cards[]{ stat, statLabel, title, body }  },  services{ eyebrow, title, items[]{ service, label, body, cta } },  results{    eyebrow, titleLead, titleRest, body,    items[]{ title, body, highlight },    media{   alt,  crop,  hotspot,  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height } }  },  caseStudies{    eyebrow, title, body,    items[]->{ title, challenge, approach, impact, capabilities, image{   alt,  crop,  hotspot,  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height } } }  },  models{    eyebrow, title, body, cta,    items[]{ stage, title, body, bestFor, href, image{   alt,  crop,  hotspot,  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height } } }  },  testimonials{ eyebrow, title, items[]{ body, name, role, portrait{   alt,  crop,  hotspot,  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height } } } },  closing{ eyebrow, title, body, cta{ label, href } }}
+// Query: *[_type == "homePage" && _id == "homePage"][0]{  hero{ titleA, titleB, titleAccent, lead, cta{ label, href }, trust },  about{    eyebrow, stat, statSuffix, statTail, body, cta{ label, href },    points[]{ title, body }  },  impact{    eyebrow, titleLead, titleAccent, body, cta{ label, href },    cards[]{ stat, statLabel, title, body }  },  services{ eyebrow, title, items[]{ service, label, body, cta } },  results{    eyebrow, titleLead, titleRest, body,    credentials[]{ line },    items[]{ title, body, highlight },    media{   alt,  crop,  hotspot,  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height } }  },  caseStudies{    eyebrow, title, body,    items[]->{ title, challenge, approach, impact, capabilities, image{   alt,  crop,  hotspot,  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height } } }  },  models{    eyebrow, title, body, cta,    items[]{ stage, title, body, bestFor, href, image{   alt,  crop,  hotspot,  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height } } }  },  testimonials{ eyebrow, title, items[]{ body, name, role, portrait{   alt,  crop,  hotspot,  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height } } } },  closing{ eyebrow, title, body, cta{ label, href } }}
 export type HOME_PAGE_QUERY_RESULT = {
   hero: {
     titleA: string;
@@ -503,6 +508,9 @@ export type HOME_PAGE_QUERY_RESULT = {
     titleLead: string;
     titleRest: string;
     body: string;
+    credentials: Array<{
+      line: string;
+    }> | null;
     items: Array<{
       title: string;
       body: string;
@@ -619,7 +627,7 @@ export type HOME_PAGE_QUERY_RESULT = {
 // Query TypeMap
 declare global {
   interface SanityQueries {
-    '*[_type == "homePage" && _id == "homePage"][0]{\n  hero{ titleA, titleB, titleAccent, lead, cta{ label, href }, trust },\n  about{\n    eyebrow, stat, statSuffix, statTail, body, cta{ label, href },\n    points[]{ title, body }\n  },\n  impact{\n    eyebrow, titleLead, titleAccent, body, cta{ label, href },\n    cards[]{ stat, statLabel, title, body }\n  },\n  services{ eyebrow, title, items[]{ service, label, body, cta } },\n  results{\n    eyebrow, titleLead, titleRest, body,\n    items[]{ title, body, highlight },\n    media{ \n  alt,\n  crop,\n  hotspot,\n  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height }\n }\n  },\n  caseStudies{\n    eyebrow, title, body,\n    items[]->{ title, challenge, approach, impact, capabilities, image{ \n  alt,\n  crop,\n  hotspot,\n  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height }\n } }\n  },\n  models{\n    eyebrow, title, body, cta,\n    items[]{ stage, title, body, bestFor, href, image{ \n  alt,\n  crop,\n  hotspot,\n  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height }\n } }\n  },\n  testimonials{ eyebrow, title, items[]{ body, name, role, portrait{ \n  alt,\n  crop,\n  hotspot,\n  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height }\n } } },\n  closing{ eyebrow, title, body, cta{ label, href } }\n}': HOME_PAGE_QUERY_RESULT;
+    '*[_type == "homePage" && _id == "homePage"][0]{\n  hero{ titleA, titleB, titleAccent, lead, cta{ label, href }, trust },\n  about{\n    eyebrow, stat, statSuffix, statTail, body, cta{ label, href },\n    points[]{ title, body }\n  },\n  impact{\n    eyebrow, titleLead, titleAccent, body, cta{ label, href },\n    cards[]{ stat, statLabel, title, body }\n  },\n  services{ eyebrow, title, items[]{ service, label, body, cta } },\n  results{\n    eyebrow, titleLead, titleRest, body,\n    credentials[]{ line },\n    items[]{ title, body, highlight },\n    media{ \n  alt,\n  crop,\n  hotspot,\n  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height }\n }\n  },\n  caseStudies{\n    eyebrow, title, body,\n    items[]->{ title, challenge, approach, impact, capabilities, image{ \n  alt,\n  crop,\n  hotspot,\n  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height }\n } }\n  },\n  models{\n    eyebrow, title, body, cta,\n    items[]{ stage, title, body, bestFor, href, image{ \n  alt,\n  crop,\n  hotspot,\n  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height }\n } }\n  },\n  testimonials{ eyebrow, title, items[]{ body, name, role, portrait{ \n  alt,\n  crop,\n  hotspot,\n  "asset": asset->{ url, "width": metadata.dimensions.width, "height": metadata.dimensions.height }\n } } },\n  closing{ eyebrow, title, body, cta{ label, href } }\n}': HOME_PAGE_QUERY_RESULT;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

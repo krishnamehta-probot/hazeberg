@@ -34,12 +34,20 @@ const TAIL = 16;
     half as far as the light above it, which is what lifts the arcs off it. */
 const DRIFT_AIR = { x: 7, y: 5 };
 const DRIFT_LAND = { x: 3, y: 2 };
-/** How far each city's label hangs below its point, px. Penang's hangs past
+/** How far each city's label hangs below its point. Penang's hangs past
     Coimbatore's: the two are 24 degrees apart, which is 40px at 1280 wide, so
     side by side they would overlap — staggered, each keeps a clear line to its
-    own point (see the geometry in the doc). */
-const DROP: Record<string, number> = { coimbatore: 16, penang: 68 };
-const DROP_DEFAULT = 16;
+    own point (see the geometry in the doc). Part of the stagger is the
+    cities' own 5.6 degrees of latitude, which shrinks with the map while the
+    labels do not, so on a map smaller than 1280's (`488px / 284`, 1.72px a
+    degree) Penang's drop takes back what the scale gives away and the two
+    stay 11.6px apart; from 1280 up that is nothing and the drop is 68px. */
+const STAGGER = (CENTRE_AT.coimbatore[1] - CENTRE_AT.penang[1]).toFixed(2);
+const DROP: Record<string, string> = {
+  coimbatore: "16px",
+  penang: `calc(68px + max(0px, (488px / 284 - var(--dm-s)) * ${STAGGER}))`,
+};
+const DROP_DEFAULT = "16px";
 
 const sixth = (i: number) => (ORDER[i % ORDER.length] ?? i) * (LAP / 6);
 const fmt = (v: number) => v.toFixed(2);
@@ -73,22 +81,39 @@ const fmt = (v: number) => v.toFixed(2);
  * **Geometry, solved rather than eyeballed.** The frame is placed by one
  * scale, `--dm-s` px per degree (globals.css, `.dmap`): the 284 degrees from
  * the Americas' west coast (128W) to Australia's east (156E) span from 1.5rem
- * right of the copy's 44rem column to one gutter short of the window, capped
- * by the band's height. The band is the hero's — header to stats rail, less
- * the hero's two margins — so the map centres on the line the copy centres
- * on. At 1280x650 that is 1.72px a degree (a 488px-wide world); at 1920x950,
- * 2.92 (828px). Everything placed on it, at all five laptop and desktop sizes
- * checked (1280x650, 1366x657, 1440x780, 1536x730, 1920x950), with the
- * drift at its furthest:
- *   - nothing drawn comes nearer the copy column than 38px (the AMERICAS label
+ * right of the copy's column (PageHero's `--hero-copy`: 44rem from xl, less at
+ * lg) to one gutter short of the window, capped by the band's height. The
+ * band is the hero's — header to stats rail, less the hero's two margins — so
+ * the map centres on the line the copy centres on. At 1280x650 that is 1.72px
+ * a degree (a 488px-wide world); at 1920x950, 2.92 (828px). Everything placed
+ * on it, at all five laptop and desktop sizes checked (1280x650, 1366x657,
+ * 1440x780, 1536x730, 1920x950), with the drift at its furthest:
+ *   - nothing drawn comes nearer the copy column than 37px (the AMERICAS label
  *     at 1280); land under the column is masked to nothing, fading in over
  *     the 5rem right of it
- *   - the highest thing (Penang's Americas arc) is 66px or more below the
- *     header (1366x657), the lowest (Penang's label) 75px or more above the
- *     rail (1280x650); land itself stays 76px clear of both
- *   - the two labels are 11.6px apart at the closest (1280), Penang's is 31px
- *     or more from APAC's glow and name, and no arc comes within 16px of
+ *   - the highest thing is 58px or more below the header (1366x657), the
+ *     lowest 66px or more above the rail (1280x650); land itself stays 68px
+ *     clear of both. (Measured in the browser on 2026-10-03, with About's six
+ *     figures on one row of the rail; the scale and every horizontal position
+ *     are as they were, and the map stands where the taller band centres it.)
+ *   - the two labels are 11.6px apart at the closest (1280), Penang's is 30px
+ *     or more from APAC's glow and name, and no arc comes within 25px of
  *     either label except at its own point
+ *
+ * From lg, a tablet held landscape (2026-10-03), the copy's column gives way
+ * so the map always has 360px: 1.27px a degree from 1024 to 1152 wide (a
+ * 360px world), 1.37 at 1180 and 1.42 at 1194. Measured at 1024x768,
+ * 1080x810, 1112x834, 1133x744, 1180x820 and 1194x834, drift at its furthest:
+ *   - nothing drawn comes nearer the column than 23.7px (AMERICAS, at 1.27);
+ *     the land is masked at its edge as above
+ *   - the highest thing is 147px or more below the header and the lowest 111px
+ *     or more above the rail — the map is width-bound here, so it floats in a
+ *     band taller than it needs — and land stays 155px clear of both; in
+ *     Safari's first screens (1024x690 to 1194x764) 113px, 77px and 121px
+ *   - the labels hold 11.6px apart (`DROP`: Penang's takes back what the scale
+ *     takes out of the stagger), Penang's is 15.7px or more from APAC's glow
+ *     and name, and no arc comes within 19px of either label but at its point
+ *   - the arcs' line is 1.0px to 1.1px across (`.dmap-line`)
  *
  * Manners: the drift answers the pointer anywhere over the hero; the loop
  * (packets, landings, drift and the minute's terminator) runs only while the
@@ -102,8 +127,9 @@ const fmt = (v: number) => v.toFixed(2);
  *
  * Accessibility: the drawing is `aria-hidden`. The two labels are a list,
  * each city with its country and its time, because the time is real
- * information. Desktop only (xl), as the globe is: narrower, the room right
- * of the copy is too small to read a world in.
+ * information. From lg, as the globe and the dial are: under it (phones and
+ * portrait tablets) the room beside the copy is too small to read a world in,
+ * and the copy takes the frame.
  */
 export function DeliveryMap({
   entities,
@@ -311,7 +337,7 @@ export function DeliveryMap({
   }, [arcs, centres, places]);
 
   return (
-    <div ref={root} className="dmap pointer-events-none absolute inset-x-0 top-[var(--hero-top)] bottom-[var(--hero-pad)] hidden xl:block">
+    <div ref={root} className="dmap pointer-events-none absolute inset-x-0 top-[var(--hero-top)] bottom-[var(--hero-pad)] hidden lg:block">
       {/* The land, behind a fade that holds still while it drifts: nothing at
           the copy column's edge, all of it 5rem later. */}
       <div aria-hidden className="dmap-fade absolute inset-0">
@@ -405,9 +431,12 @@ export function DeliveryMap({
 
           {/* The arcs: a wide faint glow under a fine line, both drawn out
               from the centres as the page lands. Widths in degrees, so they
-              grow with the map; the line's 0.6 is 1px at the smallest map
-              (1.72px a degree at 1280 wide) — at 0.5 it was a sub-pixel
-              line, which a screen draws as a grey smear, not as light. */}
+              grow with the map; the line's 0.6 is 1px at the smallest
+              desktop map (1.72px a degree at 1280 wide) — at 0.5 it was a
+              sub-pixel line, which a screen draws as a grey smear, not as
+              light. Below xl the map is smaller still (1.27px a degree at a
+              1024 tablet), and `.dmap-line` takes it to 0.8 there: 1px
+              again. */}
           <g fill="none" strokeLinecap="round">
             {arcs.map((a, i) => (
               <g key={a.key} style={{ "--in": `${(0.95 + i * 0.1).toFixed(2)}s` } as CSSProperties}>
@@ -424,7 +453,7 @@ export function DeliveryMap({
                   pathLength={1}
                   stroke={`url(#${id(`line-${a.key}`)})`}
                   strokeWidth={0.6}
-                  className="dmap-draw"
+                  className="dmap-draw dmap-line"
                 />
               </g>
             ))}
@@ -551,7 +580,7 @@ export function DeliveryMap({
                 <span
                   aria-hidden
                   className="absolute top-[5px] left-0 w-px -translate-x-1/2 bg-linear-to-b from-accent/80 to-white/25"
-                  style={{ height: drop - 5 }}
+                  style={{ height: `calc(${drop} - 5px)` }}
                 />
                 <div
                   className="absolute -right-3 w-max rounded-md bg-void/70 px-3 py-2 ring-1 ring-white/15 backdrop-blur-md"

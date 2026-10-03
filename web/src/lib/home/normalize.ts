@@ -37,6 +37,9 @@ import type {
  *     lists by position, and a wrong count is a crash or an unlabelled line.
  *   - **A missing photograph or an unknown page** falls back to the shipped
  *     one in the same slot.
+ *   - **A field added to the schema after the document was written** — the
+ *     Results credentials — falls back on its own when the document does not
+ *     have it, and takes nothing else in the section with it.
  *
  * Draft mode encodes invisible source maps into every string ("stega"), which
  * is what makes preview text clickable. Anything the code COMPARES or puts in
@@ -206,6 +209,30 @@ function services(raw: Raw["services"], fb: HomeServices): HomeServices {
   };
 }
 
+/**
+ * The credentials, field by field rather than section by section.
+ *
+ * The field arrived after the document did (2026-10-03), so ABSENT is the
+ * normal state of the live document until it is patched, not an editor's work
+ * in progress — it falls back to the shipped pair, and says nothing, because
+ * that is not a fault. A pair at the wrong length is one: the layout draws
+ * two, so it falls back too, and logs. Neither touches the rest of Results.
+ *
+ * A line an editor has CLEARED is left out rather than drawn: an empty item
+ * would be a blank mark, and on the second one a hairline beside nothing. The
+ * file's rule — cleared looks cleared in a preview — still holds; the mark is
+ * simply not there until it has words. Tested on the cleaned text, because a
+ * draft's source map can make an empty string non-empty.
+ */
+function credentials(raw: NonNullable<Raw["results"]>["credentials"], fb: string[]): string[] {
+  if (raw == null) return fb;
+  if (raw.length !== fb.length) {
+    console.warn(`[home] results: expected ${fb.length} credentials, got ${raw.length} — rendering the shipped pair.`);
+    return fb;
+  }
+  return raw.map((c) => text(c?.line)).filter((line) => clean(line).trim() !== "");
+}
+
 function results(raw: Raw["results"], fb: HomeResults): HomeResults {
   const items = raw?.items ?? [];
   if (items.length !== fb.items.length) {
@@ -217,6 +244,7 @@ function results(raw: Raw["results"], fb: HomeResults): HomeResults {
     titleLead: text(raw?.titleLead),
     titleRest: text(raw?.titleRest),
     body: text(raw?.body),
+    credentials: credentials(raw?.credentials, fb.credentials),
     items: items.map((item, i) => {
       const highlight = clean(item?.highlight);
       return {

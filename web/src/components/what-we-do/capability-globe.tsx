@@ -33,8 +33,32 @@ import { CAPABILITY_ICON } from "./capability-chip";
  * through the globe.
  *
  * One loop drives the globe and the ring together and writes straight to the
- * DOM. It stops when the hero leaves the screen or the tab is hidden. Desktop
- * only (xl): narrower, the copy takes the frame's width.
+ * DOM. It stops when the hero leaves the screen or the tab is hidden. From lg,
+ * a tablet held landscape, up (2026-10-03; it was xl only); under lg the copy
+ * takes the frame's width.
+ *
+ * **Geometry, measured rather than eyeballed.** The stage is `min(28rem |
+ * 30rem, the screen less the header and 11rem, the width right of the copy's
+ * measure less 24px)`. From xl the third term is 488px or more and never
+ * binds: 366px to 480px across at 1280x650 to 1920x950, rect for rect as
+ * before. At the six landscape tablets (1024x768 to 1194x834) it is the one
+ * that binds — 360px from 1024 to 1152 wide, 388px at 1180, 402px at 1194 —
+ * and the ring and its discs stand 28px or more right of the copy's column,
+ * the caption 91px or more, the globe 144px or more below the header and the
+ * caption 129px or more above the foot of the screen (109px and 94px in
+ * Safari's first screens, 1024x690 to 1194x764). A pointed disc's name,
+ * 246px at the widest, hangs east of a disc west of the globe there, so it
+ * stays 21px or more clear of the column too; and west of a disc east of it,
+ * where a centred name ran up to 53px past the window's edge, so it stays
+ * 15px or more inside it. (From xl the names are centred as before, and at
+ * 1280 to about 1440 wide an eastern one still runs past the edge.)
+ *
+ * On a touch screen a tap is a click and nothing waits for a hover: the
+ * caption names the disc nearest the reader whatever the pointer does. A disc
+ * takes the pointer on the near half of the ring and a little round its ends
+ * (`depth > -0.25`), where it is drawn at 81% of its 48px or more — 39px — so
+ * each carries an invisible ring of hit area 4px wide: 45px or more wherever
+ * it can be tapped (measured on a touch context at 1024x768).
  */
 
 /** Orbit radii and tilt, as fractions of the stage. The globe itself is 80% of
@@ -189,6 +213,19 @@ export function CapabilityGlobe({
         li.style.zIndex = lit ? "40" : depth > 0 ? "30" : "10";
         if (lit) li.dataset.lit = "";
         else delete li.dataset.lit;
+        // West of the globe, a name centred over its disc can reach past the
+        // stage's left edge, and below xl that edge is only 24px off the
+        // copy; there the name hangs east from the disc instead (`data-west`).
+        // East of it, the same name reaches past the window's edge — by up to
+        // 53px from 1280 to about 1440 as well as below xl — so it hangs west
+        // (`data-east`). At every width, since 2026-10-03: the desktop clip
+        // was older than the tablet one. A tenth of the stage in from the
+        // middle, a centred name (246px at the widest) still clears both
+        // edges.
+        const west = x < half - size * 0.1;
+        const east = x > half + size * 0.1;
+        if (west !== "west" in li.dataset) li.toggleAttribute("data-west", west);
+        if (east !== "east" in li.dataset) li.toggleAttribute("data-east", east);
         li.style.pointerEvents = depth > -0.25 ? "auto" : "none";
       }
       return nearest;
@@ -328,17 +365,20 @@ export function CapabilityGlobe({
   }, [items]);
 
   return (
-    <div className="pointer-events-none absolute inset-0 hidden xl:block">
+    <div className="pointer-events-none absolute inset-0 hidden lg:block">
       {/* The stage: right of the copy's measure, centred in the frame below
           the header. Its size is the only number the layout sets; the globe,
           the ring and the discs are all fractions of it. */}
       {/* Sized by the viewport's height as well as capped, so the globe, its
           ring and the caption under it always fit the first screen; set a
           little above the middle of what the header leaves, so the caption
-          has room beneath it. */}
+          has room beneath it. The third term is the width right of the
+          copy's measure (PageHero's `--hero-copy-w`), less 24px, as the
+          dial's is: from xl it is 488px or more and never binds, and at lg
+          it is what keeps the ring off the copy. */}
       <div
         ref={stage}
-        className="absolute top-[calc(50%_+_var(--header-h)/2_-_2.5rem)] right-[max(var(--gutter),calc((100vw_-_82.5rem)/2_+_var(--gutter)))] size-[min(28rem,calc(100svh_-_var(--header-h)_-_11rem))] -translate-y-1/2 2xl:size-[min(30rem,calc(100svh_-_var(--header-h)_-_11rem))]"
+        className="absolute top-[calc(50%_+_var(--header-h)/2_-_2.5rem)] right-[max(var(--gutter),calc((100vw_-_82.5rem)/2_+_var(--gutter)))] size-[min(28rem,calc(100svh_-_var(--header-h)_-_11rem),calc(min(100cqw,82.5rem)_-_2_*_var(--gutter)_-_var(--hero-copy-w)_-_1.5rem))] -translate-y-1/2 2xl:size-[min(30rem,calc(100svh_-_var(--header-h)_-_11rem),calc(min(100cqw,82.5rem)_-_2_*_var(--gutter)_-_var(--hero-copy-w)_-_1.5rem))]"
       >
         {/* The far half of the ring, behind the globe. */}
         <svg
@@ -402,15 +442,21 @@ export function CapabilityGlobe({
                   }}
                   className="group/li pointer-events-auto absolute top-0 left-0 size-12 will-change-transform"
                 >
+                  {/* `before:` is the hit ring: 56px before the depth scale,
+                      so 45px at the smallest a disc can be tapped. */}
                   <a
                     href={`#${item.id}`}
-                    className="grid size-12 place-items-center rounded-pill bg-void/55 text-on-panel shadow-lg ring-1 shadow-primary/25 ring-white/30 backdrop-blur-md transition-[background-color,box-shadow] dur-base ease-brand hover:bg-void/35 hover:shadow-primary/55 hover:ring-white/75 focus-visible:ring-white/75"
+                    className="grid size-12 place-items-center rounded-pill bg-void/55 text-on-panel shadow-lg ring-1 shadow-primary/25 ring-white/30 backdrop-blur-md transition-[background-color,box-shadow] dur-base ease-brand before:absolute before:-inset-1 before:rounded-pill before:content-[''] hover:bg-void/35 hover:shadow-primary/55 hover:ring-white/75 focus-visible:ring-white/75"
                   >
                     <Icon aria-hidden className="size-5" strokeWidth={1.7} />
                     {/* The name, right above the disc while it is pointed at or
                         focused. It is the link's text either way, so assistive
-                        technology reads it whether or not it is showing. */}
-                    <span className="pointer-events-none absolute bottom-full left-1/2 mb-2.5 inline-flex -translate-x-1/2 translate-y-1 items-center gap-2 rounded-pill bg-void/80 px-3.5 py-1.5 text-sm whitespace-nowrap text-on-panel opacity-0 ring-1 ring-white/20 backdrop-blur-md transition dur-fast ease-brand group-data-[lit]/li:translate-y-0 group-data-[lit]/li:opacity-100">
+                        technology reads it whether or not it is showing. Below
+                        xl a disc west of the globe hangs it east from its own
+                        left edge, so it never reaches over the copy, and one
+                        east of it hangs it west from its right edge, so it
+                        never runs off the screen. */}
+                    <span className="pointer-events-none absolute bottom-full left-1/2 mb-2.5 inline-flex -translate-x-1/2 translate-y-1 items-center gap-2 rounded-pill bg-void/80 px-3.5 py-1.5 text-sm whitespace-nowrap text-on-panel opacity-0 ring-1 ring-white/20 backdrop-blur-md transition dur-fast ease-brand group-data-[lit]/li:translate-y-0 group-data-[lit]/li:opacity-100 group-data-[west]/li:left-0 group-data-[west]/li:translate-x-0 group-data-[east]/li:right-0 group-data-[east]/li:left-auto group-data-[east]/li:translate-x-0">
                       <span className="font-mono text-[0.6875rem] tracking-caps text-accent">
                         {item.n}
                       </span>

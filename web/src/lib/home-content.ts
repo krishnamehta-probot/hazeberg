@@ -41,6 +41,22 @@ export const HERO = {
 /* 02 — client rail (lives inside the hero) ------------------------------ */
 export const LOGOS = {
   /**
+   * The label over the rolling marks. The owner's word for them, 2026-10-03:
+   * "Rest – Add 'Via Partners'". Kept in their casing; the band sets it in
+   * capitals either way.
+   *
+   * In code rather than the CMS, with the rail it labels: which marks sit under
+   * it is decided here, so the words that say what they are belong here too.
+   */
+  viaPartners: "Via Partners",
+  /**
+   * `channel` splits the band in two, and the split is the owner's, 2026-10-03:
+   * "Client: Enovix, Hitachi, ScribeAmerica, Ramsay Health, JMAN Group. Rest –
+   * Add 'Via Partners'". The five `direct` clients stand still under the trust
+   * label; every `partner` mark rolls under "Via Partners". The direct five
+   * lead the array, in the owner's order, so anything that reads `items`
+   * straight through (/v2's strip) meets them first.
+   *
    * The thirteen vectors supplied 2026-09-23, normalised once at import:
    *
    *   - every painted fill forced to white, because the strip sits on the hero's
@@ -64,21 +80,47 @@ export const LOGOS = {
    * to overflow it. That is what keeps the band thin without touching the files.
    *
    * Re-derive with `scripts/inkscale.mjs` if a file is replaced. Do not hand-tune.
+   *
+   * `w` and `h` are the file's own `width` and `height`, copied from its root
+   * `<svg>` (re-copy them if a file is replaced). They go on the `<img>` so the
+   * browser knows each mark's shape BEFORE it loads: without them a mark is 0px
+   * wide until it arrives, the direct five sit on one row on a phone and then
+   * break onto two, and the band grows 32px under an arc that was already drawn
+   * clear of the shorter one — measured with the logos held back 1.5s.
+   *
+   * **The reference is UPS, at 1.00.** It was the median of the original
+   * thirteen, and every approved size is relative to it. The script normalises
+   * to the median of whatever is in the folder, so with sixteen files it lands
+   * on JMAN Group and prints every figure 1.195x larger — pasted as printed,
+   * that grows every mark on both rails by a fifth when nothing about those
+   * files changed. So divide the script's figures by the one it prints for
+   * `ups.svg`. Done that way, all thirteen originals come back exactly as
+   * approved, which is the check that the division is right.
+   *
+   * Three marks were NOT supplied: ScribeAmerica, Ramsay Health Care and JMAN
+   * Group, taken 2026-10-03 from the header of each company's own website by
+   * `scripts/logos-web.mjs`, which names every source URL. ScribeAmerica's site
+   * only serves a raster, so its file is a 2560x293 PNG carried as a mask
+   * inside an SVG — see the script. **Web-sourced: confirm all three with the
+   * owner before launch.**
    */
   items: [
-    { file: "novartis.svg", name: "Novartis", scale: 0.49 },
-    { file: "chevron.svg", name: "Chevron", scale: 1.3 },
-    { file: "hitachi.svg", name: "Hitachi", scale: 1.27 },
-    { file: "alcon.svg", name: "Alcon", scale: 0.59 },
-    { file: "ups.svg", name: "UPS", scale: 1.0 },
-    { file: "iron-mountain.svg", name: "Iron Mountain", scale: 0.63 },
-    { file: "medallia.svg", name: "Medallia", scale: 0.66 },
-    { file: "docusign.svg", name: "DocuSign", scale: 1.54 },
-    { file: "sandoz.svg", name: "Sandoz", scale: 3.04 },
-    { file: "enovix.svg", name: "Enovix", scale: 0.93 },
-    { file: "menasha.svg", name: "Menasha", scale: 1.41 },
-    { file: "northstar.svg", name: "NorthStar Anesthesia", scale: 0.76 },
-    { file: "digitalocean.svg", name: "DigitalOcean", scale: 1.13 },
+    { file: "enovix.svg", name: "Enovix", scale: 0.93, w: 225, h: 56, channel: "direct" },
+    { file: "hitachi.svg", name: "Hitachi", scale: 1.27, w: 166, h: 71, channel: "direct" },
+    { file: "scribeamerica.svg", name: "ScribeAmerica", scale: 0.43, w: 2560, h: 293, channel: "direct" },
+    { file: "ramsay-health-care.svg", name: "Ramsay Health Care", scale: 0.59, w: 81, h: 22, channel: "direct" },
+    { file: "jman-group.svg", name: "JMAN Group", scale: 0.84, w: 154, h: 68, channel: "direct" },
+    { file: "novartis.svg", name: "Novartis", scale: 0.49, w: 265, h: 43, channel: "partner" },
+    { file: "chevron.svg", name: "Chevron", scale: 1.3, w: 150, h: 84, channel: "partner" },
+    { file: "alcon.svg", name: "Alcon", scale: 0.59, w: 214, h: 58, channel: "partner" },
+    { file: "ups.svg", name: "UPS", scale: 1.0, w: 145, h: 173, channel: "partner" },
+    { file: "iron-mountain.svg", name: "Iron Mountain", scale: 0.63, w: 211, h: 59, channel: "partner" },
+    { file: "medallia.svg", name: "Medallia", scale: 0.66, w: 219, h: 57, channel: "partner" },
+    { file: "docusign.svg", name: "DocuSign", scale: 1.54, w: 150, h: 84, channel: "partner" },
+    { file: "sandoz.svg", name: "Sandoz", scale: 3.04, w: 129, h: 97, channel: "partner" },
+    { file: "menasha.svg", name: "Menasha", scale: 1.41, w: 155, h: 81, channel: "partner" },
+    { file: "northstar.svg", name: "NorthStar Anesthesia", scale: 0.76, w: 148, h: 84, channel: "partner" },
+    { file: "digitalocean.svg", name: "DigitalOcean", scale: 1.13, w: 112, h: 113, channel: "partner" },
   ],
 } as const;
 
@@ -301,6 +343,25 @@ export const RESULTS = {
   titleLead: "20+ Projects. 200+ Integrations. 100% Customer Retention.",
   titleRest: "Trusted delivery across the Workday lifecycle.",
   body: "From Go-Live and Zero-Disruption Testing to Workday Health Checks and Always-On Support, we help enterprises achieve long-term success.",
+  /**
+   * The owner's two credentials, 2026-10-03, verbatim — not a character
+   * changed, "from a Tier-2 city from India" included. Flagged rather than
+   * silently tidied, like item 01's repeated title below.
+   *
+   * They sit here, between the figures in the heading and the four cards,
+   * because they are the same kind of claim as "100% Customer Retention" —
+   * proof — and the first card ("Pure-Play Workday Expertise") is the one
+   * they rank. As list items in body copy they would read as features.
+   *
+   * Each line is one string, in the CMS too, and the page sets its first word
+   * — the ordinal — large. One string means the sentence can never lose the
+   * space between two fields; it is the same split-in-code the case study
+   * titles use at " with ".
+   */
+  credentials: [
+    "1st Workday exclusive consulting firm from a Tier-2 city from India",
+    "3rd Workday exclusive consulting firm from India",
+  ],
   /**
    * Replaced 2026-09-25. These were four counters — 20+, 200+, 40+, 100% — and
    * the client moved those figures up into the heading, where they now open the

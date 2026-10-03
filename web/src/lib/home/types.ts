@@ -115,6 +115,14 @@ export type HomeResults = {
   /** The claim, on its own line. */
   titleRest: string;
   body: string;
+  /**
+   * The owner's distinctions, one sentence each, e.g. "3rd Workday exclusive
+   * consulting firm from India". The section sets the leading ordinal large;
+   * the sentence itself is never split in the content. Two, drawn as a pair;
+   * fewer only while an editor has cleared one in a draft (`normalize.ts`
+   * leaves an empty line out rather than drawing a blank mark).
+   */
+  credentials: string[];
   /** Exactly four: the split block reads them by position. */
   items: HomeCapability[];
   media: HomeImage;
